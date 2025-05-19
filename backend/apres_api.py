@@ -8,6 +8,7 @@ import ipaddress
 import tempfile
 import chardet
 import unicodedata
+from pathlib import Path
 from collections import OrderedDict
 
 # --- Configuration ---
