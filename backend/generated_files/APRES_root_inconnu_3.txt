@@ -1,0 +1,1235 @@
+Informations de base du routeur :
+Le hostname du routeur est : inconnu
+Le modele du routeur est : vmx
+La version du systeme Junos est : 14.1R4.8
+
+Informations du moteur de routage :
+Routing Engine status:
+    DRAM                      2048 MB (2048 MB installed)
+    Memory utilization          41 percent
+    CPU utilization:
+      User                      13 percent
+      Background                 0 percent
+      Kernel                    13 percent
+      Interrupt                 58 percent
+      Idle                      17 percent
+    Model                          RE-VMX
+    Serial ID                      VM5543516AC4
+    Start time                     2025-05-18 12:05:02 UTC
+    Uptime                         6 hours, 10 minutes, 57 seconds
+    Last reboot reason             0x10:misc hardware reason 
+    Load averages:                 1 minute   5 minute  15 minute
+                                       3.70       3.00       2.45
+
+Informations sur les interfaces :
+--- TERSE ---
+Interface               Admin Link Proto    Local                 Remote
+ge-0/0/0                up    up
+ge-0/0/0.0              up    up   inet     192.168.186.2/24
+                                   multiservice
+lc-0/0/0                up    up
+lc-0/0/0.32769          up    up   vpls    
+pfe-0/0/0               up    up
+pfe-0/0/0.16383         up    up   inet    
+                                   inet6   
+pfh-0/0/0               up    up
+pfh-0/0/0.16383         up    up   inet    
+ge-0/0/1                up    up
+ge-0/0/2                up    up
+ge-0/0/3                up    up
+ge-0/0/4                up    up
+ge-0/0/5                up    up
+ge-0/0/6                up    up
+ge-0/0/7                up    up
+ge-0/0/8                up    up
+ge-0/0/9                up    up
+cbp0                    up    up
+demux0                  up    up
+dsc                     up    up
+em0                     up    up
+em1                     up    up
+em1.0                   up    up   inet     172.16.0.1/16   
+                                   inet6    fe80::5200:ff:fe01:1/64
+em2                     up    up
+em3                     up    up
+em4                     up    up
+em5                     up    up
+gre                     up    up
+ipip                    up    up
+irb                     up    up
+lo0                     up    up
+lo0.16384               up    up   inet     127.0.0.1           --> 0/0
+lo0.16385               up    up   inet     128.0.0.1           --> 0/0
+                                            128.0.0.4           --> 0/0
+                                   inet6    fe80::200:f:fc00:0
+lo0.32768               up    up  
+lsi                     up    up
+mtun                    up    up
+pimd                    up    up
+pime                    up    up
+pip0                    up    up
+pp0                     up    up
+tap                     up    up
+vtep                    up    up
+
+--- DETAIL ---
+Physical interface: ge-0/0/0, Enabled, Physical link is Up
+  Interface index: 137, SNMP ifIndex: 513, Generation: 140
+  Link-level type: Ethernet, MTU: 1514, MRU: 1522, Speed: 1000mbps, BPDU Error: None, MAC-REWRITE Error: None, Loopback: Disabled, Source filtering: Disabled, Flow control: Enabled
+  Pad to minimum frame size: Disabled
+  Device flags   : Present Running
+  Interface flags: SNMP-Traps Internal: 0x4000
+  Link flags     : None
+  CoS queues     : 8 supported, 8 maximum usable queues
+  Hold-times     : Up 0 ms, Down 0 ms
+  Current address: 00:05:86:71:46:00, Hardware address: 00:05:86:71:46:00
+  Last flapped   : 2025-05-18 12:06:28 UTC (06:09:36 ago)
+  Statistics last cleared: Never
+  Traffic statistics:
+   Input  bytes  :              2549473                  240 bps
+   Output bytes  :             10996305               105880 bps
+   Input  packets:                41174                    0 pps
+   Output packets:                77459                   87 pps
+   IPv6 transit statistics:
+    Input  bytes  :              210256
+    Output bytes  :                   0
+    Input  packets:                 903
+    Output packets:                   0
+  Active alarms  : None
+  Active defects : None
+  Interface transmit statistics: Disabled
+
+  Logical interface ge-0/0/0.0 (Index 329) (SNMP ifIndex 523) (Generation 138)
+    Flags: Up SNMP-Traps 0x4004000 Encapsulation: ENET2
+    Traffic statistics:
+     Input  bytes  :              2606629
+     Output bytes  :             10531569
+     Input  packets:                42393
+     Output packets:                77459
+    Local statistics:
+     Input  bytes  :              2127180
+     Output bytes  :             10531417
+     Input  packets:                39384
+     Output packets:                77456
+    Transit statistics:
+     Input  bytes  :               479449                    0 bps
+     Output bytes  :                  152                    0 bps
+     Input  packets:                 3009                    0 pps
+     Output packets:                    3                    0 pps
+    Protocol inet, MTU: 1500, Generation: 152, Route table: 0
+      Flags: Sendbcast-pkt-to-re, Is-Primary
+      Addresses, Flags: Is-Default Is-Preferred Is-Primary
+        Destination: 192.168.186/24, Local: 192.168.186.2, Broadcast: 192.168.186.255, Generation: 140
+    Protocol multiservice, MTU: Unlimited, Generation: 153, Route table: 0
+      Flags: Is-Primary
+      Policer: Input: __default_arp_policer__
+
+Physical interface: lc-0/0/0, Enabled, Physical link is Up
+  Interface index: 134, SNMP ifIndex: 507, Generation: 137
+  Type: Unspecified, Link-level type: Unspecified, MTU: 0, Clocking: Unspecified, Speed: 800mbps
+  Device flags   : Present Running
+  Link type      : Unspecified
+  Link flags     : None
+  Physical info  : Unspecified
+  Hold-times     : Up 0 ms, Down 0 ms
+  Current address: Unspecified, Hardware address: Unspecified
+  Alternate link address: Unspecified
+  Last flapped   : Never
+  Statistics last cleared: Never
+  Traffic statistics:
+   Input  bytes  :                    0
+   Output bytes  :                    0
+   Input  packets:                    0
+   Output packets:                    0
+   IPv6 transit statistics:
+    Input  bytes  :                   0
+    Output bytes  :                   0
+    Input  packets:                   0
+    Output packets:                   0
+
+  Logical interface lc-0/0/0.32769 (Index 326) (SNMP ifIndex 508) (Generation 135)
+    Flags: Up Encapsulation: ENET2
+    Bandwidth: 0
+    Traffic statistics:
+     Input  bytes  :                    0
+     Output bytes  :                    0
+     Input  packets:                    0
+     Output packets:                    0
+    Local statistics:
+     Input  bytes  :                    0
+     Output bytes  :                    0
+     Input  packets:                    0
+     Output packets:                    0
+    Transit statistics:
+     Input  bytes  :                    0                    0 bps
+     Output bytes  :                    0                    0 bps
+     Input  packets:                    0                    0 pps
+     Output packets:                    0                    0 pps
+    Protocol vpls, MTU: Unlimited, Generation: 148, Route table: 1
+      Flags: Is-Primary
+
+Physical interface: pfe-0/0/0, Enabled, Physical link is Up
+  Interface index: 136, SNMP ifIndex: 510, Generation: 139
+  Type: Unspecified, Link-level type: Unspecified, MTU: 0, Clocking: Unspecified, Speed: 800mbps
+  Device flags   : Present Running
+  Link type      : Unspecified
+  Link flags     : None
+  Physical info  : Unspecified
+  Hold-times     : Up 0 ms, Down 0 ms
+  Current address: Unspecified, Hardware address: Unspecified
+  Alternate link address: Unspecified
+  Last flapped   : Never
+  Statistics last cleared: Never
+  Traffic statistics:
+   Input  bytes  :                    0
+   Output bytes  :                    0
+   Input  packets:                    0
+   Output packets:                    0
+   IPv6 transit statistics:
+    Input  bytes  :                   0
+    Output bytes  :                   0
+    Input  packets:                   0
+    Output packets:                   0
+
+  Logical interface pfe-0/0/0.16383 (Index 328) (SNMP ifIndex 512) (Generation 137)
+    Flags: Up SNMP-Traps Encapsulation: ENET2
+    Bandwidth: 0
+    Traffic statistics:
+     Input  bytes  :                    0
+     Output bytes  :                    0
+     Input  packets:                    0
+     Output packets:                    0
+     IPv6 transit statistics:
+      Input  bytes  :                   0
+      Output bytes  :                   0
+      Input  packets:                   0
+      Output packets:                   0
+    Local statistics:
+     Input  bytes  :                    0
+     Output bytes  :                    0
+     Input  packets:                    0
+     Output packets:                    0
+    Transit statistics:
+     Input  bytes  :                    0                    0 bps
+     Output bytes  :                    0                    0 bps
+     Input  packets:                    0                    0 pps
+     Output packets:                    0                    0 pps
+     IPv6 transit statistics:
+      Input  bytes  :                   0
+      Output bytes  :                   0
+      Input  packets:                   0
+      Output packets:                   0
+    Protocol inet, MTU: Unlimited, Generation: 150, Route table: 1
+      Flags: None
+    Protocol inet6, MTU: Unlimited, Generation: 151, Route table: 1
+      Flags: None
+
+Physical interface: pfh-0/0/0, Enabled, Physical link is Up
+  Interface index: 135, SNMP ifIndex: 509, Generation: 138
+  Type: Unspecified, Link-level type: Unspecified, MTU: 0, Clocking: Unspecified, Speed: 800mbps
+  Device flags   : Present Running
+  Link type      : Unspecified
+  Link flags     : None
+  Physical info  : Unspecified
+  Hold-times     : Up 0 ms, Down 0 ms
+  Current address: Unspecified, Hardware address: Unspecified
+  Alternate link address: Unspecified
+  Last flapped   : Never
+  Statistics last cleared: Never
+  Traffic statistics:
+   Input  bytes  :                    0
+   Output bytes  :                    0
+   Input  packets:                    0
+   Output packets:                    0
+   IPv6 transit statistics:
+    Input  bytes  :                   0
+    Output bytes  :                   0
+    Input  packets:                   0
+    Output packets:                   0
+
+  Logical interface pfh-0/0/0.16383 (Index 327) (SNMP ifIndex 511) (Generation 136)
+    Flags: Up SNMP-Traps Encapsulation: ENET2
+    Bandwidth: 0
+    Traffic statistics:
+     Input  bytes  :                    0
+     Output bytes  :                    0
+     Input  packets:                    0
+     Output packets:                    0
+    Local statistics:
+     Input  bytes  :                    0
+     Output bytes  :                    0
+     Input  packets:                    0
+     Output packets:                    0
+    Transit statistics:
+     Input  bytes  :                    0                    0 bps
+     Output bytes  :                    0                    0 bps
+     Input  packets:                    0                    0 pps
+     Output packets:                    0                    0 pps
+    Protocol inet, MTU: Unlimited, Generation: 149, Route table: 1
+      Flags: None
+
+Physical interface: ge-0/0/1, Enabled, Physical link is Up
+  Interface index: 138, SNMP ifIndex: 514, Generation: 141
+  Link-level type: Ethernet, MTU: 1514, MRU: 1522, Speed: 1000mbps, BPDU Error: None, MAC-REWRITE Error: None, Loopback: Disabled, Source filtering: Disabled, Flow control: Enabled
+  Pad to minimum frame size: Disabled
+  Device flags   : Present Running
+  Interface flags: SNMP-Traps Internal: 0x4000
+  Link flags     : None
+  CoS queues     : 8 supported, 8 maximum usable queues
+  Hold-times     : Up 0 ms, Down 0 ms
+  Current address: 00:05:86:71:46:01, Hardware address: 00:05:86:71:46:01
+  Last flapped   : 2025-05-18 12:06:28 UTC (06:09:36 ago)
+  Statistics last cleared: Never
+  Traffic statistics:
+   Input  bytes  :                    0                    0 bps
+   Output bytes  :                    0                    0 bps
+   Input  packets:                    0                    0 pps
+   Output packets:                    0                    0 pps
+   IPv6 transit statistics:
+    Input  bytes  :                   0
+    Output bytes  :                   0
+    Input  packets:                   0
+    Output packets:                   0
+  Active alarms  : None
+  Active defects : None
+  Interface transmit statistics: Disabled
+
+Physical interface: ge-0/0/2, Enabled, Physical link is Up
+  Interface index: 139, SNMP ifIndex: 515, Generation: 142
+  Link-level type: Ethernet, MTU: 1514, MRU: 1522, Speed: 1000mbps, BPDU Error: None, MAC-REWRITE Error: None, Loopback: Disabled, Source filtering: Disabled, Flow control: Enabled
+  Pad to minimum frame size: Disabled
+  Device flags   : Present Running
+  Interface flags: SNMP-Traps Internal: 0x4000
+  Link flags     : None
+  CoS queues     : 8 supported, 8 maximum usable queues
+  Hold-times     : Up 0 ms, Down 0 ms
+  Current address: 00:05:86:71:46:02, Hardware address: 00:05:86:71:46:02
+  Last flapped   : 2025-05-18 12:06:28 UTC (06:09:36 ago)
+  Statistics last cleared: Never
+  Traffic statistics:
+   Input  bytes  :                    0                    0 bps
+   Output bytes  :                    0                    0 bps
+   Input  packets:                    0                    0 pps
+   Output packets:                    0                    0 pps
+   IPv6 transit statistics:
+    Input  bytes  :                   0
+    Output bytes  :                   0
+    Input  packets:                   0
+    Output packets:                   0
+  Active alarms  : None
+  Active defects : None
+  Interface transmit statistics: Disabled
+
+Physical interface: ge-0/0/3, Enabled, Physical link is Up
+  Interface index: 140, SNMP ifIndex: 516, Generation: 143
+  Link-level type: Ethernet, MTU: 1514, MRU: 1522, Speed: 1000mbps, BPDU Error: None, MAC-REWRITE Error: None, Loopback: Disabled, Source filtering: Disabled, Flow control: Enabled
+  Pad to minimum frame size: Disabled
+  Device flags   : Present Running
+  Interface flags: SNMP-Traps Internal: 0x4000
+  Link flags     : None
+  CoS queues     : 8 supported, 8 maximum usable queues
+  Hold-times     : Up 0 ms, Down 0 ms
+  Current address: 00:05:86:71:46:03, Hardware address: 00:05:86:71:46:03
+  Last flapped   : 2025-05-18 12:06:28 UTC (06:09:36 ago)
+  Statistics last cleared: Never
+  Traffic statistics:
+   Input  bytes  :                    0                    0 bps
+   Output bytes  :                    0                    0 bps
+   Input  packets:                    0                    0 pps
+   Output packets:                    0                    0 pps
+   IPv6 transit statistics:
+    Input  bytes  :                   0
+    Output bytes  :                   0
+    Input  packets:                   0
+    Output packets:                   0
+  Active alarms  : None
+  Active defects : None
+  Interface transmit statistics: Disabled
+
+Physical interface: ge-0/0/4, Enabled, Physical link is Up
+  Interface index: 141, SNMP ifIndex: 517, Generation: 144
+  Link-level type: Ethernet, MTU: 1514, MRU: 1522, Speed: 1000mbps, BPDU Error: None, MAC-REWRITE Error: None, Loopback: Disabled, Source filtering: Disabled, Flow control: Enabled
+  Pad to minimum frame size: Disabled
+  Device flags   : Present Running
+  Interface flags: SNMP-Traps Internal: 0x4000
+  Link flags     : None
+  CoS queues     : 8 supported, 8 maximum usable queues
+  Hold-times     : Up 0 ms, Down 0 ms
+  Current address: 00:05:86:71:46:04, Hardware address: 00:05:86:71:46:04
+  Last flapped   : 2025-05-18 12:06:28 UTC (06:09:36 ago)
+  Statistics last cleared: Never
+  Traffic statistics:
+   Input  bytes  :                    0                    0 bps
+   Output bytes  :                    0                    0 bps
+   Input  packets:                    0                    0 pps
+   Output packets:                    0                    0 pps
+   IPv6 transit statistics:
+    Input  bytes  :                   0
+    Output bytes  :                   0
+    Input  packets:                   0
+    Output packets:                   0
+  Active alarms  : None
+  Active defects : None
+  Interface transmit statistics: Disabled
+
+Physical interface: ge-0/0/5, Enabled, Physical link is Up
+  Interface index: 142, SNMP ifIndex: 518, Generation: 145
+  Link-level type: Ethernet, MTU: 1514, MRU: 1522, Speed: 1000mbps, BPDU Error: None, MAC-REWRITE Error: None, Loopback: Disabled, Source filtering: Disabled, Flow control: Enabled
+  Pad to minimum frame size: Disabled
+  Device flags   : Present Running
+  Interface flags: SNMP-Traps Internal: 0x4000
+  Link flags     : None
+  CoS queues     : 8 supported, 8 maximum usable queues
+  Hold-times     : Up 0 ms, Down 0 ms
+  Current address: 00:05:86:71:46:05, Hardware address: 00:05:86:71:46:05
+  Last flapped   : 2025-05-18 12:06:28 UTC (06:09:36 ago)
+  Statistics last cleared: Never
+  Traffic statistics:
+   Input  bytes  :                    0                    0 bps
+   Output bytes  :                    0                    0 bps
+   Input  packets:                    0                    0 pps
+   Output packets:                    0                    0 pps
+   IPv6 transit statistics:
+    Input  bytes  :                   0
+    Output bytes  :                   0
+    Input  packets:                   0
+    Output packets:                   0
+  Active alarms  : None
+  Active defects : None
+  Interface transmit statistics: Disabled
+
+Physical interface: ge-0/0/6, Enabled, Physical link is Up
+  Interface index: 143, SNMP ifIndex: 519, Generation: 146
+  Link-level type: Ethernet, MTU: 1514, MRU: 1522, Speed: 1000mbps, BPDU Error: None, MAC-REWRITE Error: None, Loopback: Disabled, Source filtering: Disabled, Flow control: Enabled
+  Pad to minimum frame size: Disabled
+  Device flags   : Present Running
+  Interface flags: SNMP-Traps Internal: 0x4000
+  Link flags     : None
+  CoS queues     : 8 supported, 8 maximum usable queues
+  Hold-times     : Up 0 ms, Down 0 ms
+  Current address: 00:05:86:71:46:06, Hardware address: 00:05:86:71:46:06
+  Last flapped   : 2025-05-18 12:06:28 UTC (06:09:36 ago)
+  Statistics last cleared: Never
+  Traffic statistics:
+   Input  bytes  :                    0                    0 bps
+   Output bytes  :                    0                    0 bps
+   Input  packets:                    0                    0 pps
+   Output packets:                    0                    0 pps
+   IPv6 transit statistics:
+    Input  bytes  :                   0
+    Output bytes  :                   0
+    Input  packets:                   0
+    Output packets:                   0
+  Active alarms  : None
+  Active defects : None
+  Interface transmit statistics: Disabled
+
+Physical interface: ge-0/0/7, Enabled, Physical link is Up
+  Interface index: 144, SNMP ifIndex: 520, Generation: 147
+  Link-level type: Ethernet, MTU: 1514, MRU: 1522, Speed: 1000mbps, BPDU Error: None, MAC-REWRITE Error: None, Loopback: Disabled, Source filtering: Disabled, Flow control: Enabled
+  Pad to minimum frame size: Disabled
+  Device flags   : Present Running
+  Interface flags: SNMP-Traps Internal: 0x4000
+  Link flags     : None
+  CoS queues     : 8 supported, 8 maximum usable queues
+  Hold-times     : Up 0 ms, Down 0 ms
+  Current address: 00:05:86:71:46:07, Hardware address: 00:05:86:71:46:07
+  Last flapped   : 2025-05-18 12:06:28 UTC (06:09:36 ago)
+  Statistics last cleared: Never
+  Traffic statistics:
+   Input  bytes  :                    0                    0 bps
+   Output bytes  :                    0                    0 bps
+   Input  packets:                    0                    0 pps
+   Output packets:                    0                    0 pps
+   IPv6 transit statistics:
+    Input  bytes  :                   0
+    Output bytes  :                   0
+    Input  packets:                   0
+    Output packets:                   0
+  Active alarms  : None
+  Active defects : None
+  Interface transmit statistics: Disabled
+
+Physical interface: ge-0/0/8, Enabled, Physical link is Up
+  Interface index: 145, SNMP ifIndex: 521, Generation: 148
+  Link-level type: Ethernet, MTU: 1514, MRU: 1522, Speed: 1000mbps, BPDU Error: None, MAC-REWRITE Error: None, Loopback: Disabled, Source filtering: Disabled, Flow control: Enabled
+  Pad to minimum frame size: Disabled
+  Device flags   : Present Running
+  Interface flags: SNMP-Traps Internal: 0x4000
+  Link flags     : None
+  CoS queues     : 8 supported, 8 maximum usable queues
+  Hold-times     : Up 0 ms, Down 0 ms
+  Current address: 00:05:86:71:46:08, Hardware address: 00:05:86:71:46:08
+  Last flapped   : 2025-05-18 12:06:28 UTC (06:09:36 ago)
+  Statistics last cleared: Never
+  Traffic statistics:
+   Input  bytes  :                    0                    0 bps
+   Output bytes  :                    0                    0 bps
+   Input  packets:                    0                    0 pps
+   Output packets:                    0                    0 pps
+   IPv6 transit statistics:
+    Input  bytes  :                   0
+    Output bytes  :                   0
+    Input  packets:                   0
+    Output packets:                   0
+  Active alarms  : None
+  Active defects : None
+  Interface transmit statistics: Disabled
+
+Physical interface: ge-0/0/9, Enabled, Physical link is Up
+  Interface index: 146, SNMP ifIndex: 522, Generation: 149
+  Link-level type: Ethernet, MTU: 1514, MRU: 1522, Speed: 1000mbps, BPDU Error: None, MAC-REWRITE Error: None, Loopback: Disabled, Source filtering: Disabled, Flow control: Enabled
+  Pad to minimum frame size: Disabled
+  Device flags   : Present Running
+  Interface flags: SNMP-Traps Internal: 0x4000
+  Link flags     : None
+  CoS queues     : 8 supported, 8 maximum usable queues
+  Hold-times     : Up 0 ms, Down 0 ms
+  Current address: 00:05:86:71:46:09, Hardware address: 00:05:86:71:46:09
+  Last flapped   : 2025-05-18 12:06:28 UTC (06:09:36 ago)
+  Statistics last cleared: Never
+  Traffic statistics:
+   Input  bytes  :                    0                    0 bps
+   Output bytes  :                    0                    0 bps
+   Input  packets:                    0                    0 pps
+   Output packets:                    0                    0 pps
+   IPv6 transit statistics:
+    Input  bytes  :                   0
+    Output bytes  :                   0
+    Input  packets:                   0
+    Output packets:                   0
+  Active alarms  : None
+  Active defects : None
+  Interface transmit statistics: Disabled
+
+Physical interface: .local., Enabled, Physical link is Up
+  Interface index: 0, SNMP ifIndex: 0, Generation: 1
+  Type: Loopback, Link-level type: Interface-Specific, MTU: Unlimited, Clocking: Unspecified, Speed: Unlimited
+  Device flags   : Present Running Loopback
+  Interface flags: Point-To-Point
+  Link type      : Unspecified
+  Link flags     : None
+  Physical info  : Unspecified
+  Hold-times     : Up 0 ms, Down 0 ms
+  Current address: Unspecified, Hardware address: Unspecified
+  Alternate link address: Unspecified
+  Last flapped   : Never
+  Statistics last cleared: Never
+  Traffic statistics:
+   Input  bytes  :                    0
+   Output bytes  :                    0
+   Input  packets:                    0
+   Output packets:                    0
+   IPv6 transit statistics:
+    Input  bytes  :                   0
+    Output bytes  :                   0
+    Input  packets:                   0
+    Output packets:                   0
+
+  Logical interface .local..0 (Index 0) (SNMP ifIndex 0) (Generation 1)
+    Flags: Down Point-To-Point Encapsulation: Unspecified
+    Bandwidth: 0
+    Protocol inet, MTU: Unlimited, Generation: 133, Route table: 0
+      Flags: None
+      Addresses, Flags: Is-Primary
+        Destination: Unspecified, Local: 192.168.186.2, Broadcast: Unspecified, Generation: 139
+    Protocol iso, MTU: Unlimited, Generation: 136, Route table: 0
+      Flags: None
+    Protocol inet6, MTU: Unlimited, Generation: 130, Route table: 0
+      Flags: None
+    Protocol mpls, MTU: Unlimited, Maximum labels: 3, Generation: 132, Route table: 0
+      Flags: None
+    Protocol 61, MTU: Unlimited, Generation: 129, Route table: 0
+      Flags: None
+
+  Logical interface .local..1 (Index 1) (SNMP ifIndex 0) (Generation 2)
+    Flags: Down Point-To-Point Encapsulation: Unspecified
+    Bandwidth: 0
+    Protocol inet, MTU: Unlimited, Generation: 134, Route table: 1
+      Flags: None
+      Addresses, Flags: Is-Primary
+        Destination: Unspecified, Local: 128.0.0.1, Broadcast: Unspecified, Generation: 133
+      Addresses, Flags: None
+        Destination: Unspecified, Local: 128.0.0.4, Broadcast: Unspecified, Generation: 135
+      Addresses, Flags: None
+        Destination: Unspecified, Local: 172.16.0.1, Broadcast: Unspecified, Generation: 129
+    Protocol inet6, MTU: Unlimited, Generation: 131, Route table: 1
+      Flags: None
+      Addresses, Flags: None
+        Destination: Unspecified, Local: fe80::200:f:fc00:0
+    Generation: 137
+      Addresses, Flags: None
+        Destination: Unspecified, Local: fe80::5200:ff:fe01:1
+    Protocol vpls, MTU: Unlimited, Generation: 130
+    Generation: 137, Route table: 1
+      Flags: None
+
+  Logical interface .local..2 (Index 2) (SNMP ifIndex 0) (Generation 2)
+    Flags: Down Point-To-Point Encapsulation: Unspecified
+    Bandwidth: 0
+    Protocol inet, MTU: Unlimited, Generation: 135, Route table: 2
+      Flags: None
+      Addresses, Flags: Is-Default Is-Primary
+        Destination: Unspecified, Local: 127.0.0.1, Broadcast: Unspecified, Generation: 131
+
+  Logical interface .local..3 (Index 321) (SNMP ifIndex 0) (Generation 130)
+    Flags: Down Point-To-Point Encapsulation: Unspecified
+    Bandwidth: 0
+    Protocol vpls, MTU: Unlimited, Generation: 138, Route table: 3
+      Flags: None
+
+  Logical interface .local..4 (Index 322) (SNMP ifIndex 0) (Generation 131)
+    Flags: Down Point-To-Point Encapsulation: Unspecified
+    Bandwidth: 0
+    Protocol inet, MTU: Unlimited, Generation: 139, Route table: 4
+      Flags: None
+    Protocol iso, MTU: Unlimited, Generation: 140, Route table: 4
+      Flags: None
+    Protocol inet6, MTU: Unlimited, Generation: 142, Route table: 4
+      Flags: None
+
+  Logical interface .local..5 (Index 323) (SNMP ifIndex 0) (Generation 132)
+    Flags: Down Point-To-Point Encapsulation: Unspecified
+    Bandwidth: 0
+    Protocol mpls, MTU: Unlimited, Maximum labels: 3, Generation: 141, Route table: 5
+      Flags: None
+
+Physical interface: cbp0, Enabled, Physical link is Up
+  Interface index: 129, SNMP ifIndex: 501, Generation: 132
+  Type: Ethernet, Link-level type: Ethernet, MTU: 1514, Clocking: Unspecified, Speed: Unspecified
+  Device flags   : Present Running
+  Interface flags: SNMP-Traps
+  Link type      : Full-Duplex
+  Link flags     : None
+  Physical info  : Unspecified
+  Hold-times     : Up 0 ms, Down 0 ms
+  Current address: 00:05:86:71:46:11, Hardware address: 00:05:86:71:46:11
+  Alternate link address: Unspecified
+  Last flapped   : Never
+  Statistics last cleared: Never
+  Traffic statistics:
+   Input  bytes  :                    0
+   Output bytes  :                    0
+   Input  packets:                    0
+   Output packets:                    0
+   IPv6 transit statistics:
+    Input  bytes  :                   0
+    Output bytes  :                   0
+    Input  packets:                   0
+    Output packets:                   0
+
+Physical interface: demux0, Enabled, Physical link is Up
+  Interface index: 128, SNMP ifIndex: 502, Generation: 131
+  Type: Software-Pseudo, Link-level type: Unspecified, MTU: 9192, Clocking: 1, Speed: Unspecified
+  Device flags   : Present Running
+  Interface flags: Point-To-Point SNMP-Traps
+  Link type      : Full-Duplex
+  Link flags     : None
+  Physical info  : Unspecified
+  Hold-times     : Up 0 ms, Down 0 ms
+  Current address: Unspecified, Hardware address: Unspecified
+  Alternate link address: Unspecified
+  Last flapped   : Never
+  Statistics last cleared: Never
+  Traffic statistics:
+   Input  bytes  :                    0
+   Output bytes  :                    0
+   Input  packets:                    0
+   Output packets:                    0
+   IPv6 transit statistics:
+    Input  bytes  :                   0
+    Output bytes  :                   0
+    Input  packets:                   0
+    Output packets:                   0
+
+Physical interface: dsc, Enabled, Physical link is Up
+  Interface index: 5, SNMP ifIndex: 5, Generation: 6
+  Type: Software-Pseudo, Link-level type: Unspecified, MTU: Unlimited, Clocking: Unspecified, Speed: Unspecified
+  Device flags   : Present Running
+  Interface flags: Point-To-Point SNMP-Traps
+  Link type      : Unspecified
+  Link flags     : None
+  Physical info  : Unspecified
+  Hold-times     : Up 0 ms, Down 0 ms
+  Current address: Unspecified, Hardware address: Unspecified
+  Alternate link address: Unspecified
+  Last flapped   : Never
+  Statistics last cleared: Never
+  Traffic statistics:
+   Input  bytes  :                    0
+   Output bytes  :                    0
+   Input  packets:                    0
+   Output packets:                    0
+   IPv6 transit statistics:
+    Input  bytes  :                   0
+    Output bytes  :                   0
+    Input  packets:                   0
+    Output packets:                   0
+
+Physical interface: em0, Enabled, Physical link is Up
+  Interface index: 8, SNMP ifIndex: 17, Generation: 1
+  Type: Ethernet, Link-level type: Ethernet, MTU: 1514, Clocking: Unspecified, Speed: 1000mbps
+  Device flags   : Present Running
+  Interface flags: SNMP-Traps
+  Link type      : Full-Duplex
+  Link flags     : None
+  Physical info  : Unspecified
+  Hold-times     : Up 0 ms, Down 0 ms
+  Current address: 50:00:00:01:00:00, Hardware address: 50:00:00:01:00:00
+  Alternate link address: Unspecified
+  Last flapped   : Never
+  Statistics last cleared: Never
+  Traffic statistics:
+   Input  bytes  :                    0
+   Output bytes  :                    0
+   Input  packets:                    0
+   Output packets:                    0
+   IPv6 transit statistics:
+    Input  bytes  :                   0
+    Output bytes  :                   0
+    Input  packets:                   0
+    Output packets:                   0
+
+Physical interface: em1, Enabled, Physical link is Up
+  Interface index: 9, SNMP ifIndex: 23, Generation: 2
+  Type: Ethernet, Link-level type: Ethernet, MTU: 1514, Clocking: Unspecified, Speed: 1000mbps
+  Device flags   : Present Running
+  Interface flags: SNMP-Traps
+  Link type      : Full-Duplex
+  Physical info  : Unspecified
+  Hold-times     : Up 0 ms, Down 0 ms
+  Current address: 50:00:00:01:00:01, Hardware address: 50:00:00:01:00:01
+  Alternate link address: Unspecified
+  Last flapped   : Never
+  Statistics last cleared: Never
+  Traffic statistics:
+   Input  bytes  :                    0
+   Output bytes  :                    0
+   Input  packets:                    0
+   Output packets:                    5
+   IPv6 transit statistics:
+    Input  bytes  :                   0
+    Output bytes  :                   0
+    Input  packets:                   0
+    Output packets:                   0
+
+  Logical interface em1.0 (Index 3) (SNMP ifIndex 24) (Generation 1)
+    Flags: Up SNMP-Traps 0x4000000 Encapsulation: ENET2
+    Traffic statistics:
+     Input  bytes  :                    0
+     Output bytes  :                  362
+     Input  packets:                    0
+     Output packets:                    5
+     IPv6 transit statistics:
+      Input  bytes  :                   0
+      Output bytes  :                   0
+      Input  packets:                   0
+      Output packets:                   0
+    Local statistics:
+     Input  bytes  :                    0
+     Output bytes  :                  362
+     Input  packets:                    0
+     Output packets:                    5
+    Protocol inet, MTU: 1500, Generation: 143, Route table: 1
+      Flags: Is-Primary
+      Addresses, Flags: Is-Preferred Is-Primary
+        Destination: 172.16/16, Local: 172.16.0.1, Broadcast: 172.16.255.255, Generation: 1
+    Protocol inet6, MTU: 1500, Generation: 144, Route table: 1
+      Flags: Is-Primary
+      Addresses, Flags: Is-Preferred
+        Destination: fe80::/64, Local: fe80::5200:ff:fe01:1
+    Generation: 2
+
+Physical interface: em2, Enabled, Physical link is Up
+  Interface index: 64, SNMP ifIndex: 116, Generation: 3
+  Type: Ethernet, Link-level type: Ethernet, MTU: 1514, Clocking: Unspecified, Speed: 1000mbps
+  Device flags   : Present Running
+  Interface flags: Promiscuous SNMP-Traps
+  Link type      : Full-Duplex
+  Link flags     : None
+  Physical info  : Unspecified
+  Hold-times     : Up 0 ms, Down 0 ms
+  Current address: 50:00:00:01:00:02, Hardware address: 50:00:00:01:00:02
+  Alternate link address: Unspecified
+  Last flapped   : Never
+  Statistics last cleared: Never
+  Traffic statistics:
+   Input  bytes  :                    0
+   Output bytes  :                    0
+   Input  packets:                41283
+   Output packets:                77467
+   IPv6 transit statistics:
+    Input  bytes  :                   0
+    Output bytes  :                   0
+    Input  packets:                   0
+    Output packets:                   0
+
+Physical interface: em3, Enabled, Physical link is Up
+  Interface index: 65, SNMP ifIndex: 151, Generation: 4
+  Type: Ethernet, Link-level type: Ethernet, MTU: 1514, Clocking: Unspecified, Speed: 1000mbps
+  Device flags   : Present Running
+  Interface flags: Promiscuous SNMP-Traps
+  Link type      : Full-Duplex
+  Link flags     : None
+  Physical info  : Unspecified
+  Hold-times     : Up 0 ms, Down 0 ms
+  Current address: 50:00:00:01:00:03, Hardware address: 50:00:00:01:00:03
+  Alternate link address: Unspecified
+  Last flapped   : Never
+  Statistics last cleared: Never
+  Traffic statistics:
+   Input  bytes  :                    0
+   Output bytes  :                    0
+   Input  packets:                    0
+   Output packets:                    0
+   IPv6 transit statistics:
+    Input  bytes  :                   0
+    Output bytes  :                   0
+    Input  packets:                   0
+    Output packets:                   0
+
+Physical interface: em4, Enabled, Physical link is Up
+  Interface index: 66, SNMP ifIndex: 153, Generation: 5
+  Type: Ethernet, Link-level type: Ethernet, MTU: 1514, Clocking: Unspecified, Speed: 1000mbps
+  Device flags   : Present Running
+  Interface flags: Promiscuous SNMP-Traps
+  Link type      : Full-Duplex
+  Link flags     : None
+  Physical info  : Unspecified
+  Hold-times     : Up 0 ms, Down 0 ms
+  Current address: 50:00:00:01:00:04, Hardware address: 50:00:00:01:00:04
+  Alternate link address: Unspecified
+  Last flapped   : Never
+  Statistics last cleared: Never
+  Traffic statistics:
+   Input  bytes  :                    0
+   Output bytes  :                    0
+   Input  packets:                    0
+   Output packets:                    0
+   IPv6 transit statistics:
+    Input  bytes  :                   0
+    Output bytes  :                   0
+    Input  packets:                   0
+    Output packets:                   0
+
+Physical interface: em5, Enabled, Physical link is Up
+  Interface index: 67, SNMP ifIndex: 155, Generation: 6
+  Type: Ethernet, Link-level type: Ethernet, MTU: 1514, Clocking: Unspecified, Speed: 1000mbps
+  Device flags   : Present Running
+  Interface flags: Promiscuous SNMP-Traps
+  Link type      : Full-Duplex
+  Link flags     : None
+  Physical info  : Unspecified
+  Hold-times     : Up 0 ms, Down 0 ms
+  Current address: 50:00:00:01:00:05, Hardware address: 50:00:00:01:00:05
+  Alternate link address: Unspecified
+  Last flapped   : Never
+  Statistics last cleared: Never
+  Traffic statistics:
+   Input  bytes  :                    0
+   Output bytes  :                    0
+   Input  packets:                    0
+   Output packets:                    0
+   IPv6 transit statistics:
+    Input  bytes  :                   0
+    Output bytes  :                   0
+    Input  packets:                   0
+    Output packets:                   0
+
+Physical interface: gre, Enabled, Physical link is Up
+  Interface index: 10, SNMP ifIndex: 8, Generation: 11
+  Type: GRE, Link-level type: GRE, MTU: Unlimited, Speed: Unlimited
+  Hold-times     : Up 0 ms, Down 0 ms
+  Device flags   : Present Running
+  Interface flags: Point-To-Point SNMP-Traps
+  Statistics last cleared: Never
+  Traffic statistics:
+   Input  bytes  :                    0
+   Output bytes  :                    0
+   Input  packets:                    0
+   Output packets:                    0
+   IPv6 transit statistics:
+    Input  bytes  :                   0
+    Output bytes  :                   0
+    Input  packets:                   0
+    Output packets:                   0
+
+Physical interface: ipip, Enabled, Physical link is Up
+  Interface index: 11, SNMP ifIndex: 9, Generation: 12
+  Type: IPIP, Link-level type: IP-over-IP, MTU: Unlimited, Speed: Unlimited
+  Hold-times     : Up 0 ms, Down 0 ms
+  Device flags   : Present Running
+  Interface flags: SNMP-Traps
+  Statistics last cleared: Never
+  Traffic statistics:
+   Input  bytes  :                    0
+   Output bytes  :                    0
+   Input  packets:                    0
+   Output packets:                    0
+   IPv6 transit statistics:
+    Input  bytes  :                   0
+    Output bytes  :                   0
+    Input  packets:                   0
+    Output packets:                   0
+
+Physical interface: irb, Enabled, Physical link is Up
+  Interface index: 132, SNMP ifIndex: 503, Generation: 135
+  Type: Ethernet, Link-level type: Ethernet, MTU: 1514, Clocking: Unspecified, Speed: Unspecified
+  Device flags   : Present Running
+  Interface flags: SNMP-Traps
+  Link type      : Full-Duplex
+  Link flags     : None
+  Physical info  : Unspecified
+  Hold-times     : Up 0 ms, Down 0 ms
+  Current address: 00:05:86:71:49:f0, Hardware address: 00:05:86:71:49:f0
+  Alternate link address: Unspecified
+  Last flapped   : Never
+  Statistics last cleared: Never
+  Traffic statistics:
+   Input  bytes  :                    0
+   Output bytes  :                    0
+   Input  packets:                    0
+   Output packets:                    0
+   IPv6 transit statistics:
+    Input  bytes  :                   0
+    Output bytes  :                   0
+    Input  packets:                   0
+    Output packets:                   0
+
+Physical interface: lo0, Enabled, Physical link is Up
+  Interface index: 6, SNMP ifIndex: 6, Generation: 7
+  Type: Loopback, Link-level type: Unspecified, MTU: Unlimited, Clocking: Unspecified, Speed: Unspecified
+  Device flags   : Present Running Loopback
+  Interface flags: SNMP-Traps
+  Link type      : Unspecified
+  Link flags     : None
+  Physical info  : Unspecified
+  Hold-times     : Up 0 ms, Down 0 ms
+  Current address: Unspecified, Hardware address: Unspecified
+  Alternate link address: Unspecified
+  Last flapped   : Never
+  Statistics last cleared: Never
+  Traffic statistics:
+   Input  bytes  :                 7051
+   Output bytes  :                 7051
+   Input  packets:                  125
+   Output packets:                  125
+   IPv6 transit statistics:
+    Input  bytes  :                   0
+    Output bytes  :                   0
+    Input  packets:                   0
+    Output packets:                   0
+
+  Logical interface lo0.16384 (Index 324) (SNMP ifIndex 21) (Generation 133)
+    Flags: Down SNMP-Traps Encapsulation: Unspecified
+    Traffic statistics:
+     Input  bytes  :                  784
+     Output bytes  :                  784
+     Input  packets:                   16
+     Output packets:                   16
+    Local statistics:
+     Input  bytes  :                  784
+     Output bytes  :                  784
+     Input  packets:                   16
+     Output packets:                   16
+    Transit statistics:
+     Input  bytes  :                    0                    0 bps
+     Output bytes  :                    0                    0 bps
+     Input  packets:                    0                    0 pps
+     Output packets:                    0                    0 pps
+    Protocol inet, MTU: Unlimited, Generation: 145, Route table: 2
+      Addresses, Flags: None
+        Destination: Unspecified, Local: 127.0.0.1, Broadcast: Unspecified, Generation: 132
+
+  Logical interface lo0.16385 (Index 325) (SNMP ifIndex 22) (Generation 134)
+    Flags: Down SNMP-Traps Encapsulation: Unspecified
+    Traffic statistics:
+     Input  bytes  :                 6267
+     Output bytes  :                 6267
+     Input  packets:                  109
+     Output packets:                  109
+     IPv6 transit statistics:
+      Input  bytes  :                   0
+      Output bytes  :                   0
+      Input  packets:                   0
+      Output packets:                   0
+    Local statistics:
+     Input  bytes  :                 6267
+     Output bytes  :                 6267
+     Input  packets:                  109
+     Output packets:                  109
+    Transit statistics:
+     Input  bytes  :                    0                    0 bps
+     Output bytes  :                    0                    0 bps
+     Input  packets:                    0                    0 pps
+     Output packets:                    0                    0 pps
+     IPv6 transit statistics:
+      Input  bytes  :                   0
+      Output bytes  :                   0
+      Input  packets:                   0
+      Output packets:                   0
+    Protocol inet, MTU: Unlimited, Generation: 146, Route table: 1
+      Addresses, Flags: Is-Default Is-Primary
+        Destination: Unspecified, Local: 128.0.0.1, Broadcast: Unspecified, Generation: 134
+      Addresses, Flags: None
+        Destination: Unspecified, Local: 128.0.0.4, Broadcast: Unspecified, Generation: 136
+    Protocol inet6, MTU: Unlimited, Generation: 147, Route table: 1
+        Destination: Unspecified, Local: fe80::200:f:fc00:0
+    Generation: 138
+
+  Logical interface lo0.32768 (Index 320) (SNMP ifIndex 250) (Generation 129)
+    Flags: Down Encapsulation: Unspecified
+    Traffic statistics:
+     Input  bytes  :                    0
+     Output bytes  :                    0
+     Input  packets:                    0
+     Output packets:                    0
+    Local statistics:
+     Input  bytes  :                    0
+     Output bytes  :                    0
+     Input  packets:                    0
+     Output packets:                    0
+    Transit statistics:
+     Input  bytes  :                    0                    0 bps
+     Output bytes  :                    0                    0 bps
+     Input  packets:                    0                    0 pps
+     Output packets:                    0                    0 pps
+
+Physical interface: lsi, Enabled, Physical link is Up
+  Interface index: 4, SNMP ifIndex: 4, Generation: 5
+  Type: Software-Pseudo, Link-level type: LSI, MTU: Unlimited, Clocking: Unspecified, Speed: Unlimited
+  Device flags   : Present Running
+  Link type      : Unspecified
+  Link flags     : None
+  Physical info  : Unspecified
+  Hold-times     : Up 0 ms, Down 0 ms
+  Current address: Unspecified, Hardware address: Unspecified
+  Alternate link address: Unspecified
+  Last flapped   : Never
+  Statistics last cleared: Never
+  Traffic statistics:
+   Input  bytes  :                    0
+   Output bytes  :                    0
+   Input  packets:                    0
+   Output packets:                    0
+   IPv6 transit statistics:
+    Input  bytes  :                   0
+    Output bytes  :                   0
+    Input  packets:                   0
+    Output packets:                   0
+
+Physical interface: mtun, Enabled, Physical link is Up
+  Interface index: 68, SNMP ifIndex: 12, Generation: 7
+  Type: Multicast-GRE, Link-level type: GRE, MTU: Unlimited, Speed: Unlimited
+  Hold-times     : Up 0 ms, Down 0 ms
+  Device flags   : Present Running
+  Interface flags: SNMP-Traps
+  Statistics last cleared: Never
+  Traffic statistics:
+   Input  bytes  :                    0
+   Output bytes  :                    0
+   Input  packets:                    0
+   Output packets:                    0
+   IPv6 transit statistics:
+    Input  bytes  :                   0
+    Output bytes  :                   0
+    Input  packets:                   0
+    Output packets:                   0
+
+Physical interface: pimd, Enabled, Physical link is Up
+  Interface index: 26, SNMP ifIndex: 11, Generation: 130
+  Type: PIMD, Link-level type: PIM-Decapsulator, MTU: Unlimited, Speed: Unlimited
+  Hold-times     : Up 0 ms, Down 0 ms
+  Device flags   : Present Running
+  Statistics last cleared: Never
+  Traffic statistics:
+   Input  bytes  :                    0
+   Output bytes  :                    0
+   Input  packets:                    0
+   Output packets:                    0
+   IPv6 transit statistics:
+    Input  bytes  :                   0
+    Output bytes  :                   0
+    Input  packets:                   0
+    Output packets:                   0
+
+Physical interface: pime, Enabled, Physical link is Up
+  Interface index: 25, SNMP ifIndex: 10, Generation: 129
+  Type: PIME, Link-level type: PIM-Encapsulator, MTU: Unlimited, Speed: Unlimited
+  Hold-times     : Up 0 ms, Down 0 ms
+  Device flags   : Present Running
+  Statistics last cleared: Never
+  Traffic statistics:
+   Input  bytes  :                    0
+   Output bytes  :                    0
+   Input  packets:                    0
+   Output packets:                    0
+   IPv6 transit statistics:
+    Input  bytes  :                   0
+    Output bytes  :                   0
+    Input  packets:                   0
+    Output packets:                   0
+
+Physical interface: pip0, Enabled, Physical link is Up
+  Interface index: 130, SNMP ifIndex: 504, Generation: 133
+  Type: Ethernet, Link-level type: Ethernet, MTU: 1514, Clocking: Unspecified, Speed: Unspecified
+  Device flags   : Present Running
+  Interface flags: SNMP-Traps
+  Link type      : Full-Duplex
+  Link flags     : None
+  Physical info  : Unspecified
+  Hold-times     : Up 0 ms, Down 0 ms
+  Current address: 00:05:86:71:49:b0, Hardware address: 00:05:86:71:49:b0
+  Alternate link address: Unspecified
+  Last flapped   : Never
+  Statistics last cleared: Never
+  Traffic statistics:
+   Input  bytes  :                    0
+   Output bytes  :                    0
+   Input  packets:                    0
+   Output packets:                    0
+   IPv6 transit statistics:
+    Input  bytes  :                   0
+    Output bytes  :                   0
+    Input  packets:                   0
+    Output packets:                   0
+
+Physical interface: pp0, Enabled, Physical link is Up
+  Interface index: 131, SNMP ifIndex: 505, Generation: 134
+  Type: PPPoE, Link-level type: PPPoE, MTU: 1532, Speed: Unspecified
+  Device flags   : Present Running
+  Interface flags: Point-To-Point SNMP-Traps
+  Link type      : Full-Duplex
+  Link flags     : None
+  Physical info  : Unspecified
+  Hold-times     : Up 0 ms, Down 0 ms
+  Current address: Unspecified, Hardware address: Unspecified
+  Alternate link address: Unspecified
+
+Physical interface: tap, Enabled, Physical link is Up
+  Interface index: 12, SNMP ifIndex: 7, Generation: 13
+  Type: Software-Pseudo, Link-level type: Interface-Specific, MTU: Unlimited, Clocking: Unspecified, Speed: Unlimited
+  Device flags   : Present Running
+  Interface flags: SNMP-Traps
+  Link type      : Unspecified
+  Link flags     : None
+  Physical info  : Unspecified
+  Hold-times     : Up 0 ms, Down 0 ms
+  Current address: Unspecified, Hardware address: Unspecified
+  Alternate link address: Unspecified
+  Last flapped   : Never
+  Statistics last cleared: Never
+  Traffic statistics:
+   Input  bytes  :                    0
+   Output bytes  :                    0
+   Input  packets:                    0
+   Output packets:                    0
+   IPv6 transit statistics:
+    Input  bytes  :                   0
+    Output bytes  :                   0
+    Input  packets:                   0
+    Output packets:                   0
+
+Physical interface: vtep, Enabled, Physical link is Up
+  Interface index: 133, SNMP ifIndex: 506, Generation: 136
+  Type: Software-Pseudo, Link-level type: VxLAN-Tunnel-Endpoint, MTU: 1600, Clocking: Unspecified, Speed: Unlimited
+  Device flags   : Present Running
+  Link type      : Full-Duplex
+  Link flags     : None
+  Physical info  : Unspecified
+  Hold-times     : Up 0 ms, Down 0 ms
+  Current address: Unspecified, Hardware address: Unspecified
+  Alternate link address: Unspecified
+  Last flapped   : Never
+  Statistics last cleared: Never
+  Traffic statistics:
+   Input  bytes  :                    0
+   Output bytes  :                    0
+   Input  packets:                    0
+   Output packets:                    0
+   IPv6 transit statistics:
+    Input  bytes  :                   0
+    Output bytes  :                   0
+    Input  packets:                   0
+    Output packets:                   0
+
+
+Informations ARP :
+MAC Address       Address         Name                      Interface           Flags
+00:50:56:c0:00:08 192.168.186.1   192.168.186.1             ge-0/0/0.0          none
+00:0c:29:80:ff:c8 192.168.186.129 192.168.186.129           ge-0/0/0.0          none
+00:50:56:eb:df:18 192.168.186.254 192.168.186.254           ge-0/0/0.0          none
+Total entries: 3
+
+Informations sur les routes :
+Router ID: 192.168.186.2
+
+inet.0: 2 destinations, 2 routes (2 active, 0 holddown, 0 hidden)
+              Direct:      1 routes,      1 active
+               Local:      1 routes,      1 active
+
+Protocole OSPF :
+OSPF instance is not running
+
+Protocole IS-IS :
+IS-IS instance is not running
+
+Protocole MPLS :
+MPLS not configured
+
+Protocole LDP :
+LDP instance is not running
+
+Protocole RSVP :
+RSVP not configured
+
+Protocole LLDP :
+
+
+Protocole LSP :
+MPLS not configured
+
+Protocole BGP :
+BGP is not running
+
+Services configurés :
+ssh
+
+Protocoles configurés :
+
+Listes de Contrôle d'Accès (ACL) :
+
+
+Logs des erreurs critiques dans 'messages' :
+May 18 12:05:51   /kernel: em5error setting host MAC filter table
+May 18 12:08:07   mgd[2861]: UI_CONFIGURATION_ERROR: Process: mgd, path: [edit], statement: system, Missing mandatory statement: 'root-authentication'
+May 18 12:08:17   mgd[2861]: UI_CONFIGURATION_ERROR: Process: mgd, path: [edit], statement: system, Missing mandatory statement: 'root-authentication'
+May 18 12:08:40   chassisd[2968]: CHASSISD_FILE_OPEN: File open: /dev/acb, error: 2 -- No such file or directory
+May 18 12:08:40   chassisd[2968]: CHASSISD_FILE_OPEN: File open: /dev/acb, error: 2 -- No such file or directory
+May 18 12:08:42   /kernel: KERN_ARP_DUPLICATE_ADDR: duplicate IP address 192.168.186.2! sent from address: 00:50:56:e5:13:29 (error count = 1)
+May 18 12:11:17   /kernel: KERN_ARP_DUPLICATE_ADDR: duplicate IP address 192.168.186.2! sent from address: 00:50:56:e5:13:29 (error count = 2)
+May 18 15:31:45   /kernel: KERN_ARP_DUPLICATE_ADDR: duplicate IP address 192.168.186.2! sent from address: 00:50:56:e5:13:29 (error count = 4)
+May 18 15:46:06   /kernel: KERN_ARP_DUPLICATE_ADDR: duplicate IP address 192.168.186.2! sent from address: 00:50:56:e5:13:29 (error count = 7)
+                                        
+
+Logs des erreurs critiques dans 'chassisd' :
+May  1 15:09:51  fpc_offline_now - slot 0, reason: Restarting unresponsive board, error OK transition state 1
+May  1 15:25:09  fpc_offline_now - slot 0, reason: Restarting unresponsive board, error OK transition state 1
+May  1 15:40:28 CHASSISD_FRU_UNRESPONSIVE: Error for FPC 0: unresponsive to attempts to start it; left it offline
+May  1 15:40:28 CHASSISD_FRU_OFFLINE_NOTICE: Taking FPC 0 offline: Error
+May  1 15:40:28  fpc_down slot 0 reason Error cargs 0x0
+May  1 15:40:28  fpc_offline_now - slot 0, reason: Error, error Unresponsive transition state 1
+May  1 15:40:28  FPC#0 - power off [addr 0x11] reason: Error
+May  1 15:40:28  send: red alarm set, device FPC 0, reason FPC 0 Hard errors
+May  1 16:09:19  ch_power_off_frus_cleanup_exit: Chassisd exiting with error-code= 69
+                                        
+
+La configuration totale :
+set version 14.1R4.8
+set system root-authentication encrypted-password "$1$NVqcWakK$wNyGWq25FAqoOIBlUA/Eq/"
+set system services ssh
+set system syslog user * any emergency
+set system syslog file messages any notice
+set system syslog file messages authorization info
+set system syslog file interactive-commands interactive-commands any
+set interfaces ge-0/0/0 unit 0 family inet address 192.168.186.2/24

@@ -10,6 +10,7 @@ import ipaddress
 import tempfile
 import portalocker
 import subprocess # Kept for lancer_apres, though ideally APRES is also an API call
+from pathlib import Path
 
 # --- Configuration ---
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))

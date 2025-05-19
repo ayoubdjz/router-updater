@@ -5,7 +5,6 @@ import json
 import AVANT_API # Import your refactored avant script
 import APRES_API # Import your refactored apres script
 from netmiko import ConnectHandler # For quick connection test
-from pathlib import Path
 
 app = Flask(__name__)
 CORS(app) # Allow all origins for simplicity in dev
