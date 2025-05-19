@@ -1,0 +1,77 @@
+Informations de base du routeur (APRES):
+  Hostname: inconnu
+  Modèle: vmx
+  Version Junos: 14.1R4.8
+
+--- Collecte APRES étendue ---
+
+Informations du moteur de routage (APRES):
+Routing Engine status:
+    DRAM                      2048 MB (2048 MB installed)
+    Memory utilization          40 percent
+    CPU utilization:
+      User                       2 percent
+      Background                 0 percent
+      Kernel                     3 percent
+      Interrupt                  5 percent
+      Idle                      91 percent
+    Model                          RE-VMX
+    Serial ID                      VM5543516AC4
+    Start time                     2025-05-19 12:21:31 UTC
+    Uptime                         2 hours, 20 minutes, 34 seconds
+    Last reboot reason             0x10:misc hardware reason 
+    Load averages:                 1 minute   5 minute  15 minute
+                                       0.24       0.08       0.02
+
+
+Informations sur les interfaces (APRES):
+--- TERSE (APRES) ---
+Interface               Admin Link Proto    Local                 Remote
+ge-0/0/0                up    up
+ge-0/0/0.0              up    up   inet     192.168.186.2/24
+                                   multiservice
+lc-0/0/0                up    up
+lc-0/0/0.32769          up    up   vpls    
+pfe-0/0/0               up    up
+pfe-0/0/0.16383         up    up   inet    
+                                   inet6   
+pfh-0/0/0               up    up
+pfh-0/0/0.16383         up    up   inet    
+ge-0/0/1                up    up
+ge-0/0/2                up    up
+ge-0/0/3                up    up
+ge-0/0/4                up    up
+ge-0/0/5                up    up
+ge-0/0/6                up    up
+ge-0/0/7                up    up
+ge-0/0/8                up    up
+ge-0/0/9                up    up
+cbp0                    up    up
+demux0                  up    up
+dsc                     up    up
+em0                     up    up
+em1                     up    up
+em1.0                   up    up   inet     172.16.0.1/16   
+                                   inet6    fe80::5200:ff:fe01:1/64
+em2                     up    up
+em3                     up    up
+em4                     up    up
+em5                     up    up
+gre                     up    up
+ipip                    up    up
+irb                     up    up
+lo0                     up    up
+lo0.16384               up    up   inet     127.0.0.1           --> 0/0
+lo0.16385               up    up   inet     128.0.0.1           --> 0/0
+                                            128.0.0.4           --> 0/0
+                                   inet6    fe80::200:f:fc00:0
+lo0.32768               up    up  
+lsi                     up    up
+mtun                    up    up
+pimd                    up    up
+pime                    up    up
+pip0                    up    up
+pp0                     up    up
+tap                     up    up
+vtep                    up    up
+

@@ -1,136 +1,125 @@
 import React, { useState } from 'react';
 import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
+import Paper from '@mui/material/Paper';
 import { useAuth } from '../../contexts/AuthContext';
-import { runAvantChecks, unlockRouter } from '../../api/routerApi';
+import { runUpdateProcedure } from '../../api/routerApi';
 import LogDisplay from '../Common/LogDisplay';
-import UpdateRunner from '../Update/UpdateRunner'; // We'll create this
-import ApresRunner from '../Apres/ApresRunner'; // We'll create this
 
-const AvantRunner = () => {
-  const { credentials, sessionData, updateSessionData, logout } = useAuth();
+const UpdateRunner = ({ onUpdateProcessFinished }) => { // Renamed prop for clarity
+  const { credentials, sessionData, updateSession, logout } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
-  const [avantResult, setAvantResult] = useState(null);
+  const [imageFile, setImageFile] = useState(sessionData.lastImageFile || '');
   const [error, setError] = useState('');
   const [logs, setLogs] = useState([]);
+  const [updateRunData, setUpdateRunData] = useState(null);
 
-  const handleRunAvant = async () => {
-    if (!credentials) {
-      setError("Not authenticated. Please login.");
+  const handleRunUpdate = async () => {
+    // ... (validation logic - same as before)
+    if (!credentials || !sessionData.ident_data) {
+      setError("Authentication or AVANT session data missing. Cannot proceed with update.");
       return;
     }
+    if (!imageFile.trim()) {
+      setError("Software image file name (on router) is required.");
+      return;
+    }
+
     setIsLoading(true);
     setError('');
     setLogs([]);
-    setAvantResult(null);
+    setUpdateRunData(null);
+    // updateSession({ updateCompleted: false, updateData: null }); // Reset only specific update flags
 
+    const updatePayload = {
+      ident_data: sessionData.ident_data,
+      password: credentials.password,
+      image_file: imageFile.trim(),
+    };
+
+    let updateSuccess = false;
     try {
-      const response = await runAvantChecks(credentials);
+      const response = await runUpdateProcedure(updatePayload);
       setLogs(response.data.logs || []);
       if (response.data.status === 'success') {
-        setAvantResult(response.data);
-        updateSessionData({ // Save crucial data for subsequent steps
-          ident_data: response.data.ident_data,
-          lock_file_path: response.data.lock_file_path, // from ident_data.lock_file_path
-          avant_file_path: response.data.avant_file_path,
-          config_file_path: response.data.config_file_path,
-          avantCompleted: true,
-          updateCompleted: false, // Reset update status
-          apresCompleted: false   // Reset apres status
+        setUpdateRunData(response.data);
+        updateSession({ 
+          updateCompleted: true, // Mark as completed
+          updateData: response.data.updated_junos_info || null,
+          lastImageFile: imageFile.trim()
         });
-        setError(''); // Clear previous errors
+        setError('');
+        updateSuccess = true;
       } else {
-        setError(response.data.message || 'AVANT checks failed.');
-        setAvantResult(null); // Clear previous successful result
-        updateSessionData({ avantCompleted: false });
+        setError(response.data.message || 'Update procedure failed.');
+        updateSession({ updateCompleted: false }); // Explicitly mark as not completed on failure
       }
     } catch (err) {
-      const errorMsg = err.response?.data?.message || err.message || 'An error occurred during AVANT checks.';
+      const errorMsg = err.response?.data?.message || err.message || 'An error occurred during update.';
       setError(errorMsg);
-      setLogs(prevLogs => [...prevLogs, `Error: ${errorMsg}`, ...(err.response?.data?.logs || [])]);
-      setAvantResult(null);
-      updateSessionData({ avantCompleted: false });
-      if(err.response?.status === 401 || err.response?.status === 403) { // Example: if API returns these for auth issues
-          logout(); // Force logout if auth seems to be the problem
+      const errLogs = err.response?.data?.logs || [];
+      setLogs(prevLogs => [...prevLogs, `Error: ${errorMsg}`, ...errLogs]);
+      updateSession({ updateCompleted: false });
+      if(err.response?.status === 401 || err.response?.status === 403) {
+        logout();
       }
     } finally {
       setIsLoading(false);
+      if (onUpdateProcessFinished) onUpdateProcessFinished(updateSuccess); // Notify parent process is done
     }
   };
-
-  const handleUnlock = async () => {
-    if (!sessionData.lock_file_path) {
-        setError("No lock file path found in session to unlock.");
-        return;
-    }
-    setIsLoading(true);
-    setError('');
-    try {
-        await unlockRouter(sessionData.lock_file_path);
-        setLogs(prev => [...prev, `Attempted to unlock router with lock file: ${sessionData.lock_file_path}`]);
-        updateSessionData({ lock_file_path: null, avantCompleted: false, updateCompleted: false, apresCompleted: false }); // Clear lock path and statuses
-        setAvantResult(null); // Clear previous results
-    } catch (err) {
-        const errorMsg = err.response?.data?.message || err.message || 'Failed to unlock router.';
-        setError(errorMsg);
-        setLogs(prevLogs => [...prevLogs, `Error unlocking: ${errorMsg}`]);
-    } finally {
-        setIsLoading(false);
-    }
-  };
-
+  
+  // Only show if AVANT is done, and update has been chosen, but not yet completed
+  if (!sessionData.avantCompleted || !sessionData.updateAttempted || sessionData.updateCompleted) {
+    return null;
+  }
 
   return (
-    <Box sx={{ my: 2, p: 2, border: '1px solid lightgray', borderRadius: 1 }}>
-      <Typography variant="h5">1. Pre-Checks (AVANT)</Typography>
+    <Paper elevation={2} sx={{ my: 2, p: 3, backgroundColor: '#fff9c4' /* Light yellow to indicate active step */ }}>
+      <Typography variant="h5" gutterBottom>Step 2: Software Update Configuration</Typography>
       {error && <Alert severity="error" sx={{my:1}}>{error}</Alert>}
+      <TextField
+        label="Software Image File Name (on router's /var/tmp/)"
+        variant="outlined"
+        fullWidth
+        value={imageFile}
+        onChange={(e) => setImageFile(e.target.value)}
+        sx={{ my: 2 }}
+        disabled={isLoading || sessionData.updateCompleted}
+        helperText="Example: jinstall-ppc-VERSION-signed.tgz"
+      />
       <Button
         variant="contained"
-        onClick={handleRunAvant}
-        disabled={isLoading || sessionData.avantCompleted}
-        sx={{ mr: 1, my:1 }}
+        color="secondary"
+        onClick={handleRunUpdate}
+        disabled={isLoading || !imageFile.trim() || !sessionData.avantCompleted || sessionData.updateCompleted}
       >
-        {isLoading ? <CircularProgress size={24} /> : 'Run AVANT Checks'}
+        {isLoading ? <CircularProgress size={24} sx={{color: 'white'}} /> : 'Run Software Update'}
       </Button>
-       {sessionData.lock_file_path && (
-           <Button
-            variant="outlined"
-            color="warning"
-            onClick={handleUnlock}
-            disabled={isLoading}
-            sx={{my:1}}
-           >
-             {isLoading ? <CircularProgress size={24} /> : 'Force Unlock Router & Reset'}
-           </Button>
-       )}
 
-      <LogDisplay logs={logs} title="AVANT Execution Logs" />
+      <LogDisplay logs={logs} title="Update Execution Logs" />
 
-      {avantResult && avantResult.status === 'success' && (
-        <Box sx={{my:1}}>
-          <Alert severity="success">AVANT checks completed successfully!</Alert>
-          <Typography variant="body2" sx={{mt:1}}>
-            AVANT File: {avantResult.avant_file_path}<br />
-            Config File: {avantResult.config_file_path}<br />
-            Lock File: {avantResult.lock_file_path}
-          </Typography>
+      {sessionData.updateCompleted && updateRunData?.status === 'success' && (
+         <Box sx={{my:2}}>
+            <Alert severity="success" icon={false}>Update procedure completed successfully!</Alert>
+            {updateRunData.updated_junos_info && (
+                <Typography variant="body2" sx={{mt:1}}>
+                    New Junos Version (reported): {updateRunData.updated_junos_info.new_junos_version}
+                </Typography>
+            )}
         </Box>
       )}
-
-      {sessionData.avantCompleted && !sessionData.updateCompleted && (
-        <UpdateRunner />
-      )}
-      {sessionData.avantCompleted && sessionData.updateCompleted && !sessionData.apresCompleted && (
-         <ApresRunner />
-      )}
-       {sessionData.avantCompleted && !sessionData.updateCompleted && !sessionData.apresCompleted && ( // Option to run APRES if no UPDATE
-        <ApresRunner allowSkipUpdate={true} />
-      )}
-    </Box>
+       {updateRunData && updateRunData.status !== 'success' && !isLoading && ( // If update was attempted and failed
+          <Alert severity="warning" sx={{my:1}}>
+            The update process encountered an issue. You can review logs and decide to run APRES checks or reset.
+          </Alert>
+        )}
+    </Paper>
   );
 };
 
-export default AvantRunner;
+export default UpdateRunner;

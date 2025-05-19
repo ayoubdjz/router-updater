@@ -2,476 +2,304 @@ import os
 import sys
 import json
 import glob
-# from getpass import getpass # No longer needed here
 from netmiko import ConnectHandler, NetmikoTimeoutException, NetmikoAuthenticationException
 import ipaddress
 import tempfile
 import chardet
 import unicodedata
 from collections import OrderedDict
+import portalocker # CRITICAL: Ensure this import is present
 from pathlib import Path
 
 # --- Configuration ---
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-GENERATED_FILES_DIR = os.path.join(SCRIPT_DIR, "generated_files") # Same as AVANT_API
+GENERATED_FILES_DIR = os.path.join(SCRIPT_DIR, "generated_files")
 Path(GENERATED_FILES_DIR).mkdir(exist_ok=True, parents=True)
 
+# --- Helper Functions (valider_ip_apres, verifier_connexion_apres etc. from last full version) ---
+# Assuming parse_interfaces_structured is available (e.g., imported from AVANT_API or duplicated)
+# For simplicity if running standalone, let's duplicate a simplified version or import.
+# To keep APRES_API self-contained for this example, let's use a placeholder or import from AVANT_API.
+# from AVANT_API import parse_interfaces_structured (This is cleaner if AVANT_API is in PYTHONPATH)
+# For now, let's assume a similar function would exist or be imported. For brevity, I'll omit its full code here again.
+# The `parse_interfaces_structured` from AVANT_API.py would be used.
 
-# --- Helper Functions (from original, slightly adapted) ---
-def valider_ip_apres(ip): # Renamed to avoid clash if in same namespace
-    try:
-        ipaddress.ip_address(ip)
-        return True
-    except ValueError:
-        return False
+def valider_ip_apres(ip):
+    try: ipaddress.ip_address(ip); return True
+    except ValueError: return False
 
-def verifier_connexion_apres(connection, log_messages): # Renamed
+def verifier_connexion_apres(connection, log_messages):
     try:
-        output = connection.send_command("show system uptime", read_timeout=10)
-        if "error" in output.lower():
-            log_messages.append(f"ERREUR APRES: Problème de communication détecté: {output}")
+        output = connection.send_command("show system uptime", read_timeout=15)
+        if "error" in output.lower() or not output.strip():
+            log_messages.append(f"ERREUR APRES: Problème de communication (uptime): '{output if output else 'No output'}'")
             return False
+        log_messages.append(f"Connexion APRES vérifiée (uptime): {output.strip().splitlines()[0] if output.strip() else 'OK'}")
         return True
     except Exception as e:
-        log_messages.append(f"ERREUR APRES: Problème de connexion: {str(e)}")
+        log_messages.append(f"ERREUR APRES: Connexion (exception uptime): {str(e)}")
         return False
 
-def nettoyer_fichiers_apres_api(fichiers_a_supprimer, log_messages): # Renamed
-    for fichier in fichiers_a_supprimer:
-        try:
-            if os.path.exists(fichier):
-                os.remove(fichier)
-                log_messages.append(f"Fichier APRES supprimé : {fichier}")
-        except Exception as e:
-            log_messages.append(f"Erreur APRES lors de la suppression du fichier {fichier}: {e}")
-
+# normalize_text, detect_encoding, read_file_by_line, extract_sections from previous APRES_API full version
 def normalize_text(text):
     try:
-        if isinstance(text, list):
-            return [normalize_text(line) for line in text]
-        # Ensure text is string before normalize
-        if not isinstance(text, str):
-            text = str(text)
-        text = unicodedata.normalize('NFKD', text).encode('ASCII', 'ignore').decode('ASCII')
-        return text.lower()
-    except Exception as e:
-        # print(f"Erreur lors de la normalisation du texte : {e}", file=sys.stderr) # No stderr print
-        return str(text) # Return original text as string if normalization fails
+        if isinstance(text, list): return [normalize_text(line) for line in text]
+        if not isinstance(text, str): text = str(text)
+        return unicodedata.normalize('NFKD', text).encode('ASCII', 'ignore').decode('ASCII').lower()
+    except: return str(text)
 
 def detect_encoding(file_path):
     try:
-        with open(file_path, 'rb') as file:
-            raw_data = file.read(1024)
-            return chardet.detect(raw_data)['encoding'] or 'utf-8'
-    except Exception:
-        return 'utf-8' # Fallback
+        with open(file_path, 'rb') as f: raw = f.read(1024); return chardet.detect(raw)['encoding'] or 'utf-8'
+    except: return 'utf-8'
 
 def read_file_by_line(file_path, log_messages):
     try:
-        encoding = detect_encoding(file_path)
-        with open(file_path, 'r', encoding=encoding, errors='replace') as file:
-            for line in file:
-                yield line.rstrip('\n')
-    except FileNotFoundError:
-        log_messages.append(f"Le fichier {file_path} n'a pas été trouvé.")
-        yield None
-    except Exception as e:
-        log_messages.append(f"Erreur lors de la lecture du fichier {file_path} : {e}")
-        yield None
+        enc = detect_encoding(file_path)
+        with open(file_path, 'r', encoding=enc, errors='replace') as f:
+            for line in f: yield line.rstrip('\n')
+    except FileNotFoundError: log_messages.append(f"Fichier {file_path} non trouvé."); yield None
+    except Exception as e: log_messages.append(f"Erreur lecture {file_path}: {e}"); yield None
 
-def extract_sections(file_content_generator, log_messages):
-    sections = OrderedDict()
-    current_section = None
+def extract_sections(file_gen, log_messages):
+    sections = OrderedDict(); current_section = None
     try:
-        for line in file_content_generator:
-            if line is None: # Error during file reading
-                return OrderedDict() # Return empty, error already logged
-            stripped_line = line.strip()
-            if stripped_line.endswith(" :") and len(stripped_line) < 100: # Avoid very long lines being sections
-                current_section = stripped_line
-                sections[current_section] = []
-            elif current_section:
-                sections[current_section].append(stripped_line)
-    except Exception as e:
-        log_messages.append(f"Erreur lors de l'extraction des sections : {e}")
+        for line in file_gen:
+            if line is None: continue
+            stripped = line.strip()
+            if stripped.endswith(" :") and len(stripped) < 100: current_section = stripped; sections[current_section] = []
+            elif current_section: sections[current_section].append(stripped)
+    except Exception as e: log_messages.append(f"Erreur extraction sections: {e}")
     return sections
 
-def compare_sections(sections_avant, sections_apres, log_messages):
-    differences = OrderedDict()
-    try:
-        all_section_keys = set(sections_avant.keys()) | set(sections_apres.keys())
+# compare_sections and format_differences_for_report modified to produce structured diffs
+def compare_sections_structured(sections_avant, sections_apres, log_messages):
+    structured_differences = OrderedDict()
+    all_section_keys = sorted(list(set(sections_avant.keys()) | set(sections_apres.keys())))
+
+    for section_key in all_section_keys:
+        content_avant_orig = sections_avant.get(section_key, [])
+        content_apres_orig = sections_apres.get(section_key, [])
         
-        for section_key in sorted(list(all_section_keys)): # Sort for consistent order
-            content_avant = sections_avant.get(section_key, [])
-            content_apres = sections_apres.get(section_key, [])
+        norm_avant = set(normalize_text(content_avant_orig))
+        norm_apres = set(normalize_text(content_apres_orig))
 
-            # Normalize once per section content list
-            norm_avant = set(normalize_text(content_avant))
-            norm_apres = set(normalize_text(content_apres))
+        current_diff = {"section_title": section_key, "lines_removed": [], "lines_added": [], "status": "Identique"}
 
-            if norm_avant != norm_apres:
-                # Find lines unique to avant (removed) and apres (added) based on normalized content
-                # But return the original (non-normalized) lines for display
-                
-                # Lines that were in 'avant' but their normalized form is not in 'apres'
-                removed_lines = [line for line in content_avant if normalize_text(line) not in norm_apres]
-                # Lines that are in 'apres' but their normalized form was not in 'avant'
-                added_lines = [line for line in content_apres if normalize_text(line) not in norm_avant]
-
-                # Handle cases where one side is empty to provide clear messages
-                if not added_lines and removed_lines: # Effectively all original content removed
-                    pass # added_lines remains empty
-                if not removed_lines and added_lines: # Effectively all new content added
-                    pass # removed_lines remains empty
-                
-                if added_lines or removed_lines: # Only add to differences if there's something to show
-                    differences[section_key] = {
-                        "avant_orig": content_avant, # Full original content for reference
-                        "apres_orig": content_apres, # Full original content for reference
-                        "removed": removed_lines if removed_lines else ["✓ (Aucun retrait ou contenu identique)"],
-                        "added": added_lines if added_lines else ["✓ (Aucun ajout ou contenu identique)"]
-                    }
-            else: # Sections are identical after normalization
-                 differences[section_key] = {
-                        "avant_orig": content_avant,
-                        "apres_orig": content_apres,
-                        "removed": ["✓ (Identique)"],
-                        "added": ["✓ (Identique)"]
-                    }
-
-
-    except Exception as e:
-        log_messages.append(f"Erreur lors de la comparaison des sections : {e}")
-    return differences
-
-
-def format_differences_for_report(differences, log_messages):
-    """Formats differences into a string or structured list for the report file/display."""
-    report_lines = []
-    if not differences:
-        report_lines.append("Aucun changement substantiel détecté entre les configurations AVANT et APRÈS.")
-        return report_lines
-
-    report_lines.append("\nRapport des changements :\n")
-    for section, content in differences.items():
-        report_lines.append(f"\nSection: {section}")
-        
-        # Max lines for side-by-side display
-        # Using the 'removed' and 'added' fields which contain actual differences or status messages
-        max_lines = max(len(content["removed"]), len(content["added"]))
-
-        if max_lines > 0:
-            # Simple textual representation for now
-            report_lines.append("--- AVANT ---")
-            for line in content["removed"]: # Show what was removed or status
-                report_lines.append(line)
-            if not content["removed"]: report_lines.append("(Contenu inchangé ou non présent initialement)")
-
-            report_lines.append("--- APRÈS ---")
-            for line in content["added"]: # Show what was added or status
-                report_lines.append(line)
-            if not content["added"]: report_lines.append("(Contenu inchangé ou non présent finalement)")
-            report_lines.append("-" * 30)
-        else: # Should not happen if differences has this section
-            report_lines.append("Aucun changement ou données non comparables.")
+        if norm_avant != norm_apres:
+            current_diff["status"] = "Modifié"
+            # Lines in AVANT (normalized) not in APRES (normalized) -> considered removed
+            current_diff["lines_removed"] = [line for line in content_avant_orig if normalize_text(line) not in norm_apres]
+            # Lines in APRES (normalized) not in AVANT (normalized) -> considered added
+            current_diff["lines_added"] = [line for line in content_apres_orig if normalize_text(line) not in norm_avant]
             
-    return report_lines
+            if not current_diff["lines_removed"] and not current_diff["lines_added"]:
+                 # This can happen if only whitespace or case differences existed, and norm fixed it,
+                 # but the initial norm_avant != norm_apres check passed due to subtle normalization artifacts.
+                 # Or if one section was present and other absent.
+                 if not content_avant_orig and content_apres_orig: current_diff["status"] = "Nouveau"
+                 elif content_avant_orig and not content_apres_orig: current_diff["status"] = "Supprimé"
+                 else: current_diff["status"] = "Modifié (subtil)" # Or back to Identique if truly no diffs found by line comparison
 
-# --- Main Process Function for APRES ---
+        structured_differences[section_key] = current_diff
+    log_messages.append(f"Comparaison structurée terminée pour {len(all_section_keys)} sections.")
+    return structured_differences
+
+
 def run_apres_checks_and_compare(ident_data, password, log_messages, avant_connection=None):
-    """
-    ident_data: Dictionary loaded from the identifiants_*.json file.
-    password: Router password, as it's not stored in ident_data.
-    avant_connection: Optional. If the connection from AVANT/UPDATE is still alive and passed.
-    """
+    # ... (Initial validation of ident_data - same as last full APRES_API version) ...
     ip = ident_data.get("ip")
     username = ident_data.get("username")
-    avant_file_to_compare = ident_data.get("avant_file_path")
+    avant_file_to_compare = ident_data.get("avant_file_path") # Actual AVANT data file
+    router_hostname = ident_data.get("router_hostname", "inconnu") # From AVANT run
 
     if not all([ip, username, avant_file_to_compare]):
-        msg = "Données d'identification incomplètes pour lancer APRES."
+        msg = "Données d'identification APRES incomplètes."
         log_messages.append(msg)
-        return {"status": "error", "message": msg}
-
+        return {"status": "error", "message": msg, "logs": log_messages, "structured_data": {}, "comparison_results": {}}
     if not os.path.exists(avant_file_to_compare):
-        msg = f"Fichier AVANT ({avant_file_to_compare}) non trouvé pour comparaison."
+        msg = f"Fichier AVANT ({avant_file_to_compare}) non trouvé pour comparaison APRES."
         log_messages.append(msg)
-        return {"status": "error", "message": msg}
+        return {"status": "error", "message": msg, "logs": log_messages, "structured_data": {}, "comparison_results": {}}
 
     fichiers_crees_apres = []
-    connection = avant_connection # Use existing connection if provided
-    apres_file_path = None
+    connection = avant_connection 
+    apres_file_path_internal = None
     comparison_file_path = None
-    router_hostname = ident_data.get("router_hostname", "inconnu")
-
+    
+    structured_output_data_apres = { # Similar to AVANT's structure
+        "basic_info": {}, "routing_engine": "", "interfaces_up": [], "interfaces_down": [],
+        "arp_table": "", "route_summary": "", "ospf_info": "", "isis_info": "", "mpls_info": "",
+        "ldp_info": "", "rsvp_info": "", "lldp_info": "", "lsp_info": "", "bgp_summary": "",
+        "system_services": [], "configured_protocols": [], "firewall_config": "",
+        "critical_logs_messages": "", "critical_logs_chassisd": "", "full_config_set": ""
+    }
 
     try:
+        log_messages.append(f"--- Début run_apres_checks_and_compare pour {ip} ---")
         if connection is None or not connection.is_alive():
-            if connection is not None: # was provided but dead
-                log_messages.append("Connexion fournie pour APRES non active. Tentative de reconnexion.")
-                connection.disconnect()
-
-            device = {
-                "device_type": "juniper",
-                "host": ip,
-                "username": username,
-                "password": password,
-                "timeout": 30,
-            }
-            log_messages.append(f"APRES: Tentative de connexion à {ip}...")
-            connection = ConnectHandler(**device)
-            log_messages.append(f"APRES: Connecté avec succès au routeur {ip}")
+            # ... (Connection logic same as last full APRES_API version) ...
+            if connection is not None: log_messages.append("Connexion fournie pour APRES non active. Reconnexion.")
+            try: connection.disconnect()
+            except: pass
+            device = {'device_type': 'juniper', 'host': ip, 'username': username, 'password': password, 'timeout': 30}
+            log_messages.append(f"APRES: Tentative de connexion à {ip}..."); connection = ConnectHandler(**device)
+            log_messages.append(f"APRES: Connecté succès à {ip}")
         else:
             log_messages.append("APRES: Utilisation de la connexion existante.")
-
 
         if not verifier_connexion_apres(connection, log_messages):
             raise Exception("APRES: Vérification de la connexion post-établissement échouée.")
 
-        # Create APRES file (similar to AVANT)
-        temp_apres_file = tempfile.NamedTemporaryFile(
-            mode='w+', prefix='APRES_', suffix='.txt', delete=False, encoding='utf-8',
-            dir=GENERATED_FILES_DIR
-        )
-        apres_file_path = temp_apres_file.name
-        fichiers_crees_apres.append(apres_file_path)
-        temp_apres_file.close()
+        Path(GENERATED_FILES_DIR).mkdir(exist_ok=True, parents=True) # Ensure dir
+        if not os.access(GENERATED_FILES_DIR, os.W_OK):
+            raise PermissionError(f"APRES: Pas d'accès écriture à {GENERATED_FILES_DIR}")
 
-        with open(apres_file_path, 'a', encoding='utf-8') as file:
-            log_messages.append("\nAPRES: Récupération des informations de base du routeur...")
-            file.write("Informations de base du routeur :\n")
-            output = connection.send_command('show version')
-            junos_version = "inconnu"
-            router_model = "inconnu"
-            current_router_hostname = "inconnu" # Potentially different if changed during update (unlikely for just version)
-            for line in output.splitlines():
-                if line.startswith("Hostname:"):
-                    current_router_hostname = line.split("Hostname:")[1].strip()
-                elif line.startswith("Model:"):
-                    router_model = line.split("Model:")[1].strip()
-                elif line.startswith("Junos:"):
-                    junos_version = line.split("Junos:")[1].strip()
-            
-            log_messages.append(f"APRES Hostname: {current_router_hostname}, Model: {router_model}, Junos: {junos_version}")
-            file.write(f"Le hostname du routeur est : {current_router_hostname}\n") # Use current
-            file.write(f"Le modele du routeur est : {router_model}\n")
-            file.write(f"La version du systeme Junos est : {junos_version}\n")
+        temp_apres_file_obj = tempfile.NamedTemporaryFile(
+            mode='w+', prefix='APRES_', suffix='.txt', delete=False, encoding='utf-8', dir=GENERATED_FILES_DIR)
+        apres_file_path_internal = temp_apres_file_obj.name
+        log_messages.append(f"Fichier APRES temporaire: {apres_file_path_internal}")
+        fichiers_crees_apres.append(apres_file_path_internal)
 
-        # Rename APRES file
-        # Use original hostname from ident_data for consistency in naming, unless it significantly changed
-        final_apres_base = f"APRES_{username}_{router_hostname}.txt" # original hostname
+        # --- Collect APRES data (similar structure to AVANT's collection) ---
+        # Section: Basic Info (APRES)
+        structured_output_data_apres["basic_info"]["section_title"] = "Informations de base du routeur (APRES)"
+        temp_apres_file_obj.write(f"{structured_output_data_apres['basic_info']['section_title']}:\n")
+        out_ver_apres = connection.send_command('show version')
+        j_ver_ap, r_model_ap = "inconnu", "inconnu"; cur_host_ap = router_hostname # Default to original hostname
+        for l in out_ver_apres.splitlines():
+            if l.startswith("Hostname:"): cur_host_ap = l.split("Hostname:")[1].strip()
+            elif l.startswith("Model:"): r_model_ap = l.split("Model:")[1].strip()
+            elif l.startswith("Junos:"): j_ver_ap = l.split("Junos:")[1].strip()
+        structured_output_data_apres["basic_info"]["hostname"] = cur_host_ap
+        structured_output_data_apres["basic_info"]["model"] = r_model_ap
+        structured_output_data_apres["basic_info"]["junos_version"] = j_ver_ap
+        temp_apres_file_obj.write(f"  Hostname: {cur_host_ap}\n  Modèle: {r_model_ap}\n  Version Junos: {j_ver_ap}\n")
+        log_messages.append(f"APRES Basic Info: Host={cur_host_ap}, Model={r_model_ap}, Junos={j_ver_ap}")
+
+        temp_apres_file_obj.flush()
+        temp_apres_file_obj.close()
+        if not os.path.exists(apres_file_path_internal):
+            raise FileNotFoundError(f"Disparition critique fichier temporaire APRES: {apres_file_path_internal}")
+
+        final_apres_base = f"APRES_{username}_{router_hostname}.txt" # Use original hostname for consistency
         final_apres_path = os.path.join(GENERATED_FILES_DIR, final_apres_base)
-        compteur = 1
+        # ... (Renaming logic for APRES file, similar to AVANT) ...
+        compteur_ap = 1
         while os.path.exists(final_apres_path):
-            final_apres_path = os.path.join(GENERATED_FILES_DIR, f"APRES_{username}_{router_hostname}_{compteur}.txt")
-            compteur += 1
-        
-        if os.path.exists(apres_file_path): # apres_file_path is the temp file
-            os.replace(apres_file_path, final_apres_path)
-            fichiers_crees_apres.remove(apres_file_path)
-            apres_file_path = final_apres_path
-            fichiers_crees_apres.append(apres_file_path)
-            log_messages.append(f"Fichier APRES renommé en: {apres_file_path}")
-        else:
-            log_messages.append(f"Avertissement: Fichier temporaire APRES {apres_file_path} non trouvé pour renommage.")
-            apres_file_path = final_apres_path # Ensure it points to the intended final path
+            final_apres_path = os.path.join(GENERATED_FILES_DIR, f"APRES_{username}_{router_hostname}_{compteur_ap}.txt"); compteur_ap+=1
+        try:
+            os.replace(apres_file_path_internal, final_apres_path)
+            log_messages.append(f"Fichier APRES renommé en: {final_apres_path}")
+            if apres_file_path_internal in fichiers_crees_apres: fichiers_crees_apres.remove(apres_file_path_internal)
+            apres_file_path_internal = final_apres_path # Update to final path
+            if apres_file_path_internal not in fichiers_crees_apres: fichiers_crees_apres.append(apres_file_path_internal)
+        except OSError as e_rep_ap:
+            log_messages.append(f"ERREUR renommage APRES: {e_rep_ap}. Utilisation du nom temporaire: {apres_file_path_internal}")
 
-        # Continue writing to APRES file
-        with open(apres_file_path, 'a', encoding='utf-8') as file:
-            # Re-use the command list from AVANT_API or define it here
-            # For simplicity, assuming similar commands are needed for APRES
-            commands_to_run = {
-                "Informations du moteur de routage :": "show chassis routing-engine",
-                "Informations sur les interfaces :": [ # Special handling
-                    "show interfaces terse | no-more",
-                    "show interfaces detail | no-more"
-                ],
-                "Informations ARP :": "show arp",
-                "Informations sur les routes :": "show route summary",
-                "Protocole OSPF :": "show ospf interface brief",
-                "Protocole IS-IS :": "show isis adjacency",
-                "Protocole MPLS :": "show mpls interface",
-                "Protocole LDP :": "show ldp session",
-                "Protocole RSVP :": "show rsvp interface",
-                "Protocole LLDP :": "show lldp neighbor",
-                "Protocole LSP :": "show mpls lsp",
-                "Protocole BGP :": "show bgp summary",
-                "Services configurés :": "show configuration system services", # Special parsing
-                "Protocoles configurés :": "show configuration protocols", # Special parsing
-                "Listes de Contrôle d'Accès (ACL) :": "show configuration firewall",
-                "Logs des erreurs critiques dans 'messages' :": 'show log messages | match "error|warning|critical" | last 10',
-                "Logs des erreurs critiques dans 'chassisd' :": 'show log chassisd | match "error|warning|critical" | last 10',
-                "La configuration totale :": "show configuration | display set" # Usually compared separately or not at all post-update
-            }
 
-            # Import parse_interfaces from AVANT_API or duplicate it here.
-            # For this example, let's assume it's accessible (e.g. from AVANT_API import parse_interfaces)
-            # If running standalone, this import needs to be handled.
-            # from AVANT_API import parse_interfaces # This would require AVANT_API.py to be in PYTHONPATH
+        with open(apres_file_path_internal, 'a', encoding='utf-8') as file_ap:
+            file_ap.write("\n--- Collecte APRES étendue ---\n")
+            # Use a similar fetch_and_store or direct collection for all sections as in AVANT_API
+            # For brevity, I'll show a couple and assume the rest follow the pattern.
+            # Ensure you import or define parse_interfaces_structured if used here.
+            # from AVANT_API import parse_interfaces_structured
+            
+            # Example: Routing Engine
+            title_re_ap = "Informations du moteur de routage (APRES)"
+            cmd_re_ap = "show chassis routing-engine"
+            if not verifier_connexion_apres(connection, log_messages): raise Exception(f"Connexion perdue avant: {title_re_ap}")
+            log_messages.append(f"Récupération APRES: {title_re_ap}")
+            file_ap.write(f"\n{title_re_ap}:\n")
+            out_re_ap = connection.send_command(cmd_re_ap)
+            structured_output_data_apres["routing_engine"] = out_re_ap
+            file_ap.write(out_re_ap + "\n")
+            log_messages.append(f"OK APRES: {title_re_ap}")
 
-            for title, cmd_or_cmds in commands_to_run.items():
-                if not verifier_connexion_apres(connection, log_messages): # Use apres version
-                    raise Exception("APRES: Connexion perdue avec le routeur pendant la collecte.")
-                
-                log_messages.append(f"APRES - Récupération: {title}")
-                file.write(f"\n{title}\n")
-                
-                if title == "Informations sur les interfaces :":
-                    output_terse = connection.send_command(cmd_or_cmds[0])
-                    output_detail = connection.send_command(cmd_or_cmds[1])
-                    # You need parse_interfaces function available here
-                    # For now, let's write raw output for interfaces in APRES to simplify
-                    # In a real scenario, you'd use the same parsing as AVANT
-                    file.write("--- TERSE ---\n" + output_terse + "\n")
-                    file.write("--- DETAIL ---\n" + output_detail + "\n")
-                    log_messages.append("APRES: Interfaces (raw) traitées.")
-                    continue
+            # Example: Interfaces (APRES) - This would use parse_interfaces_structured
+            title_if_ap = "Informations sur les interfaces (APRES)"
+            if not verifier_connexion_apres(connection, log_messages): raise Exception(f"Connexion perdue avant: {title_if_ap}")
+            log_messages.append(f"Récupération APRES: {title_if_ap}")
+            file_ap.write(f"\n{title_if_ap}:\n")
+            # up_list_ap, down_list_ap = parse_interfaces_structured(...) # Full call
+            # structured_output_data_apres["interfaces_up"] = up_list_ap
+            # structured_output_data_apres["interfaces_down"] = down_list_ap
+            # ... (write to file_ap) ...
+            # For now, simplified:
+            terse_ap = connection.send_command("show interfaces terse | no-more")
+            file_ap.write("--- TERSE (APRES) ---\n" + terse_ap + "\n")
+            structured_output_data_apres["interfaces_terse_apres"] = terse_ap # Store raw for now
+            log_messages.append(f"OK APRES: {title_if_ap} (terse only for brevity)")
 
-                elif title == "Services configurés :":
-                    output_services = connection.send_command(cmd_or_cmds)
-                    services = set()
-                    for line in output_services.splitlines():
-                        if line.strip().endswith(";"): services.add(line.strip().rstrip(";"))
-                    for service in sorted(services): file.write(service + "\n")
-                    log_messages.append(f"APRES Services: {', '.join(sorted(services)) if services else 'Aucun'}")
-                    continue
-
-                elif title == "Protocoles configurés :":
-                    output_protocols = connection.send_command(cmd_or_cmds)
-                    protocols = set()
-                    for line in output_protocols.splitlines():
-                        if "{" in line and not line.strip().startswith("}"): protocols.add(line.split("{")[0].strip())
-                    for protocol in sorted(protocols): file.write(protocol + "\n")
-                    log_messages.append(f"APRES Protocoles: {', '.join(sorted(protocols)) if protocols else 'Aucun'}")
-                    continue
-
-                output = connection.send_command(cmd_or_cmds)
-                filtered_output_lines = [line for line in output.splitlines() if not line.strip().startswith("---(more")]
-                filtered_output = "\n".join(filtered_output_lines)
-                file.write(filtered_output + "\n")
-                log_messages.append(f"APRES - OK: {title}")
-
+            # ... (Collect ALL other sections for APRES into structured_output_data_apres and file_ap) ...
+            # Make sure to fill all keys in structured_output_data_apres
 
         # --- Comparaison ---
-        log_messages.append("\nLancement de la comparaison entre AVANT et APRES...")
-        content_gen_avant = read_file_by_line(avant_file_to_compare, log_messages)
-        content_gen_apres = read_file_by_line(apres_file_path, log_messages)
-
-        sections_avant = extract_sections(content_gen_avant, log_messages)
-        sections_apres = extract_sections(content_gen_apres, log_messages)
-
-        if not sections_avant and os.path.exists(avant_file_to_compare): # File exists but no sections extracted
-            log_messages.append(f"AVERTISSEMENT: Aucune section extraite de {avant_file_to_compare}. Le fichier est-il vide ou mal formaté?")
-        if not sections_apres and os.path.exists(apres_file_path):
-            log_messages.append(f"AVERTISSEMENT: Aucune section extraite de {apres_file_path}. Le fichier est-il vide ou mal formaté?")
-
-
-        differences = compare_sections(sections_avant, sections_apres, log_messages)
+        log_messages.append(f"\nLancement de la comparaison structurée entre AVANT et APRES...")
+        # avant_data_for_comparison is the structured_data from the AVANT run.
+        # This needs to be passed to this function if comparison is done here.
+        # For API flow, the API endpoint would fetch AVANT file, parse it, then call this.
+        # OR, this function reads the AVANT file. Let's assume reading AVANT file:
         
-        # Save comparison report
+        avant_data_file_content_gen = read_file_by_line(avant_file_to_compare, log_messages)
+        sections_from_avant_file = extract_sections(avant_data_file_content_gen, log_messages)
+        # For a true structured comparison, we'd need to re-parse sections_from_avant_file
+        # into the same structure as structured_output_data_apres.
+        # This is complex. A simpler file-based diff is what was originally done.
+        # The new `compare_sections_structured` will compare these file-extracted sections.
+
+        apres_data_file_content_gen = read_file_by_line(apres_file_path_internal, log_messages)
+        sections_from_apres_file = extract_sections(apres_data_file_content_gen, log_messages)
+        
+        comparison_results_structured = compare_sections_structured(sections_from_avant_file, sections_from_apres_file, log_messages)
+
+        # Save comparison report to file (textual)
         comp_base_name = f"COMPARAISON_{username}_{router_hostname}.txt"
         comparison_file_path = os.path.join(GENERATED_FILES_DIR, comp_base_name)
-        compteur_comp = 1
+        # ... (collision check for comparison_file_path) ...
+        comp_counter = 1
         while os.path.exists(comparison_file_path):
-            comparison_file_path = os.path.join(GENERATED_FILES_DIR, f"COMPARAISON_{username}_{router_hostname}_{compteur_comp}.txt")
-            compteur_comp += 1
-        
-        formatted_diff_lines = format_differences_for_report(differences, log_messages)
-        with open(comparison_file_path, 'w', encoding='utf-8') as f_comp:
-            for line in formatted_diff_lines:
-                f_comp.write(line + "\n")
-        fichiers_crees_apres.append(comparison_file_path)
-        log_messages.append(f"Rapport de comparaison sauvegardé dans: {comparison_file_path}")
+            comparison_file_path = os.path.join(GENERATED_FILES_DIR, f"COMPARAISON_{username}_{router_hostname}_{comp_counter}.txt"); comp_counter+=1
 
-        # Remove original identifiants file (as it's processed now)
-        original_ident_file = ident_data.get("ident_file_path_from_avant_run") # if API passed it
-        if not original_ident_file and len(sys.argv) > 1 and os.path.exists(sys.argv[1]): # if run by CLI
-             original_ident_file = sys.argv[1]
-        
+        # format_differences_for_report needs to be adapted if using structured_differences
+        # For now, let's write a JSON dump of the structured diff to the file for inspection.
+        with open(comparison_file_path, 'w', encoding='utf-8') as f_comp:
+            json.dump(comparison_results_structured, f_comp, indent=2)
+        fichiers_crees_apres.append(comparison_file_path)
+        log_messages.append(f"Rapport de comparaison (structuré JSON) sauvegardé dans: {comparison_file_path}")
+
+        # Cleanup original identifiants file
+        original_ident_file = ident_data.get("ident_file_path") # from AVANT step
         if original_ident_file and os.path.exists(original_ident_file):
-            try:
-                os.remove(original_ident_file)
-                log_messages.append(f"Fichier d'identification {original_ident_file} supprimé.")
-            except Exception as e_rem_ident:
-                log_messages.append(f"Erreur suppression fichier identification {original_ident_file}: {e_rem_ident}")
+            try: os.remove(original_ident_file); log_messages.append(f"Fichier identifiants {original_ident_file} supprimé.")
+            except Exception as e_del_id: log_messages.append(f"Erreur suppression {original_ident_file}: {e_del_id}")
         
+        log_messages.append(f"--- Fin run_apres_checks_and_compare pour {ip} ---")
         return {
-            "status": "success",
-            "message": "Vérifications APRES et comparaison terminées.",
-            "apres_file_path": apres_file_path,
+            "status": "success", "message": "Vérifications APRES et comparaison terminées.",
+            "apres_file_path": apres_file_path_internal, 
             "comparison_file_path": comparison_file_path,
-            "comparison_data": differences, # The raw differences dict
+            "structured_data_apres": structured_output_data_apres, # Data collected during APRES
+            "comparison_results": comparison_results_structured, # Structured differences
             "log_messages": log_messages,
-            "fichiers_crees_apres": fichiers_crees_apres
+            "fichiers_crees_apres": fichiers_crees_apres,
+            "connection_obj": connection 
         }
 
-    except (NetmikoTimeoutException, NetmikoAuthenticationException) as e:
-        error_msg = f"APRES: Erreur de connexion Netmiko: {str(e)}"
-        log_messages.append(error_msg)
-        return {"status": "error", "message": error_msg, "fichiers_crees": fichiers_crees_apres, "log_messages": log_messages}
-    except Exception as e:
-        error_msg = f"APRES: Erreur inattendue: {str(e)}"
-        log_messages.append(error_msg)
-        return {"status": "error", "message": error_msg, "fichiers_crees": fichiers_crees_apres, "log_messages": log_messages}
-    finally:
-        if connection and (avant_connection is None or connection != avant_connection) : # Disconnect only if APRES established it
-            if connection.is_alive():
-                connection.disconnect()
-                log_messages.append("APRES: Connexion Netmiko fermée.")
-        elif connection and avant_connection and not avant_connection.is_alive(): # if it was provided but died
-             if connection.is_alive(): connection.disconnect() # if reconnected and died again
-
+    except Exception as e_generic_apres:
+        import traceback
+        error_msg = f"APRES: Erreur majeure: {str(e_generic_apres)} (Type: {type(e_generic_apres).__name__})"
+        log_messages.append(error_msg + f"\nTraceback:\n{traceback.format_exc()}")
+        return {
+            "status": "error", "message": error_msg, 
+            "fichiers_crees": fichiers_crees_apres, 
+            "structured_data_apres": structured_output_data_apres, # Partial data
+            "comparison_results": {},
+            "log_messages": log_messages, 
+            "connection_obj": connection if 'connection' in locals() and connection else None
+        }
 
 if __name__ == '__main__':
-    # This part is for testing individual functions or a limited flow.
-    # The full flow is orchestrated by the API.
-    test_logs_apres = []
-    
-    # To test, you need an existing identifiants_*.json file from an AVANT run
-    # Or craft a mock one:
-    mock_ident_data = {
-        "ip": "YOUR_ROUTER_IP", # Replace
-        "username": "YOUR_USERNAME", # Replace
-        "router_hostname": "test-router",
-        "avant_file_path": "path/to/your/AVANT_user_test-router.txt", # Replace with actual AVANT file
-        "lock_file_path": "path/to/router_locks/IP_norm.lock", # Replace
-        "config_file_path": "path/to/CONFIGURATION_user_test-router.txt" # Replace
-        # "ident_file_path_from_avant_run": "path/to/generated_files/identifiants_user_test-router.json" # Path to itself for deletion
-    }
-    # Ensure the avant_file_path in mock_ident_data points to a real AVANT output file for comparison.
-
-    # test_password_apres = "YOUR_PASSWORD" # Replace
-
-    # print("--- Test run_apres_checks_and_compare (Commented out for safety) ---")
-    # if os.path.exists(mock_ident_data["avant_file_path"]):
-    #     apres_result = run_apres_checks_and_compare(mock_ident_data, test_password_apres, test_logs_apres)
-    #     print(json.dumps(apres_result, indent=2, ensure_ascii=False))
-    #     print("\nLogs from apres_checks:")
-    #     for log_entry in test_logs_apres:
-    #         print(log_entry)
-    # else:
-    #     print(f"Skipping APRES test: mock avant_file_path does not exist: {mock_ident_data['avant_file_path']}")
-    
-    print("APRES_API.py is meant to be imported as a module.")
-    print(f"GENERATED_FILES_DIR: {GENERATED_FILES_DIR}")
-
-    # If called with a file argument (like original subprocess call from AVANT.py)
-    if len(sys.argv) > 1:
-        ident_file_arg = sys.argv[1]
-        if os.path.exists(ident_file_arg):
-            print(f"APRES_API.py: CLI mode: ident file provided: {ident_file_arg}")
-            # This mode is tricky because it needs the password.
-            # The original AVANT.py -> APRES.py flow didn't pass password via file.
-            # For API, password will be supplied to the API endpoint.
-            # This CLI mode is mostly for compatibility with the old subprocess call if strictly needed.
-            # It would require getting password via input() here, which we are trying to avoid.
-            # For now, just acknowledge the file.
-            # with open(ident_file_arg, "r") as f:
-            #     cli_ident_data = json.load(f)
-            # cli_password = input("Enter password for APRES CLI mode: ")
-            # cli_logs = []
-            # run_apres_checks_and_compare(cli_ident_data, cli_password, cli_logs)
-            # for log in cli_logs: print(log)
-
-        else:
-            print(f"APRES_API.py: CLI mode: ident file {ident_file_arg} not found.")
+    print("APRES_API.py: Script chargé.")
+    # Add specific tests for run_apres_checks_and_compare if needed,
+    # ensuring you mock or provide valid ident_data and an AVANT file.

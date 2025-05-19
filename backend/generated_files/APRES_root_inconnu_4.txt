@@ -6,20 +6,20 @@ La version du systeme Junos est : 14.1R4.8
 Informations du moteur de routage :
 Routing Engine status:
     DRAM                      2048 MB (2048 MB installed)
-    Memory utilization          41 percent
+    Memory utilization          43 percent
     CPU utilization:
       User                       2 percent
       Background                 0 percent
-      Kernel                     0 percent
+      Kernel                     2 percent
       Interrupt                  6 percent
-      Idle                      92 percent
+      Idle                      89 percent
     Model                          RE-VMX
     Serial ID                      VM5543516AC4
     Start time                     2025-05-19 12:21:31 UTC
-    Uptime                         1 hour, 41 minutes, 52 seconds
+    Uptime                         8 minutes, 51 seconds
     Last reboot reason             0x10:misc hardware reason 
     Load averages:                 1 minute   5 minute  15 minute
-                                       0.06       0.03       0.00
+                                       0.00       0.09       0.09
 
 Informations sur les interfaces :
 --- TERSE ---
@@ -83,17 +83,17 @@ Physical interface: ge-0/0/0, Enabled, Physical link is Up
   CoS queues     : 8 supported, 8 maximum usable queues
   Hold-times     : Up 0 ms, Down 0 ms
   Current address: 00:05:86:71:0a:00, Hardware address: 00:05:86:71:0a:00
-  Last flapped   : 2025-05-19 12:22:45 UTC (01:40:41 ago)
+  Last flapped   : 2025-05-19 12:22:45 UTC (00:07:38 ago)
   Statistics last cleared: Never
   Traffic statistics:
-   Input  bytes  :               398813                12328 bps
-   Output bytes  :              1597460                78248 bps
-   Input  packets:                 6186                   28 pps
-   Output packets:                10142                   54 pps
+   Input  bytes  :               174035                    0 bps
+   Output bytes  :              1026490                63992 bps
+   Input  packets:                 3249                    0 pps
+   Output packets:                 6266                   41 pps
    IPv6 transit statistics:
-    Input  bytes  :               13523
+    Input  bytes  :                2981
     Output bytes  :                   0
-    Input  packets:                 156
+    Input  packets:                  35
     Output packets:                   0
   Active alarms  : None
   Active defects : None
@@ -102,19 +102,19 @@ Physical interface: ge-0/0/0, Enabled, Physical link is Up
   Logical interface ge-0/0/0.0 (Index 329) (SNMP ifIndex 523) (Generation 138)
     Flags: Up SNMP-Traps 0x4004000 Encapsulation: ENET2
     Traffic statistics:
-     Input  bytes  :               407493
-     Output bytes  :              1536608
-     Input  packets:                 6365
-     Output packets:                10142
+     Input  bytes  :               186583
+     Output bytes  :               988894
+     Input  packets:                 3472
+     Output packets:                 6266
     Local statistics:
-     Input  bytes  :               369931
-     Output bytes  :              1536608
-     Input  packets:                 5888
-     Output packets:                10142
+     Input  bytes  :               167775
+     Output bytes  :               988894
+     Input  packets:                 3181
+     Output packets:                 6266
     Transit statistics:
-     Input  bytes  :                37562                   32 bps
+     Input  bytes  :                18808                    0 bps
      Output bytes  :                    0                    0 bps
-     Input  packets:                  477                    0 pps
+     Input  packets:                  291                    0 pps
      Output packets:                    0                    0 pps
     Protocol inet, MTU: 1500, Generation: 152, Route table: 0
       Flags: Sendbcast-pkt-to-re, Is-Primary
@@ -278,7 +278,7 @@ Physical interface: ge-0/0/1, Enabled, Physical link is Up
   CoS queues     : 8 supported, 8 maximum usable queues
   Hold-times     : Up 0 ms, Down 0 ms
   Current address: 00:05:86:71:0a:01, Hardware address: 00:05:86:71:0a:01
-  Last flapped   : 2025-05-19 12:22:45 UTC (01:40:41 ago)
+  Last flapped   : 2025-05-19 12:22:45 UTC (00:07:38 ago)
   Statistics last cleared: Never
   Traffic statistics:
    Input  bytes  :                    0                    0 bps
@@ -304,7 +304,7 @@ Physical interface: ge-0/0/2, Enabled, Physical link is Up
   CoS queues     : 8 supported, 8 maximum usable queues
   Hold-times     : Up 0 ms, Down 0 ms
   Current address: 00:05:86:71:0a:02, Hardware address: 00:05:86:71:0a:02
-  Last flapped   : 2025-05-19 12:22:45 UTC (01:40:41 ago)
+  Last flapped   : 2025-05-19 12:22:45 UTC (00:07:38 ago)
   Statistics last cleared: Never
   Traffic statistics:
    Input  bytes  :                    0                    0 bps
@@ -330,7 +330,7 @@ Physical interface: ge-0/0/3, Enabled, Physical link is Up
   CoS queues     : 8 supported, 8 maximum usable queues
   Hold-times     : Up 0 ms, Down 0 ms
   Current address: 00:05:86:71:0a:03, Hardware address: 00:05:86:71:0a:03
-  Last flapped   : 2025-05-19 12:22:45 UTC (01:40:41 ago)
+  Last flapped   : 2025-05-19 12:22:45 UTC (00:07:38 ago)
   Statistics last cleared: Never
   Traffic statistics:
    Input  bytes  :                    0                    0 bps
@@ -356,7 +356,7 @@ Physical interface: ge-0/0/4, Enabled, Physical link is Up
   CoS queues     : 8 supported, 8 maximum usable queues
   Hold-times     : Up 0 ms, Down 0 ms
   Current address: 00:05:86:71:0a:04, Hardware address: 00:05:86:71:0a:04
-  Last flapped   : 2025-05-19 12:22:45 UTC (01:40:41 ago)
+  Last flapped   : 2025-05-19 12:22:45 UTC (00:07:38 ago)
   Statistics last cleared: Never
   Traffic statistics:
    Input  bytes  :                    0                    0 bps
@@ -382,7 +382,7 @@ Physical interface: ge-0/0/5, Enabled, Physical link is Up
   CoS queues     : 8 supported, 8 maximum usable queues
   Hold-times     : Up 0 ms, Down 0 ms
   Current address: 00:05:86:71:0a:05, Hardware address: 00:05:86:71:0a:05
-  Last flapped   : 2025-05-19 12:22:45 UTC (01:40:41 ago)
+  Last flapped   : 2025-05-19 12:22:45 UTC (00:07:38 ago)
   Statistics last cleared: Never
   Traffic statistics:
    Input  bytes  :                    0                    0 bps
@@ -408,7 +408,7 @@ Physical interface: ge-0/0/6, Enabled, Physical link is Up
   CoS queues     : 8 supported, 8 maximum usable queues
   Hold-times     : Up 0 ms, Down 0 ms
   Current address: 00:05:86:71:0a:06, Hardware address: 00:05:86:71:0a:06
-  Last flapped   : 2025-05-19 12:22:45 UTC (01:40:41 ago)
+  Last flapped   : 2025-05-19 12:22:45 UTC (00:07:38 ago)
   Statistics last cleared: Never
   Traffic statistics:
    Input  bytes  :                    0                    0 bps
@@ -434,7 +434,7 @@ Physical interface: ge-0/0/7, Enabled, Physical link is Up
   CoS queues     : 8 supported, 8 maximum usable queues
   Hold-times     : Up 0 ms, Down 0 ms
   Current address: 00:05:86:71:0a:07, Hardware address: 00:05:86:71:0a:07
-  Last flapped   : 2025-05-19 12:22:45 UTC (01:40:41 ago)
+  Last flapped   : 2025-05-19 12:22:45 UTC (00:07:38 ago)
   Statistics last cleared: Never
   Traffic statistics:
    Input  bytes  :                    0                    0 bps
@@ -460,7 +460,7 @@ Physical interface: ge-0/0/8, Enabled, Physical link is Up
   CoS queues     : 8 supported, 8 maximum usable queues
   Hold-times     : Up 0 ms, Down 0 ms
   Current address: 00:05:86:71:0a:08, Hardware address: 00:05:86:71:0a:08
-  Last flapped   : 2025-05-19 12:22:45 UTC (01:40:41 ago)
+  Last flapped   : 2025-05-19 12:22:45 UTC (00:07:38 ago)
   Statistics last cleared: Never
   Traffic statistics:
    Input  bytes  :                    0                    0 bps
@@ -486,7 +486,7 @@ Physical interface: ge-0/0/9, Enabled, Physical link is Up
   CoS queues     : 8 supported, 8 maximum usable queues
   Hold-times     : Up 0 ms, Down 0 ms
   Current address: 00:05:86:71:0a:09, Hardware address: 00:05:86:71:0a:09
-  Last flapped   : 2025-05-19 12:22:45 UTC (01:40:41 ago)
+  Last flapped   : 2025-05-19 12:22:45 UTC (00:07:38 ago)
   Statistics last cleared: Never
   Traffic statistics:
    Input  bytes  :                    0                    0 bps
@@ -756,8 +756,8 @@ Physical interface: em2, Enabled, Physical link is Up
   Traffic statistics:
    Input  bytes  :                    0
    Output bytes  :                    0
-   Input  packets:                 6267
-   Output packets:                10305
+   Input  packets:                 3296
+   Output packets:                 6287
    IPv6 transit statistics:
     Input  bytes  :                   0
     Output bytes  :                   0
