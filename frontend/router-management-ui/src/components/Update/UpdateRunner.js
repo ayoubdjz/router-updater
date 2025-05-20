@@ -6,26 +6,30 @@ import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
 import Paper from '@mui/material/Paper';
+import { toast } from 'react-toastify'; // <<<--- ADDED
 import { useAuth } from '../../contexts/AuthContext';
 import { runUpdateProcedure } from '../../api/routerApi';
 import LogDisplay from '../Common/LogDisplay';
-// Note: File upload UI is not included here, assuming image_file is a name on the router.
 
-const UpdateRunner = ({ onUpdateComplete }) => { // onUpdateComplete to notify DashboardPage
+const UpdateRunner = ({ onUpdateProcessFinished }) => { 
   const { credentials, sessionData, updateSession, logout } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
-  const [imageFile, setImageFile] = useState(sessionData.lastImageFile || ''); // Persist imageFile name in session if needed
+  const [imageFile, setImageFile] = useState(sessionData.lastImageFile || '');
   const [error, setError] = useState('');
   const [logs, setLogs] = useState([]);
   const [updateRunData, setUpdateRunData] = useState(null);
 
   const handleRunUpdate = async () => {
     if (!credentials || !sessionData.ident_data) {
-      setError("Authentication or AVANT session data missing. Cannot proceed with update.");
+      const msg = "Authentication or AVANT session data missing. Cannot proceed with update.";
+      setError(msg);
+      toast.error(msg);
       return;
     }
     if (!imageFile.trim()) {
-      setError("Software image file name (on router) is required.");
+      const msg = "Software image file name (on router) is required.";
+      setError(msg);
+      toast.warn(msg);
       return;
     }
 
@@ -33,7 +37,7 @@ const UpdateRunner = ({ onUpdateComplete }) => { // onUpdateComplete to notify D
     setError('');
     setLogs([]);
     setUpdateRunData(null);
-    updateSession({ updateCompleted: false, updateData: null }); // Reset before run
+    toast.info(`Starting software update with image: ${imageFile.trim()}. This may take a long time...`);
 
     const updatePayload = {
       ident_data: sessionData.ident_data,
@@ -41,6 +45,7 @@ const UpdateRunner = ({ onUpdateComplete }) => { // onUpdateComplete to notify D
       image_file: imageFile.trim(),
     };
 
+    let updateSuccess = false;
     try {
       const response = await runUpdateProcedure(updatePayload);
       setLogs(response.data.logs || []);
@@ -48,35 +53,41 @@ const UpdateRunner = ({ onUpdateComplete }) => { // onUpdateComplete to notify D
         setUpdateRunData(response.data);
         updateSession({ 
           updateCompleted: true, 
-          updateData: response.data.updated_junos_info || null, // Store any structured data from update
-          lastImageFile: imageFile.trim() // Store for convenience
+          updateData: response.data.updated_junos_info || null,
+          lastImageFile: imageFile.trim()
         });
         setError('');
-        if (onUpdateComplete) onUpdateComplete(true);
+        updateSuccess = true;
+        toast.success("Software update process reported success!");
       } else {
-        setError(response.data.message || 'Update procedure failed.');
-        if (onUpdateComplete) onUpdateComplete(false);
+        const errMsg = response.data.message || 'Update procedure failed.';
+        setError(errMsg);
+        toast.error(`Update Failed: ${errMsg}`);
+        updateSession({ updateCompleted: false }); 
       }
     } catch (err) {
       const errorMsg = err.response?.data?.message || err.message || 'An error occurred during update.';
       setError(errorMsg);
+      toast.error(`Update Error: ${errorMsg}`);
       const errLogs = err.response?.data?.logs || [];
       setLogs(prevLogs => [...prevLogs, `Error: ${errorMsg}`, ...errLogs]);
-      if (onUpdateComplete) onUpdateComplete(false);
+      updateSession({ updateCompleted: false });
       if(err.response?.status === 401 || err.response?.status === 403) {
         logout();
       }
     } finally {
       setIsLoading(false);
+      if (onUpdateProcessFinished) onUpdateProcessFinished(updateSuccess); 
     }
   };
   
-  // Do not render if AVANT hasn't completed or if update is already done.
-  if (!sessionData.avantCompleted || sessionData.updateCompleted) return null;
+  if (!sessionData.avantCompleted || !sessionData.updateAttempted || sessionData.updateCompleted) {
+    return null;
+  }
 
   return (
-    <Paper elevation={2} sx={{ my: 2, p: 3 }}>
-      <Typography variant="h5" gutterBottom>Step 2: Software Update</Typography>
+    <Paper elevation={2} sx={{ my: 2, p: 3, backgroundColor: isLoading ? '#e0e0e0' : '#fff9c4' }}>
+      <Typography variant="h5" gutterBottom>Step 2: Software Update Configuration</Typography>
       {error && <Alert severity="error" sx={{my:1}}>{error}</Alert>}
       <TextField
         label="Software Image File Name (on router's /var/tmp/)"
@@ -99,7 +110,7 @@ const UpdateRunner = ({ onUpdateComplete }) => { // onUpdateComplete to notify D
 
       <LogDisplay logs={logs} title="Update Execution Logs" />
 
-      {sessionData.updateCompleted && updateRunData && updateRunData.status === 'success' && (
+      {sessionData.updateCompleted && updateRunData?.status === 'success' && (
          <Box sx={{my:2}}>
             <Alert severity="success" icon={false}>Update procedure completed successfully!</Alert>
             {updateRunData.updated_junos_info && (
@@ -109,6 +120,11 @@ const UpdateRunner = ({ onUpdateComplete }) => { // onUpdateComplete to notify D
             )}
         </Box>
       )}
+       {updateRunData && updateRunData.status !== 'success' && !isLoading && ( 
+          <Alert severity="warning" sx={{my:1}}>
+            The update process encountered an issue. You can review logs and decide to run APRES checks or reset.
+          </Alert>
+        )}
     </Paper>
   );
 };

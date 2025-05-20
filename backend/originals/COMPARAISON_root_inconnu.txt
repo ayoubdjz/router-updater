@@ -1,0 +1,16 @@
+
+Rapport des changements :
+
+Informations du moteur de routage :
+
+-------------------------------------------------------------------------------------------------------------
+                        AVANT                         |                         APRÈS                        
+-------------------------------------------------------------------------------------------------------------
+User                       1 percent                  | User                       2 percent                 
+Kernel                     1 percent                  | Kernel                     0 percent                 
+Interrupt                  7 percent                  | Interrupt                  5 percent                 
+Idle                      92 percent                  | Idle                      93 percent                 
+Uptime                         55 minutes, 38 seconds | Uptime                         57 minutes, 18 seconds
+0.10       0.07       0.32                            | 0.02       0.04       0.28                           
+-------------------------------------------------------------------------------------------------------------
+

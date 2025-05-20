@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { testConnection, runAvantChecks } from '../api/routerApi'; // Added runAvantChecks
+import { testConnection } from '../api/routerApi'; // runAvantChecks removed from here
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
@@ -10,14 +10,13 @@ import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
-import LinearProgress from '@mui/material/LinearProgress'; // For combined loading
+import { toast } from 'react-toastify'; 
 
 const LoginPage = () => {
-  const [ip, setIp] = useState(localStorage.getItem('lastIp') || ''); // Remember last IP
-  const [username, setUsername] = useState(localStorage.getItem('lastUsername') || ''); // Remember last username
+  const [ip, setIp] = useState(localStorage.getItem('lastIp') || '');
+  const [username, setUsername] = useState(localStorage.getItem('lastUsername') || '');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [loadingMessage, setLoadingMessage] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const auth = useAuth();
@@ -33,51 +32,31 @@ const LoginPage = () => {
     const creds = { ip, username, password };
 
     try {
-      setLoadingMessage('Testing connection...');
       await testConnection(creds);
-      auth.login(creds); // Set credentials and isAuthenticated
+      auth.login(creds); 
+      
+      // Navigate immediately. DashboardPage will handle AVANT run.
+      // No toast here about starting AVANT, DashboardPage will provide feedback.
+      navigate('/dashboard', { state: { runAvantOnLoad: true } });
 
-      setLoadingMessage('Running pre-checks (AVANT)... This may take a moment.');
-      // Now immediately run AVANT checks
-      const avantResponse = await runAvantChecks(creds); // Pass fresh creds
-
-      if (avantResponse.data.status === 'success') {
-        auth.updateSession({ // Store all relevant AVANT data in session
-          ident_data: avantResponse.data.ident_data,
-          lock_file_path: avantResponse.data.lock_file_path,
-          avant_file_path: avantResponse.data.avant_file_path,
-          config_file_path: avantResponse.data.config_file_path,
-          avantCompleted: true,
-          avantData: avantResponse.data.structured_data,
-          // Reset other workflow flags
-          updateAttempted: false,
-          updateCompleted: false,
-          apresCompleted: false,
-        });
-        navigate('/dashboard');
-      } else {
-        setError(`AVANT checks failed: ${avantResponse.data.message || 'Unknown AVANT error'}`);
-        auth.logout(); // Logout if AVANT fails immediately after login
-      }
     } catch (err) {
-      const errorMsg = err.response?.data?.message || err.message || 'Operation failed. Please try again.';
+      const errorMsg = err.response?.data?.message || err.message || 'Login failed. Please check credentials and router connectivity.';
       setError(errorMsg);
-      console.error('Login/AVANT error:', err.response || err);
-      auth.logout(); // Ensure logout on any failure during this initial sequence
-    } finally {
+      toast.error(`Login Failed: ${errorMsg}`); 
+      console.error('Login error:', err.response || err);
+      auth.logout(); 
       setIsLoading(false);
-      setLoadingMessage('');
     }
   };
 
   return (
+    // ... (rest of the JSX is the same as the previous version)
     <Container component="main" maxWidth="xs">
       <Paper elevation={3} sx={{ marginTop: 8, padding: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <Typography component="h1" variant="h5">
-          Router Login & Initialisation
+          Router Login
         </Typography>
-        {isLoading && <Box sx={{ width: '100%', my: 2 }}><LinearProgress /><Typography variant="caption" display="block" textAlign="center">{loadingMessage}</Typography></Box>}
-        {error && !isLoading && <Alert severity="error" sx={{ width: '100%', mt: 2 }}>{error}</Alert>}
+        {error && <Alert severity="error" sx={{ width: '100%', mt: 2 }}>{error}</Alert>}
         
         <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1, width: '100%' }}>
           <TextField
@@ -125,7 +104,7 @@ const LoginPage = () => {
             sx={{ mt: 3, mb: 2 }}
             disabled={isLoading}
           >
-            {isLoading ? <CircularProgress size={24} color="inherit" /> : 'Login & Run Pre-Checks'}
+            {isLoading ? <CircularProgress size={24} color="inherit" /> : 'Login'}
           </Button>
         </Box>
       </Paper>

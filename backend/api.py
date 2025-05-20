@@ -5,6 +5,7 @@ import json
 import AVANT_API 
 import APRES_API 
 from netmiko import ConnectHandler, BaseConnection # Import BaseConnection for type checking
+from pathlib import Path
 
 app = Flask(__name__)
 CORS(app)

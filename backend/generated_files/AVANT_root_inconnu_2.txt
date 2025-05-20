@@ -1,146 +1,157 @@
-Informations de base du routeur :
-Le hostname du routeur est : inconnu
-Le modele du routeur est : vmx
-La version du systeme Junos est : 14.1R4.8
+Informations de base du routeur:
+  Hostname: inconnu
+  Modèle: vmx
+  Version Junos: 14.1R4.8
 
-Informations du moteur de routage :
+Informations du moteur de routage:
 Routing Engine status:
     DRAM                      2048 MB (2048 MB installed)
-    Memory utilization          40 percent
+    Memory utilization          41 percent
     CPU utilization:
-      User                       5 percent
+      User                       2 percent
       Background                 0 percent
-      Kernel                     8 percent
-      Interrupt                 71 percent
-      Idle                      15 percent
+      Kernel                     0 percent
+      Interrupt                  6 percent
+      Idle                      92 percent
     Model                          RE-VMX
     Serial ID                      VM5543516AC4
-    Start time                     2025-05-18 12:05:02 UTC
-    Uptime                         6 hours, 5 minutes, 6 seconds
+    Start time                     2025-05-20 02:39:38 UTC
+    Uptime                         48 minutes, 32 seconds
     Last reboot reason             0x10:misc hardware reason 
     Load averages:                 1 minute   5 minute  15 minute
-                                       1.70       2.34       2.18
+                                       0.01       0.14       0.52
 
-Informations sur les interfaces :
-Les Interfaces up :
-ge-0/0/0 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 00:05:86:71:46:00,
-ge-0/0/0.0 - Vitesse: 1000mbps - IP: 192.168.186.2
-lc-0/0/0 - Vitesse: 800mbps - IP: Aucune IP - MAC: Unspecified,
-lc-0/0/0.32769 - Vitesse: 800mbps - IP: Aucune IP
-pfe-0/0/0 - Vitesse: 800mbps - IP: Aucune IP - MAC: Unspecified,
-pfe-0/0/0.16383 - Vitesse: 800mbps - IP: Aucune IP
-pfh-0/0/0 - Vitesse: 800mbps - IP: Aucune IP - MAC: Unspecified,
-pfh-0/0/0.16383 - Vitesse: 800mbps - IP: Aucune IP
-ge-0/0/1 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 00:05:86:71:46:01,
-ge-0/0/2 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 00:05:86:71:46:02,
-ge-0/0/3 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 00:05:86:71:46:03,
-ge-0/0/4 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 00:05:86:71:46:04,
-ge-0/0/5 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 00:05:86:71:46:05,
-ge-0/0/6 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 00:05:86:71:46:06,
-ge-0/0/7 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 00:05:86:71:46:07,
-ge-0/0/8 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 00:05:86:71:46:08,
-ge-0/0/9 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 00:05:86:71:46:09,
-cbp0 - Vitesse: Unspecified - IP: Aucune IP - MAC: 00:05:86:71:46:11,
-demux0 - Vitesse: Unspecified - IP: Aucune IP - MAC: Unspecified,
-dsc - Vitesse: Unspecified - IP: Aucune IP - MAC: Unspecified,
-em0 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 50:00:00:01:00:00,
-em1 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 50:00:00:01:00:01,
-em1.0 - Vitesse: 1000mbps - IP: fe80::5200:ff:fe01:1
-em2 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 50:00:00:01:00:02,
-em3 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 50:00:00:01:00:03,
-em4 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 50:00:00:01:00:04,
-em5 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 50:00:00:01:00:05,
-gre - Vitesse: Unlimited - IP: Aucune IP
-ipip - Vitesse: Unlimited - IP: Aucune IP
-irb - Vitesse: Unspecified - IP: Aucune IP - MAC: 00:05:86:71:49:f0,
-lo0 - Vitesse: Unspecified - IP: Aucune IP - MAC: Unspecified,
-lo0.16384 - Vitesse: Unspecified - IP: 127.0.0.1
-lo0.16385 - Vitesse: Unspecified - IP: fe80::200:f:fc00:0
-lo0.32768 - Vitesse: Unspecified - IP: Aucune IP
-lsi - Vitesse: Unlimited - IP: Aucune IP - MAC: Unspecified,
-mtun - Vitesse: Unlimited - IP: Aucune IP
-pimd - Vitesse: Unlimited - IP: Aucune IP
-pime - Vitesse: Unlimited - IP: Aucune IP
-pip0 - Vitesse: Unspecified - IP: Aucune IP - MAC: 00:05:86:71:49:b0,
-pp0 - Vitesse: Unspecified - IP: Aucune IP - MAC: Unspecified,
-tap - Vitesse: Unlimited - IP: Aucune IP - MAC: Unspecified,
-vtep - Vitesse: Unlimited - IP: Aucune IP - MAC: Unspecified,
-Les Interfaces down :
-Aucune interface inactive trouvee.
 
-Informations ARP :
+Informations sur les interfaces:
+Interfaces UP:
+  Name: ge-0/0/0, Speed: 1000mbps, IP: N/A (Physical), MAC: 00:05:86:71:34:00
+  Name: ge-0/0/0.0, Speed: 1000mbps, IP: 192.168.186.2, MAC: 00:05:86:71:34:00
+  Name: lc-0/0/0, Speed: 800mbps, IP: N/A (Physical), MAC: Unspecified
+  Name: lc-0/0/0.32769, Speed: 800mbps, IP: N/A, MAC: Unspecified
+  Name: pfe-0/0/0, Speed: 800mbps, IP: N/A (Physical), MAC: Unspecified
+  Name: pfe-0/0/0.16383, Speed: 800mbps, IP: N/A, MAC: Unspecified
+  Name: pfh-0/0/0, Speed: 800mbps, IP: N/A (Physical), MAC: Unspecified
+  Name: pfh-0/0/0.16383, Speed: 800mbps, IP: N/A, MAC: Unspecified
+  Name: ge-0/0/1, Speed: 1000mbps, IP: N/A (Physical), MAC: 00:05:86:71:34:01
+  Name: ge-0/0/2, Speed: 1000mbps, IP: N/A (Physical), MAC: 00:05:86:71:34:02
+  Name: ge-0/0/3, Speed: 1000mbps, IP: N/A (Physical), MAC: 00:05:86:71:34:03
+  Name: ge-0/0/4, Speed: 1000mbps, IP: N/A (Physical), MAC: 00:05:86:71:34:04
+  Name: ge-0/0/5, Speed: 1000mbps, IP: N/A (Physical), MAC: 00:05:86:71:34:05
+  Name: ge-0/0/6, Speed: 1000mbps, IP: N/A (Physical), MAC: 00:05:86:71:34:06
+  Name: ge-0/0/7, Speed: 1000mbps, IP: N/A (Physical), MAC: 00:05:86:71:34:07
+  Name: ge-0/0/8, Speed: 1000mbps, IP: N/A (Physical), MAC: 00:05:86:71:34:08
+  Name: ge-0/0/9, Speed: 1000mbps, IP: N/A (Physical), MAC: 00:05:86:71:34:09
+  Name: cbp0, Speed: Unspecified, IP: N/A (Physical), MAC: 00:05:86:71:34:11
+  Name: demux0, Speed: Unspecified, IP: N/A (Physical), MAC: Unspecified
+  Name: dsc, Speed: Unspecified, IP: N/A (Physical), MAC: Unspecified
+  Name: em0, Speed: 1000mbps, IP: N/A (Physical), MAC: 50:00:00:01:00:00
+  Name: em1, Speed: 1000mbps, IP: N/A (Physical), MAC: 50:00:00:01:00:01
+  Name: em1.0, Speed: 1000mbps, IP: fe80::5200:ff:fe01:1, MAC: 50:00:00:01:00:01
+  Name: em2, Speed: 1000mbps, IP: N/A (Physical), MAC: 50:00:00:01:00:02
+  Name: em3, Speed: 1000mbps, IP: N/A (Physical), MAC: 50:00:00:01:00:03
+  Name: em4, Speed: 1000mbps, IP: N/A (Physical), MAC: 50:00:00:01:00:04
+  Name: em5, Speed: 1000mbps, IP: N/A (Physical), MAC: 50:00:00:01:00:05
+  Name: gre, Speed: Unlimited, IP: N/A (Physical), MAC: N/A
+  Name: ipip, Speed: Unlimited, IP: N/A (Physical), MAC: N/A
+  Name: irb, Speed: Unspecified, IP: N/A (Physical), MAC: 00:05:86:71:37:f0
+  Name: lo0, Speed: Unspecified, IP: N/A (Physical), MAC: Unspecified
+  Name: lo0.16384, Speed: Unspecified, IP: 127.0.0.1, MAC: Unspecified
+  Name: lo0.16385, Speed: Unspecified, IP: fe80::200:f:fc00:0, MAC: Unspecified
+  Name: lo0.32768, Speed: Unspecified, IP: N/A, MAC: Unspecified
+  Name: lsi, Speed: Unlimited, IP: N/A (Physical), MAC: Unspecified
+  Name: mtun, Speed: Unlimited, IP: N/A (Physical), MAC: N/A
+  Name: pimd, Speed: Unlimited, IP: N/A (Physical), MAC: N/A
+  Name: pime, Speed: Unlimited, IP: N/A (Physical), MAC: N/A
+  Name: pip0, Speed: Unspecified, IP: N/A (Physical), MAC: 00:05:86:71:37:b0
+  Name: pp0, Speed: Unspecified, IP: N/A (Physical), MAC: Unspecified
+  Name: tap, Speed: Unlimited, IP: N/A (Physical), MAC: Unspecified
+  Name: vtep, Speed: Unlimited, IP: N/A (Physical), MAC: Unspecified
+Interfaces DOWN:
+  Aucune interface DOWN.
+
+Informations ARP:
 MAC Address       Address         Name                      Interface           Flags
 00:50:56:c0:00:08 192.168.186.1   192.168.186.1             ge-0/0/0.0          none
 00:0c:29:80:ff:c8 192.168.186.129 192.168.186.129           ge-0/0/0.0          none
-00:50:56:eb:df:18 192.168.186.254 192.168.186.254           ge-0/0/0.0          none
-Total entries: 3
+Total entries: 2
 
-Informations sur les routes :
+
+Informations sur les routes:
 Router ID: 192.168.186.2
 
 inet.0: 2 destinations, 2 routes (2 active, 0 holddown, 0 hidden)
               Direct:      1 routes,      1 active
                Local:      1 routes,      1 active
 
-Protocole OSPF :
+
+Protocole OSPF:
 OSPF instance is not running
 
-Protocole IS-IS :
+
+Protocole IS-IS:
 IS-IS instance is not running
 
-Protocole MPLS :
+
+Protocole MPLS:
 MPLS not configured
 
-Protocole LDP :
+
+Protocole LDP:
 LDP instance is not running
 
-Protocole RSVP :
+
+Protocole RSVP:
 RSVP not configured
 
-Protocole LLDP :
+
+Protocole LLDP:
 
 
-Protocole LSP :
+Protocole LSP:
 MPLS not configured
 
-Protocole BGP :
+
+Protocole BGP:
 BGP is not running
 
-Services configurés :
-ssh
 
-Protocoles configurés :
+Services configurés:
+  ssh
 
-Listes de Contrôle d'Accès (ACL) :
+Protocoles configurés:
+
+Listes de Contrôle d'Accès (ACL):
 
 
-Logs des erreurs critiques dans 'messages' :
-May 18 12:05:51   /kernel: em5error setting host MAC filter table
-May 18 12:08:07   mgd[2861]: UI_CONFIGURATION_ERROR: Process: mgd, path: [edit], statement: system, Missing mandatory statement: 'root-authentication'
-May 18 12:08:17   mgd[2861]: UI_CONFIGURATION_ERROR: Process: mgd, path: [edit], statement: system, Missing mandatory statement: 'root-authentication'
-May 18 12:08:40   chassisd[2968]: CHASSISD_FILE_OPEN: File open: /dev/acb, error: 2 -- No such file or directory
-May 18 12:08:40   chassisd[2968]: CHASSISD_FILE_OPEN: File open: /dev/acb, error: 2 -- No such file or directory
-May 18 12:08:42   /kernel: KERN_ARP_DUPLICATE_ADDR: duplicate IP address 192.168.186.2! sent from address: 00:50:56:e5:13:29 (error count = 1)
-May 18 12:11:17   /kernel: KERN_ARP_DUPLICATE_ADDR: duplicate IP address 192.168.186.2! sent from address: 00:50:56:e5:13:29 (error count = 2)
-May 18 15:31:45   /kernel: KERN_ARP_DUPLICATE_ADDR: duplicate IP address 192.168.186.2! sent from address: 00:50:56:e5:13:29 (error count = 4)
-May 18 15:46:06   /kernel: KERN_ARP_DUPLICATE_ADDR: duplicate IP address 192.168.186.2! sent from address: 00:50:56:e5:13:29 (error count = 7)
+Logs erreurs critiques 'messages':
+May 20 02:40:13   /kernel: em0error setting host MAC filter table
+May 20 02:40:13   /kernel: em1error setting host MAC filter table
+May 20 02:40:13   /kernel: em2error setting host MAC filter table
+May 20 02:40:13   /kernel: em3error setting host MAC filter table
+May 20 02:40:13   /kernel: em4error setting host MAC filter table
+May 20 02:40:13   /kernel: em5error setting host MAC filter table
+May 20 02:41:52   chassisd[2959]: CHASSISD_FILE_OPEN: File open: /dev/acb, error: 2 -- No such file or directory
+May 20 02:41:52   chassisd[2959]: CHASSISD_FILE_OPEN: File open: /dev/acb, error: 2 -- No such file or directory
+May 20 02:42:33   /kernel: KERN_ARP_DUPLICATE_ADDR: duplicate IP address 192.168.186.2! sent from address: 00:50:56:e5:13:29 (error count = 1)
+---(more 76%)---
                                         
 
-Logs des erreurs critiques dans 'chassisd' :
-May  1 15:09:51  fpc_offline_now - slot 0, reason: Restarting unresponsive board, error OK transition state 1
-May  1 15:25:09  fpc_offline_now - slot 0, reason: Restarting unresponsive board, error OK transition state 1
-May  1 15:40:28 CHASSISD_FRU_UNRESPONSIVE: Error for FPC 0: unresponsive to attempts to start it; left it offline
-May  1 15:40:28 CHASSISD_FRU_OFFLINE_NOTICE: Taking FPC 0 offline: Error
+Logs erreurs critiques 'chassisd':
 May  1 15:40:28  fpc_down slot 0 reason Error cargs 0x0
 May  1 15:40:28  fpc_offline_now - slot 0, reason: Error, error Unresponsive transition state 1
 May  1 15:40:28  FPC#0 - power off [addr 0x11] reason: Error
 May  1 15:40:28  send: red alarm set, device FPC 0, reason FPC 0 Hard errors
 May  1 16:09:19  ch_power_off_frus_cleanup_exit: Chassisd exiting with error-code= 69
+May  1 16:14:47  rtsock_inform_fru_offline: inform peer type 17, index 0 offline, error 0
+May  1 16:14:47  rtsock_reset_self_ping_statistics: reset fpc_slot 0 self_ping stats, error 0
+May  1 16:14:47  fpc_offline_now - slot 0, reason: None, error Chassis connection dropped transition state 1
+May  1 16:14:55  ch_power_off_frus_cleanup_exit: Chassisd exiting with error-code= 69
+---(more 51%)---
                                         
 
-La configuration totale :
+La configuration totale (set format):
 set version 14.1R4.8
-set system root-authentication encrypted-password "$1$NVqcWakK$wNyGWq25FAqoOIBlUA/Eq/"
+set system root-authentication encrypted-password "$1$ImKgB5Fx$ijC0xs7oS2iYC91hE9XWG1"
 set system services ssh
 set system syslog user * any emergency
 set system syslog file messages any notice
