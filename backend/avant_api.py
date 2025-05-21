@@ -202,7 +202,9 @@ def run_avant_checks(ip, username, password, log_messages):
         "firewall_config": "",
         "critical_logs_messages": "",
         "critical_logs_chassisd": "",
-        "full_config_set": "" # Can be very large, consider if needed directly or just file path
+        "full_config_set": "",
+        # "setting": [{"key"  :"value", "key2" : "value2"}, {"key"  :"valuqsde", "key2" : "value222"}] # Placeholder for any additional settings 
+         # Can be very large, consider if needed directly or just file path
     }
 
     try:

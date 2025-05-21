@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -68,29 +68,25 @@ const ApresRunner = ({ onApresProcessFinished }) => {
       if (onApresProcessFinished) onApresProcessFinished(apresSuccess);
     }
   };
-  
+    // Run APRES immediately when component mounts
+  useEffect(() => {
+    if (sessionData.avantCompleted && sessionData.viewState === 'apres_running' && !sessionData.apresCompleted) {
+      handleRunApres();
+    }
+  }, [sessionData.avantCompleted, sessionData.viewState, sessionData.apresCompleted]); // eslint-disable-line react-hooks/exhaustive-deps
+
   // This component is now primarily for the *action* of running APRES.
   // Display of results happens in DashboardPage based on sessionData.
   // It's visible when DashboardPage sets sessionData.viewState to 'apres_running'
   if (!(sessionData.avantCompleted && sessionData.viewState === 'apres_running' && !sessionData.apresCompleted)) {
     return null; 
   }
-  
+
   return (
-    // The Paper and Title are now part of DashboardPage's APRES section
-    // This component focuses on the button and logs during its execution
     <Box sx={{ my: 2, p: 2, border: '1px dashed #ccc', borderRadius: 1, backgroundColor: isLoading ? '#f0f0f0' : 'transparent' }}>
       <Typography variant="h6" gutterBottom>Processing APRES...</Typography>
       {error && <Alert severity="error" sx={{my:1}}>{error}</Alert>}
-      <Button
-        variant="contained"
-        color="info" // Changed color for distinction
-        onClick={handleRunApres}
-        disabled={isLoading || sessionData.apresCompleted} 
-        sx={{my:1}}
-      >
-        {isLoading ? <CircularProgress size={24} color="inherit" /> : 'Confirm & Run APRES Now'}
-      </Button>
+      {isLoading && <CircularProgress sx={{ display: 'block', margin: '20px auto' }} />}
       <LogDisplay logs={logs} title="Live APRES Execution Logs" />
     </Box>
   );

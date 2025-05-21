@@ -1,77 +1,155 @@
-Informations de base du routeur (APRES):
-  Hostname: inconnu
-  Modèle: vmx
-  Version Junos: 14.1R4.8
+Informations de base du routeur (APRES) :
+Le modèle du routeur est : vmx
+La version du système Junos est : 14.1R4.8
 
 --- Collecte APRES étendue ---
 
-Informations du moteur de routage (APRES):
+Informations du moteur de routage (APRES) :
 Routing Engine status:
     DRAM                      2048 MB (2048 MB installed)
-    Memory utilization          41 percent
+    Memory utilization          40 percent
     CPU utilization:
-      User                       1 percent
+      User                       2 percent
       Background                 0 percent
       Kernel                     0 percent
       Interrupt                  5 percent
-      Idle                      93 percent
+      Idle                      92 percent
     Model                          RE-VMX
     Serial ID                      VM5543516AC4
-    Start time                     2025-05-20 02:39:38 UTC
-    Uptime                         1 hour, 1 minute, 44 seconds
+    Start time                     2025-05-21 02:16:18 UTC
+    Uptime                         48 minutes, 38 seconds
     Last reboot reason             0x10:misc hardware reason 
     Load averages:                 1 minute   5 minute  15 minute
-                                       0.00       0.01       0.20
+                                       0.00       0.00       0.00
+
+Informations sur les interfaces (APRES) :
+Les Interfaces up :
+ge-0/0/0 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 00:05:86:71:53:00,
+ge-0/0/0.0 - Vitesse: 1000mbps - IP: 192.168.186.2/24
+lc-0/0/0 - Vitesse: 800mbps - IP: Aucune IP - MAC: Unspecified
+lc-0/0/0.32769 - Vitesse: 800mbps - IP: Aucune IP
+pfe-0/0/0 - Vitesse: 800mbps - IP: Aucune IP - MAC: Unspecified
+pfe-0/0/0.16383 - Vitesse: 800mbps - IP: Aucune IP
+pfh-0/0/0 - Vitesse: 800mbps - IP: Aucune IP - MAC: Unspecified
+pfh-0/0/0.16383 - Vitesse: 800mbps - IP: Aucune IP
+ge-0/0/1 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 00:05:86:71:53:01,
+ge-0/0/2 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 00:05:86:71:53:02,
+ge-0/0/3 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 00:05:86:71:53:03,
+ge-0/0/4 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 00:05:86:71:53:04,
+ge-0/0/5 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 00:05:86:71:53:05,
+ge-0/0/6 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 00:05:86:71:53:06,
+ge-0/0/7 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 00:05:86:71:53:07,
+ge-0/0/8 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 00:05:86:71:53:08,
+ge-0/0/9 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 00:05:86:71:53:09,
+cbp0 - Vitesse: Unspecified - IP: Aucune IP - MAC: 00:05:86:71:53:11,
+demux0 - Vitesse: Unspecified - IP: Aucune IP - MAC: Unspecified
+dsc - Vitesse: Unspecified - IP: Aucune IP - MAC: Unspecified
+em0 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 50:00:00:01:00:00,
+em1 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 50:00:00:01:00:01,
+em1.0 - Vitesse: 1000mbps - IP: 172.16.0.1/16
+em2 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 50:00:00:01:00:02,
+em3 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 50:00:00:01:00:03,
+em4 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 50:00:00:01:00:04,
+em5 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 50:00:00:01:00:05,
+gre - Vitesse: Unlimited - IP: Aucune IP - MAC: Unspecified
+ipip - Vitesse: Unlimited - IP: Aucune IP - MAC: Unspecified
+irb - Vitesse: Unspecified - IP: Aucune IP - MAC: 00:05:86:71:56:f0,
+lo0 - Vitesse: Unspecified - IP: Aucune IP - MAC: Unspecified
+lo0.16384 - Vitesse: Unspecified - IP: 127.0.0.1
+lo0.16385 - Vitesse: Unspecified - IP: 128.0.0.1
+lo0.32768 - Vitesse: Unspecified - IP: Aucune IP
+lsi - Vitesse: Unlimited - IP: Aucune IP - MAC: Unspecified
+mtun - Vitesse: Unlimited - IP: Aucune IP - MAC: Unspecified
+pimd - Vitesse: Unlimited - IP: Aucune IP - MAC: Unspecified
+pime - Vitesse: Unlimited - IP: Aucune IP - MAC: Unspecified
+pip0 - Vitesse: Unspecified - IP: Aucune IP - MAC: 00:05:86:71:56:b0,
+pp0 - Vitesse: Unspecified - IP: Aucune IP - MAC: Unspecified
+tap - Vitesse: Unlimited - IP: Aucune IP - MAC: Unspecified
+vtep - Vitesse: Unlimited - IP: Aucune IP - MAC: Unspecified
+Les Interfaces down :
+Aucune interface inactive trouvée.
+
+Informations ARP (APRES) :
+MAC Address       Address         Name                      Interface           Flags
+00:50:56:c0:00:08 192.168.186.1   192.168.186.1             ge-0/0/0.0          none
+00:0c:29:80:ff:c8 192.168.186.129 192.168.186.129           ge-0/0/0.0          none
+Total entries: 2
+
+Informations sur les routes (APRES) :
+Résumé des routes :
+Router ID: 192.168.186.2
+
+inet.0: 2 destinations, 2 routes (2 active, 0 holddown, 0 hidden)
+              Direct:      1 routes,      1 active
+               Local:      1 routes,      1 active
 
 
-Informations sur les interfaces (APRES):
---- TERSE (APRES) ---
-Interface               Admin Link Proto    Local                 Remote
-ge-0/0/0                up    up
-ge-0/0/0.0              up    up   inet     192.168.186.2/24
-                                   multiservice
-lc-0/0/0                up    up
-lc-0/0/0.32769          up    up   vpls    
-pfe-0/0/0               up    up
-pfe-0/0/0.16383         up    up   inet    
-                                   inet6   
-pfh-0/0/0               up    up
-pfh-0/0/0.16383         up    up   inet    
-ge-0/0/1                up    up
-ge-0/0/2                up    up
-ge-0/0/3                up    up
-ge-0/0/4                up    up
-ge-0/0/5                up    up
-ge-0/0/6                up    up
-ge-0/0/7                up    up
-ge-0/0/8                up    up
-ge-0/0/9                up    up
-cbp0                    up    up
-demux0                  up    up
-dsc                     up    up
-em0                     up    up
-em1                     up    up
-em1.0                   up    up   inet     172.16.0.1/16   
-                                   inet6    fe80::5200:ff:fe01:1/64
-em2                     up    up
-em3                     up    up
-em4                     up    up
-em5                     up    up
-gre                     up    up
-ipip                    up    up
-irb                     up    up
-lo0                     up    up
-lo0.16384               up    up   inet     127.0.0.1           --> 0/0
-lo0.16385               up    up   inet     128.0.0.1           --> 0/0
-                                            128.0.0.4           --> 0/0
-                                   inet6    fe80::200:f:fc00:0
-lo0.32768               up    up  
-lsi                     up    up
-mtun                    up    up
-pimd                    up    up
-pime                    up    up
-pip0                    up    up
-pp0                     up    up
-tap                     up    up
-vtep                    up    up
+Protocole OSPF (APRES) :
+OSPF instance is not running
+
+Protocole IS-IS (APRES) :
+IS-IS instance is not running
+
+Protocole MPLS (APRES) :
+MPLS not configured
+
+Protcole LDP (APRES) :
+LDP instance is not running
+
+Protocole RSVP (APRES) :
+RSVP not configured
+
+Protocole LLDP (APRES) :
+
+
+Protocole LSP (APRES) :
+MPLS not configured
+
+Protocole BGP (APRES) :
+BGP is not running
+
+Services configurés (APRES) :
+ssh
+
+Protocoles configurés (APRES) :
+
+
+Listes de Contrôle d'Accès (ACL) (APRES) :
+Aucune ACL configurée trouvée.
+
+Logs des erreurs critiques (APRES) :
+Logs des erreurs critiques dans 'messages' :
+May 21 02:16:49   /kernel: em1error setting host MAC filter table
+May 21 02:16:49   /kernel: em1error setting host MAC filter table
+May 21 02:16:49   /kernel: em2error setting host MAC filter table
+May 21 02:16:49   /kernel: em3error setting host MAC filter table
+May 21 02:16:49   /kernel: em4error setting host MAC filter table
+May 21 02:16:49   /kernel: em5error setting host MAC filter table
+May 21 02:17:25   chassisd[2951]: CHASSISD_FILE_OPEN: File open: /dev/acb, error: 2 -- No such file or directory
+May 21 02:17:25   chassisd[2951]: CHASSISD_FILE_OPEN: File open: /dev/acb, error: 2 -- No such file or directory
+May 21 02:18:14   /kernel: KERN_ARP_DUPLICATE_ADDR: duplicate IP address 192.168.186.2! sent from address: 00:50:56:e5:13:29 (error count = 1)
+---(more 99%)---
+                                        
+Logs des erreurs critiques dans 'chassisd' :
+May  1 15:40:28  fpc_down slot 0 reason Error cargs 0x0
+May  1 15:40:28  fpc_offline_now - slot 0, reason: Error, error Unresponsive transition state 1
+May  1 15:40:28  FPC#0 - power off [addr 0x11] reason: Error
+May  1 15:40:28  send: red alarm set, device FPC 0, reason FPC 0 Hard errors
+May  1 16:09:19  ch_power_off_frus_cleanup_exit: Chassisd exiting with error-code= 69
+May  1 16:14:47  rtsock_inform_fru_offline: inform peer type 17, index 0 offline, error 0
+May  1 16:14:47  rtsock_reset_self_ping_statistics: reset fpc_slot 0 self_ping stats, error 0
+May  1 16:14:47  fpc_offline_now - slot 0, reason: None, error Chassis connection dropped transition state 1
+May  1 16:14:55  ch_power_off_frus_cleanup_exit: Chassisd exiting with error-code= 69
+---(more 51%)---
+                                        
+
+La configuration totale (APRES) :
+set version 14.1R4.8
+set system root-authentication encrypted-password "$1$qQ7Woa2E$n7vaPfuCwR08ICQukC1U21"
+set system services ssh
+set system syslog user * any emergency
+set system syslog file messages any notice
+set system syslog file messages authorization info
+set system syslog file interactive-commands interactive-commands any
+set interfaces ge-0/0/0 unit 0 family inet address 192.168.186.2/24
 

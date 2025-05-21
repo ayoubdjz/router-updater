@@ -10,7 +10,7 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
+// Box removed as Grid is not used here anymore for side-by-side of raw lines
 
 const ComparisonModal = ({ open, onClose, comparisonResults }) => {
   if (!comparisonResults || Object.keys(comparisonResults).length === 0) {
@@ -28,9 +28,9 @@ const ComparisonModal = ({ open, onClose, comparisonResults }) => {
   }
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="xl" fullWidth scroll="paper">
+    <Dialog open={open} onClose={onClose} maxWidth="lg" fullWidth scroll="paper"> {/* Changed to lg for better text fit */}
       <DialogTitle sx={{ borderBottom: 1, borderColor: 'divider' }}>AVANT vs APRES Comparison Details</DialogTitle>
-      <DialogContent dividers sx={{backgroundColor: '#f7f7f7', p: {xs:1, sm:2, md:3}}}>
+      <DialogContent dividers sx={{backgroundColor: '#f9f9f9', p: {xs:1, sm:2 }}}>
         {Object.values(comparisonResults)
           .sort((a, b) => { 
               const statusOrder = { "Modifié": 1, "Nouveau": 2, "Supprimé": 3, "Identique": 4 };
@@ -39,7 +39,7 @@ const ComparisonModal = ({ open, onClose, comparisonResults }) => {
               }
               return a.section_title.localeCompare(b.section_title);
           })
-          .map((diff_section, index) => ( // diff_section now contains {section_title, status, diff_text}
+          .map((diff_section, index) => ( 
           <Accordion 
               key={diff_section.section_title + index} 
               defaultExpanded={diff_section.status !== "Identique"} 
@@ -50,10 +50,10 @@ const ComparisonModal = ({ open, onClose, comparisonResults }) => {
             <AccordionSummary 
                 expandIcon={<ExpandMoreIcon />}
                 sx={{ 
-                    backgroundColor: diff_section.status === "Identique" ? 'rgba(0,0,0,0.03)' : 
+                    backgroundColor: diff_section.status === "Identique" ? 'rgba(0,0,0,0.02)' : 
                                      (diff_section.status === "Nouveau" ? 'success.light' : 
                                      (diff_section.status === "Supprimé" ? 'error.light' : 
-                                     'action.hover' )), // "Modifié" uses default hover, no strong orange
+                                     'action.hover' )), // Modifié uses default hover
                     borderBottom: '1px solid rgba(0,0,0,0.08)'
                 }}
             >
@@ -61,16 +61,27 @@ const ComparisonModal = ({ open, onClose, comparisonResults }) => {
                 {diff_section.section_title}
               </Typography>
               <Typography sx={{ 
-                  color: diff_section.status === "Identique" ? 'text.secondary' : (diff_section.status === "Modifié" ? 'text.primary' : 'error.dark'), // "Modifié" is now less alarming
+                  color: diff_section.status === "Identique" ? 'text.secondary' : (diff_section.status === "Modifié" ? 'text.primary' : 'error.dark'), 
                   fontWeight: 'bold' 
                 }}
               >
                 Status: {diff_section.status}
               </Typography>
             </AccordionSummary>
-            <AccordionDetails sx={{ backgroundColor: '#fff', borderTop: '1px solid rgba(0,0,0,0.08)' }}>
-                <Paper component="pre" variant="outlined" sx={{p:1.5, whiteSpace: 'pre-wrap', wordBreak: 'break-all', maxHeight: '60vh', overflowY: 'auto', fontSize:'0.75rem', fontFamily:'monospace', backgroundColor: '#fff', borderColor: 'rgba(0,0,0,0.1)' }}>
-                    {diff_section.diff_text}
+            <AccordionDetails sx={{ backgroundColor: '#fff', borderTop: '1px solid rgba(0,0,0,0.08)', p: 1.5 }}>
+                {/* Display the pre-formatted diff_text directly */}
+                <Paper component="pre" variant="outlined" sx={{
+                    p:1.5, 
+                    whiteSpace: 'pre-wrap', 
+                    wordBreak: 'break-all', 
+                    maxHeight: '60vh', 
+                    overflowY: 'auto', 
+                    fontSize:'0.8rem', // Monospace for better alignment
+                    fontFamily:'monospace', 
+                    backgroundColor: '#fff', 
+                    borderColor: 'rgba(0,0,0,0.1)' 
+                }}>
+                    {diff_section.diff_text || "(Error generating diff text or section identical)"}
                 </Paper>
             </AccordionDetails>
           </Accordion>

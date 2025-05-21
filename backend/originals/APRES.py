@@ -2,390 +2,874 @@ import os
 import sys
 import json
 import glob
-from netmiko import ConnectHandler, NetmikoTimeoutException, NetmikoAuthenticationException
+from getpass import getpass
+from netmiko import ConnectHandler
 import ipaddress
 import tempfile
 import chardet
 import unicodedata
 from collections import OrderedDict
-import portalocker 
-from pathlib import Path
 
-# --- Configuration ---
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-GENERATED_FILES_DIR = os.path.join(SCRIPT_DIR, "generated_files")
-Path(GENERATED_FILES_DIR).mkdir(exist_ok=True, parents=True)
-
-# --- Helper Functions ---
-# Import or duplicate necessary helpers from AVANT_API.py if they are identical
-# For example: verifier_connexion_apres (similar to verifier_connexion), parse_interfaces_structured
-
-def valider_ip_apres(ip): # Specific to APRES if different logic, else use AVANT_API.valider_ip
-    try: ipaddress.ip_address(ip); return True
-    except ValueError: return False
-
-def verifier_connexion_apres(connection, log_messages, context="APRES"): # Added context
+# Fonction pour vérifier si l'adresse IP fournie est valide
+def valider_ip(ip):
     try:
-        output = connection.send_command("show system uptime", read_timeout=15)
-        if "error" in output.lower() or not output.strip():
-            log_messages.append(f"ERREUR {context}: Problème de communication (uptime): '{output if output else 'No output'}'")
-            return False
-        log_messages.append(f"Connexion {context} vérifiée (uptime): {output.strip().splitlines()[0] if output.strip() else 'OK'}")
+        ipaddress.ip_address(ip)
         return True
-    except Exception as e:
-        log_messages.append(f"ERREUR {context}: Connexion (exception uptime): {str(e)}")
+    except ValueError:
         return False
 
-# Assuming parse_interfaces_structured is needed and defined as in AVANT_API.py
-# If it's in AVANT_API.py, you could do:
-# from AVANT_API import parse_interfaces_structured
-# For this standalone example, I'll include its signature and a note
-def parse_interfaces_structured(output_terse, output_detail, log_messages):
-    # Placeholder: This function should be identical to the one in AVANT_API.py
-    # or imported from there. It parses terse and detail output into structured lists.
-    log_messages.append("NOTE: parse_interfaces_structured called in APRES (ensure implementation is complete).")
-    up_interfaces = [{"name": "dummy-up-apres/0", "status": "up", "speed": "1G", "ip_address": "1.1.1.2/24", "mac_address": "AA:BB:CC:00:11:23"}]
-    down_interfaces = []
-    # --- Real parsing logic from AVANT_API.py version should be here ---
-    # For brevity, returning dummy data. Replace with full parsing from AVANT_API.py.
-    # This is a common source of discrepancy if not identical.
-    # The parsing logic MUST be the same for AVANT and APRES for valid comparison and display.
-    raw_up_names = []
-    raw_down_names = []
-    all_interface_details = {}
-    for line in output_terse.splitlines():
-        columns = line.split()
-        if len(columns) >= 2:
-            interface_name = columns[0]; status = columns[1].lower()
-            if "up" == status or ("up" in status and "admin" not in status): raw_up_names.append(interface_name)
-            elif "down" == status: raw_down_names.append(interface_name)
+# Fonction pour vérifier la connexion
+def verifier_connexion(connection):
+    try:
+        output = connection.send_command("show system uptime", read_timeout=5)
+        if "error" in output.lower():
+            return False
+        return True
+    except Exception as e:
+        print(f"\nErreur : Problème de connexion: {str(e)}")
+        return False
     
-    physical_interface_sections = output_detail.split("Physical interface:")
-    if len(physical_interface_sections) > 1: physical_interface_sections = physical_interface_sections[1:]
+# Fonction pour nettoyer les fichiers
+def nettoyer_fichiers(fichiers_a_supprimer):
+    for fichier in fichiers_a_supprimer:
+        try:
+            if os.path.exists(fichier):
+                os.remove(fichier)
+                print(f"Le fichier {fichier} a été supprimé")
+        except Exception as e:
+            print(f"Erreur lors de la suppression du fichier {fichier}: {e}")
 
-    for section in physical_interface_sections:
-        lines = section.split("\n"); phys_speed = "Indisponible"; phys_mac = "N/A"
-        if not lines: continue
-        physical_interface_name = lines[0].strip().split(",")[0].strip()
-        for line_idx, line in enumerate(lines):
-            if "Speed:" in line: phys_speed = line.split("Speed:")[1].split(",")[0].strip()
-            if "Current address:" in line or "Hardware address:" in line:
-                key = "Current address:" if "Current address:" in line else "Hardware address:"
-                phys_mac = line.split(key)[1].strip().split(",")[0].split()[0]
-        if physical_interface_name in raw_up_names or physical_interface_name in raw_down_names:
-            all_interface_details[physical_interface_name] = {"name": physical_interface_name, "status": "", "speed": phys_speed, "ip_address": "N/A (Phys)", "mac_address": phys_mac}
-        
-        logical_interface_sections = section.split("Logical interface ")
-        if len(logical_interface_sections) > 1: logical_interface_sections = logical_interface_sections[1:]
-        for logical_section in logical_interface_sections:
-            logical_lines = logical_section.split("\n"); log_ip = "N/A"
-            if not logical_lines: continue
-            logical_interface_name = logical_lines[0].strip().split()[0].strip()
-            for log_line in logical_lines:
-                if "Local:" in log_line and "inet" in logical_section.lower(): log_ip = log_line.split("Local:")[1].split(",")[0].strip()
-            if logical_interface_name in raw_up_names or logical_interface_name in raw_down_names:
-                 all_interface_details[logical_interface_name] = {"name": logical_interface_name, "status": "", "speed": phys_speed, "ip_address": log_ip, "mac_address": phys_mac}
-    
-    up_interfaces = []
-    for name in raw_up_names:
-        details = all_interface_details.get(name, {"name": name, "status": "up", "speed": "N/A", "ip_address": "N/A", "mac_address": "N/A"})
-        details["status"] = "up"; up_interfaces.append(details)
-    down_interfaces = []
-    for name in raw_down_names:
-        details = all_interface_details.get(name, {"name": name, "status": "down", "speed": "N/A", "ip_address": "N/A", "mac_address": "N/A"})
-        details["status"] = "down"; down_interfaces.append(details)
-    return up_interfaces, down_interfaces
-# End of parse_interfaces_structured (ensure this is the full, correct version)
-
-# normalize_text, detect_encoding, read_file_by_line, extract_sections (same as before)
+# Fonction pour normaliser le texte
 def normalize_text(text):
     try:
-        if isinstance(text, list): return [normalize_text(line) for line in text]
-        if not isinstance(text, str): text = str(text)
-        return unicodedata.normalize('NFKD', text).encode('ASCII', 'ignore').decode('ASCII').lower()
-    except: return str(text)
+        if isinstance(text, list):
+            return [normalize_text(line) for line in text]
+        text = unicodedata.normalize('NFKD', text).encode('ASCII', 'ignore').decode('ASCII')
+        return text.lower()
+    except Exception as e:
+        print(f"Erreur lors de la normalisation du texte : {e}", file=sys.stderr)
+        return text
 
+# Fonction pour détecter l'encodage d'un fichier
 def detect_encoding(file_path):
-    try:
-        with open(file_path, 'rb') as f: raw = f.read(1024); return chardet.detect(raw)['encoding'] or 'utf-8'
-    except: return 'utf-8'
+    with open(file_path, 'rb') as file:
+        raw_data = file.read(1024)  
+        return chardet.detect(raw_data)['encoding'] or 'utf-8'
 
-def read_file_by_line(file_path, log_messages):
+# Fonction pour lire un fichier ligne par ligne
+def read_file_by_line(file_path):
     try:
-        enc = detect_encoding(file_path)
-        with open(file_path, 'r', encoding=enc, errors='replace') as f:
-            for line in f: yield line.rstrip('\n')
-    except FileNotFoundError: log_messages.append(f"Fichier {file_path} non trouvé."); yield None
-    except Exception as e: log_messages.append(f"Erreur lecture {file_path}: {e}"); yield None
+        encoding = detect_encoding(file_path)
+        with open(file_path, 'r', encoding=encoding, errors='replace') as file:
+            for line in file:
+                yield line.rstrip('\n')
+    except FileNotFoundError:
+        print(f"Le fichier {file_path} n'a pas été trouvé.", file=sys.stderr)
+        yield None
+    except Exception as e:
+        print(f"Erreur lors de la lecture du fichier {file_path} : {e}", file=sys.stderr)
+        yield None
 
-def extract_sections(file_gen, log_messages):
-    sections = OrderedDict(); current_section = None
-    try:
-        for line in file_gen:
-            if line is None: continue
-            stripped = line.strip()
-            if stripped.endswith(" :") and len(stripped) < 100: current_section = stripped; sections[current_section] = []
-            elif current_section: sections[current_section].append(stripped)
-    except Exception as e: log_messages.append(f"Erreur extraction sections: {e}")
+# Fonction pour extraire les sections du fichier
+def extract_sections(file_content):
+    sections = OrderedDict()
+    current_section = None
+    for line in file_content:
+        if line is None: 
+            return OrderedDict()
+        stripped_line = line.strip()
+        try:
+            if stripped_line.endswith(" :"):
+                current_section = stripped_line
+                sections[current_section] = []
+            elif current_section:
+                sections[current_section].append(stripped_line)
+        except Exception as e:
+            print(f"Erreur lors de l'extraction des sections : {e}", file=sys.stderr)
     return sections
 
-def compare_sections_structured(sections_avant, sections_apres, log_messages):
-    # ... (Same as previous version of this function in APRES_API.py)
-    structured_differences = OrderedDict()
-    all_section_keys = sorted(list(set(sections_avant.keys()) | set(sections_apres.keys())))
-    for section_key in all_section_keys:
-        content_avant_orig = sections_avant.get(section_key, [])
-        content_apres_orig = sections_apres.get(section_key, [])
-        norm_avant = set(normalize_text(content_avant_orig))
-        norm_apres = set(normalize_text(content_apres_orig))
-        current_diff = {"section_title": section_key, "lines_removed": [], "lines_added": [], "status": "Identique"}
-        if norm_avant != norm_apres:
-            current_diff["status"] = "Modifié"
-            current_diff["lines_removed"] = [l for l in content_avant_orig if normalize_text(l) not in norm_apres]
-            current_diff["lines_added"] = [l for l in content_apres_orig if normalize_text(l) not in norm_avant]
-            if not current_diff["lines_removed"] and not current_diff["lines_added"]:
-                 if not content_avant_orig and content_apres_orig: current_diff["status"] = "Nouveau"
-                 elif content_avant_orig and not content_apres_orig: current_diff["status"] = "Supprimé"
-                 else: current_diff["status"] = "Modifié (subtil)"
-        structured_differences[section_key] = current_diff
-    log_messages.append(f"Comparaison structurée terminée pour {len(all_section_keys)} sections.")
-    return structured_differences
-
-
-# --- Main Process Function for APRES ---
-def run_apres_checks_and_compare(ident_data, password, log_messages, avant_connection=None):
-    ip = ident_data.get("ip")
-    username = ident_data.get("username")
-    avant_file_to_compare_path = ident_data.get("avant_file_path") # Path to the AVANT output text file
-    router_hostname = ident_data.get("router_hostname", "inconnu")
-
-    if not all([ip, username, avant_file_to_compare_path]):
-        # ... (error handling as before)
-        msg = "Données d'identification APRES incomplètes."
-        log_messages.append(msg)
-        return {"status": "error", "message": msg, "logs": log_messages, "structured_data_apres": {}, "comparison_results": {}}
-    if not os.path.exists(avant_file_to_compare_path):
-        # ... (error handling as before)
-        msg = f"Fichier AVANT ({avant_file_to_compare_path}) non trouvé pour comparaison APRES."
-        log_messages.append(msg)
-        return {"status": "error", "message": msg, "logs": log_messages, "structured_data_apres": {}, "comparison_results": {}}
-
-
-    fichiers_crees_apres = []
-    connection = avant_connection 
-    apres_file_path_internal = None # For temp then final APRES text file
-    comparison_file_path = None
-    
-    # Initialize structured data dictionary for APRES results
-    structured_output_data_apres = {
-        "basic_info": {}, "routing_engine": "", "interfaces_up": [], "interfaces_down": [],
-        "arp_table": "", "route_summary": "", "ospf_info": "", "isis_info": "", "mpls_info": "",
-        "ldp_info": "", "rsvp_info": "", "lldp_info": "", "lsp_info": "", "bgp_summary": "",
-        "system_services": [], "configured_protocols": [], "firewall_config": "",
-        "critical_logs_messages": "", "critical_logs_chassisd": "", "full_config_set": ""
-    }
-
+# Fonction pour comparer les sections
+def compare_sections(sections_avant, sections_apres):
+    differences = OrderedDict()
     try:
-        log_messages.append(f"--- Début run_apres_checks_and_compare pour {ip} ---")
-        if connection is None or not connection.is_alive():
-            if connection is not None: log_messages.append("Connexion fournie pour APRES non active. Reconnexion.")
-            try: connection.disconnect()
-            except: pass
-            device = {'device_type': 'juniper', 'host': ip, 'username': username, 'password': password, 'timeout': 30}
-            log_messages.append(f"APRES: Tentative de connexion à {ip}..."); connection = ConnectHandler(**device)
-            log_messages.append(f"APRES: Connecté succès à {ip}")
+        all_sections = OrderedDict()
+        for section in sections_avant.keys():
+            all_sections[section] = True
+        for section in sections_apres.keys():
+            all_sections[section] = True
+        for section in all_sections.keys():
+            content1 = sections_avant.get(section, [])
+            content2 = sections_apres.get(section, [])
+            norm1 = set(normalize_text(content1))
+            norm2 = set(normalize_text(content2))
+            if norm1 != norm2:
+                # Modifier ici pour ajouter des messages explicites
+                added = [line for line in content2 if normalize_text(line) in norm2 - norm1]
+                removed = [line for line in content1 if normalize_text(line) in norm1 - norm2]
+                # Si added est vide mais qu'il y a des removed, ajouter un message
+                if not added and removed:
+                    added = ["✗ (Supprimée)"]
+                # Si removed est vide mais qu'il y a des added, ajouter un message
+                if not removed and added:
+                    removed = ["✗ (Aucune)"]
+                differences[section] = {
+                    "file1": content1,
+                    "file2": content2,
+                    "added": added,
+                    "removed": removed
+                }
+    except Exception as e:
+        print(f"Erreur lors de la comparaison des sections : {e}", file=sys.stderr)
+    return differences
+
+# Fonction pour afficher les différences
+def display_differences(differences):
+    if not differences:
+        print("Aucun changement détecté entre les configurations avant et après le mis a jour")
+        return
+    print("\nRapport des changements :")
+    for section, content in differences.items():
+        print(f"\n{section}")
+        # Afficher les en-têtes spécifiques si nécessaire
+        headers = {
+            "Interfaces OSPF actives :": "Interface           State   Area            DR ID           BDR ID          Nbrs",
+            "interfaces isis actives :": "Interface           System        Hold        SNPA",
+            "interfaces mpls actives :": "Interface            State        Administrative groups(x:extended)",
+            "sessions LDP activé :": "address            State        connection    timeAdv.Mode",
+            "voisin LLDP découvert  :": "local interface            parent interafce        Port info     System Name",
+            "interfaces configuré avec RSVP :": "interface           active resv       subscr-iption     static BW    Available BW      Resrved BW     highwater mark"
+        }
+        if section in headers:
+            print(headers[section])
+        max_lines = max(len(content["removed"]), len(content["added"]))
+        if max_lines > 0:
+            # Calculer la largeur maximale pour chaque colonne
+            max_before = max((len(line) for line in content["removed"]), default=0)
+            max_after = max((len(line) for line in content["added"]), default=0)
+            # Déterminer si on doit utiliser le mode vertical
+            terminal_width = 120  # Largeur typique d'un terminal
+            use_vertical = (max_before + max_after + 3) > terminal_width
+            if use_vertical:
+                # Mode vertical amélioré avec tableau
+                print("\n" + " AVANT ".center(terminal_width, "="))
+                for line in content["removed"]:
+                    print(line)
+                print("\n" + " APRÈS ".center(terminal_width, "="))
+                for line in content["added"]:
+                    print(line)
+                print("=" * terminal_width)
+            else:
+                # Mode tableau côte à côte
+                # Ajuster les largeurs pour l'alignement
+                col_before = max(max_before, 20)
+                col_after = max(max_after, 20)
+                # En-têtes
+                print("\n" + "-" * (col_before + col_after + 3))
+                print(f"{'AVANT'.center(col_before)} | {'APRÈS'.center(col_after)}")
+                print("-" * (col_before + col_after + 3))
+                # Contenu
+                for i in range(max_lines):
+                    before = content["removed"][i] if i < len(content["removed"]) else "✓ (Identique)"
+                    after = content["added"][i] if i < len(content["added"]) else "✓ (Identique)"
+                    # Gestion spéciale des messages explicites
+                    if before == "✗ (Aucune)":
+                        after = content["added"][i] if i < len(content["added"]) else ""
+                    elif after == "✗ (Supprimée)":
+                        before = content["removed"][i] if i < len(content["removed"]) else ""
+                    # Découper les lignes trop longues
+                    before_lines = [before[j:j+col_before] for j in range(0, len(before), col_before)] or [""]
+                    after_lines = [after[j:j+col_after] for j in range(0, len(after), col_after)] or [""]
+                    max_sub_lines = max(len(before_lines), len(after_lines))
+                    for j in range(max_sub_lines):
+                        before_part = before_lines[j] if j < len(before_lines) else ""
+                        after_part = after_lines[j] if j < len(after_lines) else ""
+                        # Afficher seulement la première ligne avec le séparateur
+                        if j == 0:
+                            print(f"{before_part.ljust(col_before)} | {after_part.ljust(col_after)}")
+                        else:
+                            print(f"{before_part.ljust(col_before)}   {after_part.ljust(col_after)}")
+                print("-" * (col_before + col_after + 3) + "\n")
+
+# Fonction pour écrire les différences dans un fichier
+def write_differences_to_file(differences, filename):
+    try:
+        with open(filename, 'w', encoding='utf-8') as file:
+            if not differences:
+                file.write("Aucun changement détecté entre les configurations avant et après le mis a jour.\n")
+                return
+            file.write("\nRapport des changements :\n")
+            for section, content in differences.items():
+                file.write(f"\n{section}\n")
+                headers = {
+                    "Interfaces OSPF actives :": "Interface           State   Area            DR ID           BDR ID          Nbrs",
+                    "interfaces isis actives :": "Interface           System        Hold        SNPA",
+                    "interfaces mpls actives :": "Interface            State        Administrative groups(x:extended)",
+                    "sessions LDP activé :": "address            State        connection    timeAdv.Mode",
+                    "voisin LLDP découvert  :": "local interface            parent interafce        Port info     System Name",
+                    "interfaces configuré avec RSVP :": "interface           active resv       subscr-iption     static BW    Available BW      Resrved BW     highwater mark"
+                }
+                if section in headers:
+                    file.write(headers[section] + "\n")
+                max_lines = max(len(content["removed"]), len(content["added"]))
+                if max_lines > 0:
+                    max_before = max((len(line) for line in content["removed"]), default=0)
+                    max_after = max((len(line) for line in content["added"]), default=0)
+                    file_width = 120
+                    use_vertical = (max_before + max_after + 3) > file_width
+                    if use_vertical:
+                        file.write("\n" + " AVANT ".center(file_width, "=") + "\n")
+                        for line in content["removed"]:
+                            file.write(line + "\n")
+                        file.write("\n" + " APRÈS ".center(file_width, "=") + "\n")
+                        for line in content["added"]:
+                            file.write(line + "\n")
+                        file.write("=" * file_width + "\n")
+                    else:
+                        col_before = max(max_before, 20)
+                        col_after = max(max_after, 20)
+                        file.write("\n" + "-" * (col_before + col_after + 3) + "\n")
+                        file.write(f"{'AVANT'.center(col_before)} | {'APRÈS'.center(col_after)}\n")
+                        file.write("-" * (col_before + col_after + 3) + "\n")
+                        for i in range(max_lines):
+                            # Modifications ici pour gérer les cas spéciaux
+                            before = content["removed"][i] if i < len(content["removed"]) else "✓ (Identique)"
+                            after = content["added"][i] if i < len(content["added"]) else "✓ (Identique)"
+                            # Gestion spéciale des messages explicites
+                            if before == "✗ (Aucune)":
+                                after = content["added"][i] if i < len(content["added"]) else ""
+                            elif after == "✗ (Supprimée)":
+                                before = content["removed"][i] if i < len(content["removed"]) else ""
+                            before_lines = [before[j:j+col_before] for j in range(0, len(before), col_before)] or [""]
+                            after_lines = [after[j:j+col_after] for j in range(0, len(after), col_after)] or [""]
+                            max_sub_lines = max(len(before_lines), len(after_lines))
+                            for j in range(max_sub_lines):
+                                before_part = before_lines[j] if j < len(before_lines) else ""
+                                after_part = after_lines[j] if j < len(after_lines) else ""
+                                
+                                if j == 0:
+                                    file.write(f"{before_part.ljust(col_before)} | {after_part.ljust(col_after)}\n")
+                                else:
+                                    file.write(f"{before_part.ljust(col_before)}   {after_part.ljust(col_after)}\n")
+                        file.write("-" * (col_before + col_after + 3) + "\n\n")
+        print(f"\nLe rapport détaillé des changements a été sauvegardé dans le fichier : {filename}.")
+    except Exception as e:
+        print(f"Erreur lors de l'écriture des différences dans le fichier : {e}")
+
+# Trouver et charger le fichier d'identification
+try:
+    # Vérifier si un fichier d'identifiants a été passé en argument
+    if len(sys.argv) > 1:
+        selected_file = sys.argv[1]
+        if not os.path.exists(selected_file):
+            raise FileNotFoundError(f"Fichier spécifié introuvable: {selected_file}")
+    else:
+        # Fallback à la recherche automatique si aucun argument
+        fichier_identifiants = glob.glob("identifiants_*.json")
+        if not fichier_identifiants:
+            raise FileNotFoundError("Aucun fichier d'identification trouvé. Exécutez AVANT.py d'abord.")
+        
+        if len(fichier_identifiants) > 1:
+            print("Plusieurs sessions actives détectées:")
+            for i, file in enumerate(fichier_identifiants, 1):
+                print(f"{i}. {file}")
+            choice = int(input("Choisissez le numéro de la session à utiliser: ")) - 1
+            selected_file = fichier_identifiants[choice]
         else:
-            log_messages.append("APRES: Utilisation de la connexion existante.")
+            selected_file = fichier_identifiants[0]
+    # Charger le fichier d'identifiants
+    with open(selected_file, "r") as f:
+        identifiants = json.load(f)
+    # Validation des champs requis
+    ip = identifiants.get("ip")
+    username = identifiants.get("username")
+    lock_file = identifiants.get("lock_file")
+    AVANT = identifiants.get("AVANT", "")
+    config_filename = identifiants.get("config_filename","")
+    if not all([ip, username, lock_file]):
+        raise ValueError("Fichier d'identifiants incomplet ou corrompu")
+    if not valider_ip(ip):
+        raise ValueError("Adresse IP invalide dans le fichier d'identifiants")
+except Exception as e:
+    print(f"ERREUR: {str(e)}")
+    sys.exit(1)
 
-        if not verifier_connexion_apres(connection, log_messages, context="APRES"): # Pass context
-            raise Exception("APRES: Vérification de la connexion post-établissement échouée.")
-
-        Path(GENERATED_FILES_DIR).mkdir(exist_ok=True, parents=True)
-        if not os.access(GENERATED_FILES_DIR, os.W_OK):
-            raise PermissionError(f"APRES: Pas d'accès écriture à {GENERATED_FILES_DIR}")
-
-        temp_apres_file_obj = tempfile.NamedTemporaryFile(
-            mode='w+', prefix='APRES_', suffix='.txt', delete=False, encoding='utf-8', dir=GENERATED_FILES_DIR)
-        apres_file_path_internal = temp_apres_file_obj.name
-        log_messages.append(f"Fichier APRES temporaire: {apres_file_path_internal}")
-        fichiers_crees_apres.append(apres_file_path_internal)
-
-        # Section: Basic Info (APRES)
-        structured_output_data_apres["basic_info"]["section_title"] = "Informations de base du routeur (APRES)"
-        temp_apres_file_obj.write(f"{structured_output_data_apres['basic_info']['section_title']}:\n")
-        out_ver_apres = connection.send_command('show version')
-        j_ver_ap, r_model_ap = "inconnu", "inconnu"; cur_host_ap = router_hostname
-        for l in out_ver_apres.splitlines():
-            if l.startswith("Hostname:"): cur_host_ap = l.split("Hostname:")[1].strip()
-            elif l.startswith("Model:"): r_model_ap = l.split("Model:")[1].strip()
-            elif l.startswith("Junos:"): j_ver_ap = l.split("Junos:")[1].strip()
-        structured_output_data_apres["basic_info"]["hostname"] = cur_host_ap
-        structured_output_data_apres["basic_info"]["model"] = r_model_ap
-        structured_output_data_apres["basic_info"]["junos_version"] = j_ver_ap
-        temp_apres_file_obj.write(f"  Hostname: {cur_host_ap}\n  Modèle: {r_model_ap}\n  Version Junos: {j_ver_ap}\n")
-        log_messages.append(f"APRES Basic Info: Host={cur_host_ap}, Model={r_model_ap}, Junos={j_ver_ap}")
-
-        temp_apres_file_obj.flush()
-        temp_apres_file_obj.close()
-        if not os.path.exists(apres_file_path_internal):
-            raise FileNotFoundError(f"Disparition critique fichier temporaire APRES: {apres_file_path_internal}")
-
-        final_apres_base = f"APRES_{username}_{router_hostname}.txt"
-        final_apres_path = os.path.join(GENERATED_FILES_DIR, final_apres_base)
-        compteur_ap = 1
-        while os.path.exists(final_apres_path):
-            final_apres_path = os.path.join(GENERATED_FILES_DIR, f"APRES_{username}_{router_hostname}_{compteur_ap}.txt"); compteur_ap+=1
+# Boucle pour la connexion SSH
+connection = None
+fichiers_crees = [] 
+APRES = None
+fichier_identifiants = None
+try:
+    while True:
+        password = getpass("Veuillez entrer votre mot de passe : ")
+        device = {
+            "device_type": "juniper",
+            "host": ip,
+            "username": username,
+            "password": password,
+            "timeout": 30,  # Augmenté le timeout pour les connexions lentes
+        }
         try:
-            os.replace(apres_file_path_internal, final_apres_path)
-            log_messages.append(f"Fichier APRES renommé en: {final_apres_path}")
-            if apres_file_path_internal in fichiers_crees_apres: fichiers_crees_apres.remove(apres_file_path_internal)
-            apres_file_path_internal = final_apres_path
-            if apres_file_path_internal not in fichiers_crees_apres: fichiers_crees_apres.append(apres_file_path_internal)
-        except OSError as e_rep_ap:
-            log_messages.append(f"ERREUR renommage APRES: {e_rep_ap}. Utilisation du nom temporaire: {apres_file_path_internal}")
+            connection = ConnectHandler(**device)
+            # Vérification de la connexion
+            if verifier_connexion(connection):
+                break
+            else:
+                print("Échec de la connexion. Veuillez réessayer.")
+                connection.disconnect()
+        except Exception as e:
+            print(f"Échec de la connexion: {str(e)}")
+            print("Veuillez vérifier votre mot de passe et réessayer.\n")
+            if connection:
+                connection.disconnect()
+
+    # Création du fichier temporaire
+    temp_file = tempfile.NamedTemporaryFile(
+        mode='w+',
+        prefix='APRES_',
+        suffix='.txt',
+        delete=False,  # Ne pas supprimer automatiquement à la fermeture
+        encoding='utf-8'
+    )
+    fichier_temporaire = temp_file.name
+    fichiers_crees.append(fichier_temporaire)
+    # Fermer le fichier car nous allons le rouvrir en mode 'with' plus tard
+    temp_file.close()
+    # Réouvrir le fichier en mode append pour y écrire les données
+    with open(fichier_temporaire, 'a', encoding='utf-8') as file:
+        try: 
+            # Récupérer les informations de version
+            #Vérifie si la connexion est toujours active
+            if not verifier_connexion(connection):
+                raise Exception("Connexion perdue avec le routeur")
+            print("\nInformations de base du routeur :")
+            file.write("Informations de base du routeur :\n")
+            output = connection.send_command('show version')
+            junos_version = "inconnu"
+            router_model = "inconnu"
+            router_hostname = "inconnu"
+            for line in output.splitlines():
+                if line.startswith("Hostname:"):
+                    router_hostname = line.split("Hostname:")[1].strip()
+                    print(f"Le hostname du routeur est : {router_hostname}")
+                    file.write(f"Le hostname du routeur est : {router_hostname}\n")
+                elif line.startswith("Model:"):
+                    router_model = line.split("Model:")[1].strip()
+                    print(f"Le modèle du routeur est : {router_model}")
+                    file.write(f"Le modele du routeur est : {router_model}\n")
+                elif line.startswith("Junos:"): 
+                    junos_version = line.split("Junos:")[1].strip()
+                    print(f"La version du système Junos est : {junos_version}")
+                    file.write(f"La version du systeme Junos est : {junos_version}\n")
+        except Exception as e:
+            print(f"Erreur lors de la récupération des informations de base du routeur : {str(e)}")
+            file.write(f"\nErreur lors de la recuperation des informations de base du routeur : {str(e)}")
+            junos_version = "inconnu"
+            router_model = "inconnu"
+            router_hostname = "inconnu"
+            raise # Relance l'exception pour arrêter le script
+
+    # Renommage sécurisé du fichier temporaire
+    # Renommer le fichier temporaire avec le nom du routeur
+    base_APRES = f"APRES_{username}_{router_hostname}.txt"
+    APRES = base_APRES
+    # Vérifier si le fichier final existe déjà et trouver un nom disponible
+    compteur = 1
+    while os.path.exists(APRES):
+        APRES = f"APRES_{username}_{router_hostname}_{compteur}.txt"
+        compteur += 1
+    try:
+        # Vérifier que le fichier source existe
+        if os.path.exists(fichier_temporaire):
+            # Fermer explicitement le fichier s'il est ouvert
+            if 'file' in locals() and not file.closed:
+                file.close()
+            # Renommer de manière atomique
+            os.replace(fichier_temporaire, APRES)
+            # Mettre à jour la liste des fichiers créés
+            fichiers_crees.remove(fichier_temporaire)
+            fichiers_crees.append(APRES)
+        else:
+            print("Avertissement : Le fichier temporaire est introuvable.")
+            APRES = fichier_temporaire
+    except Exception as e:
+        print(f"Erreur lors du renommage : {e}. Le fichier reste {fichier_temporaire}")
+        APRES = fichier_temporaire
+        # Ajouter le fichier temporaire à la liste s'il n'y est pas déjà
+        if fichier_temporaire not in fichiers_crees:
+            fichiers_crees.append(fichier_temporaire)
+
+    with open(APRES, 'a') as file:
+        # Afficher les informations du moteur de routage 
+        try:
+            if not verifier_connexion(connection):
+                raise Exception("Connexion perdue avec le routeur")
+            print("\nInformations du moteur de routage :")
+            file.write("\nInformations du moteur de routage :\n")
+            routing_engine_output = connection.send_command("show chassis routing-engine")
+            print(routing_engine_output)
+            file.write(routing_engine_output + "\n")
+        except Exception as e:
+            print(f"Erreur lors de la récupération des informations du moteur de routage : {e}")
+            file.write(f"Erreur lors de la recuperation des informations du moteur de routage : {e}")
+            raise  
+
+        # Récupérer les informations des interfaces
+        try:
+            if not verifier_connexion(connection):
+                raise Exception("Connexion perdue avec le routeur")
+            print("\nInformations sur les interfaces :")
+            file.write("\nInformations sur les interfaces :\n")
+            output_terse = connection.send_command("show interfaces terse | no-more")
+            output_detail = connection.send_command("show interfaces detail | no-more")
+            interfaces_up = []
+            interfaces_down = []
+            interfaces_info = {}
+            interfaces_ip = {}
+            interfaces_mac = {}  
+            # Traitement des interfaces physiques et logiques
+            for line in output_terse.splitlines():
+                columns = line.split()
+                if len(columns) >= 2:
+                    interface_name = columns[0]
+                    status = columns[1]
+                    if "up" in status.lower():
+                        interfaces_up.append(interface_name)
+                    elif "down" in status.lower():
+                        interfaces_down.append(interface_name)
+                    if "inet" in columns:
+                        ip_index = columns.index("inet") + 1
+                        if ip_index < len(columns):
+                            interfaces_ip[interface_name] = columns[ip_index]
+            # Extraction des informations détaillées (BP et adresse MAC)
+            interfaces = output_detail.split("Physical interface:")[1:]
+            for interface in interfaces:
+                lines = interface.split("\n")
+                interface_name = lines[0].strip().split(",")[0]
+                speed = "Indisponible"
+                mac_address = None  # Par défaut, pas d'adresse MAC
+                for line in lines:
+                    if "Speed:" in line:
+                        speed = line.split("Speed:")[1].split(",")[0].strip()
+                    if "Current address:" in line:
+                        mac_address = line.split("Current address:")[1].strip().split()[0]  # Ne garde que l'adresse MAC
+                interfaces_info[interface_name] = speed
+                interfaces_mac[interface_name] = mac_address  # Stocker l'adresse MAC
+                # Traitement des interfaces logiques
+                logical_interfaces = interface.split("Logical interface")[1:]
+                for logical_interface in logical_interfaces:
+                    logical_lines = logical_interface.split("\n")
+                    logical_name = logical_lines[0].strip().split()[0]
+                    # Stocker les informations de l'interface logique
+                    interfaces_info[logical_name] = speed
+                    # Récupérer l'adresse IP de l'interface logique
+                    for line in logical_lines:
+                        if "Local:" in line and "Destination:" in line:
+                            logical_ip = line.split("Local:")[1].split(",")[0].strip()
+                            interfaces_ip[logical_name] = logical_ip
+            # Affichage des interfaces up
+            print("Les Interfaces up :")
+            file.write("Les Interfaces up :\n")
+            if interfaces_up:
+                for intf in interfaces_up:
+                    speed = interfaces_info.get(intf, "Indisponible")
+                    ip_address = interfaces_ip.get(intf, "Aucune IP")
+                    mac_address = interfaces_mac.get(intf)
+                    output = f"{intf} - Vitesse: {speed} - IP: {ip_address}"
+                    if mac_address: 
+                        output += f" - MAC: {mac_address}"
+                    print(output)
+                    file.write(output + "\n")
+            else:
+                print("Aucune interface active trouvée.")
+                file.write("Aucune interface active trouvee.\n")
+            # Affichage des interfaces down
+            print("Les Interfaces down :")
+            file.write("Les Interfaces down :\n")
+            if interfaces_down:
+                for intf in interfaces_down:
+                    speed = interfaces_info.get(intf, "Indisponible")
+                    ip_address = interfaces_ip.get(intf, "Aucune IP")
+                    mac_address = interfaces_mac.get(intf)
+                    output = f"{intf} - Vitesse: {speed} - IP: {ip_address}"
+                    if mac_address:  
+                        output += f" - MAC: {mac_address}"
+                    print(output)
+                    file.write(output + "\n")
+            else:
+                print("Aucune interface inactive trouvée.")
+                file.write("Aucune interface inactive trouvee.\n")
+        except Exception as e:
+            print(f"Erreur lors de la récupération des informations des interfaces : {e}")
+            file.write(f"Erreur lors de la recuperation des informations des interfaces : {e}")
+            raise  
         
-        # --- Collect other data for APRES ---
-        with open(apres_file_path_internal, 'a', encoding='utf-8') as file_ap:
-            file_ap.write("\n--- Collecte APRES étendue ---\n")
-            
-            def fetch_and_store_apres(key, title, cmd, is_raw=True, special_parser=None):
-                # Simplified version of AVANT's fetch_and_store, adapt as needed
-                if not verifier_connexion_apres(connection, log_messages, "APRES"):
-                    raise Exception(f"Connexion APRES perdue avant: {title}")
-                log_messages.append(f"Récupération APRES: {title}")
-                file_ap.write(f"\n{title}:\n")
-                output = connection.send_command(cmd, read_timeout=60)
-                
-                if special_parser:
-                    parsed_data = special_parser(output)
-                    structured_output_data_apres[key] = parsed_data
-                    if isinstance(parsed_data, list) and parsed_data and isinstance(parsed_data[0], dict):
-                         for item_dict in parsed_data:
-                            for k,v in item_dict.items(): file_ap.write(f"  {k}: {v}\n")
-                            file_ap.write("\n")
-                    elif isinstance(parsed_data, list):
-                        for item_str in parsed_data: file_ap.write(f"  {item_str}\n")
-                    else: file_ap.write(str(parsed_data) + "\n")
-                elif is_raw:
-                    structured_output_data_apres[key] = output
-                    file_ap.write(output + "\n")
-                else:
-                    lines = [l.strip() for l in output.splitlines() if l.strip() and not l.strip().startswith("---(more")]
-                    structured_output_data_apres[key] = lines
-                    for line_item in lines: file_ap.write(f"  {line_item}\n")
-                log_messages.append(f"OK APRES: {title}")
+        # Récupération des informations ARP 
+        try:
+            print("\nInformations ARP :")
+            file.write("\nInformations ARP :\n")
+            # Exécuter la commande show arp
+            arp_output = connection.send_command("show arp")
+            # Afficher le résultat brut directement
+            print(arp_output)
+            file.write(arp_output + "\n")   
+        except Exception as e:
+            print(f"Erreur lors de la récupération des informations ARP : {e}")
+            file.write(f"Erreur lors de la recuperation des informations ARP : {e}\n")  
 
-            fetch_and_store_apres("routing_engine", "Informations du moteur de routage (APRES)", "show chassis routing-engine")
-
-            # Interfaces (APRES)
-            if not verifier_connexion_apres(connection, log_messages, "APRES"): raise Exception("Connexion APRES perdue avant interfaces")
-            log_messages.append("Récupération APRES: Informations sur les interfaces")
-            file_ap.write("\nInformations sur les interfaces (APRES):\n")
-            cmd_terse_ap = "show interfaces terse | no-more"
-            cmd_detail_ap = "show interfaces detail | no-more"
-            out_terse_ap = connection.send_command(cmd_terse_ap, read_timeout=60)
-            out_detail_ap = connection.send_command(cmd_detail_ap, read_timeout=120)
-            up_list_ap, down_list_ap = parse_interfaces_structured(out_terse_ap, out_detail_ap, log_messages)
-            structured_output_data_apres["interfaces_up"] = up_list_ap
-            structured_output_data_apres["interfaces_down"] = down_list_ap
-            file_ap.write("Interfaces UP (APRES):\n")
-            if up_list_ap:
-                for iface in up_list_ap: file_ap.write(f"  Name: {iface['name']}, Speed: {iface['speed']}, IP: {iface['ip_address']}, MAC: {iface['mac_address']}\n")
-            else: file_ap.write("  Aucune interface UP (APRES).\n")
-            file_ap.write("Interfaces DOWN (APRES):\n")
-            if down_list_ap:
-                for iface in down_list_ap: file_ap.write(f"  Name: {iface['name']}, Speed: {iface['speed']}, IP: {iface['ip_address']}, MAC: {iface['mac_address']}\n")
-            else: file_ap.write("  Aucune interface DOWN (APRES).\n")
-            log_messages.append("OK APRES: Informations sur les interfaces")
-
-            fetch_and_store_apres("arp_table", "Informations ARP (APRES)", "show arp")
-            fetch_and_store_apres("route_summary", "Informations sur les routes (APRES)", "show route summary")
-            fetch_and_store_apres("ospf_info", "Protocole OSPF (APRES)", "show ospf interface brief")
-            # ... Add all other fetch_and_store_apres calls similar to AVANT_API.py ...
-            fetch_and_store_apres("isis_info", "Protocole IS-IS (APRES)", "show isis adjacency")
-            fetch_and_store_apres("mpls_info", "Protocole MPLS (APRES)", "show mpls interface")
-            fetch_and_store_apres("ldp_info", "Protocole LDP (APRES)", "show ldp session")
-            fetch_and_store_apres("rsvp_info", "Protocole RSVP (APRES)", "show rsvp interface")
-            fetch_and_store_apres("lldp_info", "Protocole LLDP (APRES)", "show lldp neighbor")
-            fetch_and_store_apres("lsp_info", "Protocole LSP (APRES)", "show mpls lsp")
-            fetch_and_store_apres("bgp_summary", "Protocole BGP (APRES)", "show bgp summary")
-            
-            def parse_services_apres(output): return sorted(list(set(l.strip().rstrip(";") for l in output.splitlines() if l.strip().endswith(";"))))
-            fetch_and_store_apres("system_services", "Services configurés (APRES)", "show configuration system services", is_raw=False, special_parser=parse_services_apres)
-            
-            def parse_protocols_apres(output): return sorted(list(set(l.split("{")[0].strip() for l in output.splitlines() if "{" in l and not l.strip().startswith("}"))))
-            fetch_and_store_apres("configured_protocols", "Protocoles configurés (APRES)", "show configuration protocols", is_raw=False, special_parser=parse_protocols_apres)
-
-            fetch_and_store_apres("firewall_config", "Listes de Contrôle d'Accès (ACL) (APRES)", "show configuration firewall")
-            fetch_and_store_apres("critical_logs_messages", "Logs erreurs critiques 'messages' (APRES)", 'show log messages | match "error|warning|critical" | last 10')
-            fetch_and_store_apres("critical_logs_chassisd", "Logs erreurs critiques 'chassisd' (APRES)", 'show log chassisd | match "error|warning|critical" | last 10')
-
-            if not verifier_connexion_apres(connection, log_messages, "APRES"): raise Exception("Connexion APRES perdue avant config totale.")
-            title_cfg_ap = "La configuration totale (set format) (APRES)"
-            cmd_cfg_ap = "show configuration | display set"
-            log_messages.append(f"Récupération APRES: {title_cfg_ap}")
-            file_ap.write(f"\n{title_cfg_ap}:\n")
-            out_cfg_ap = connection.send_command(cmd_cfg_ap, read_timeout=180)
-            structured_output_data_apres["full_config_set"] = out_cfg_ap
-            file_ap.write(out_cfg_ap + "\n")
-            log_messages.append(f"OK APRES: {title_cfg_ap}")
-
-
-        # --- Comparaison ---
-        log_messages.append(f"\nLancement de la comparaison structurée entre AVANT et APRES...")
-        avant_data_file_content_gen = read_file_by_line(avant_file_to_compare_path, log_messages)
-        sections_from_avant_file = extract_sections(avant_data_file_content_gen, log_messages)
-
-        apres_data_file_content_gen = read_file_by_line(apres_file_path_internal, log_messages) # Use the actual APRES text file
-        sections_from_apres_file = extract_sections(apres_data_file_content_gen, log_messages)
+        # Les routes Informations sur les routes 
+        try:
+            if not verifier_connexion(connection):
+                raise Exception("Connexion perdue avec le routeur")
+            print("\nInformations sur les routes :")
+            file.write("\nInformations sur les routes :\n")
+            print("Résumé des routes :")
+            file.write("Resume des routes :\n")
+            route_summary = connection.send_command("show route summary")
+            if route_summary.strip():  # Vérifier si la sortie n'est pas vide
+                print(route_summary)
+                file.write(route_summary + "\n")
+            else:
+                print("Aucun résumé de route trouvé.")
+                file.write("Aucun resume de route trouve.\n")
+        except Exception as e:
+            print(f"Erreur lors de la récupération des informations sur les routes : {e}")
+            file.write(f"Erreur lors de la recuperation des informations sur les routes : {e}")
+            raise  
         
-        if not sections_from_avant_file and os.path.exists(avant_file_to_compare_path):
-            log_messages.append(f"AVERTISSEMENT: Aucune section extraite de {avant_file_to_compare_path} (AVANT). Comparaison affectée.")
-        if not sections_from_apres_file and os.path.exists(apres_file_path_internal):
-            log_messages.append(f"AVERTISSEMENT: Aucune section extraite de {apres_file_path_internal} (APRES). Comparaison affectée.")
+        # Vérifier le protocol OSPF
+        try:
+            print("\nProtocole OSPF :")
+            file.write("\nProtocole OSPF :\n")
+            ospf_interfaces = connection.send_command("show ospf interface brief")
+            if "OSPF instance is not running" in ospf_interfaces: 
+                print("OSPF n'est pas configuré sur ce routeur.")
+                file.write("OSPF n'est pas configure sur ce routeur.\n")
+            else:
+                print("Interfaces OSPF actives :")
+                file.write("Interfaces OSPF actives :\n")
+                print(ospf_interfaces)
+                file.write(ospf_interfaces + "\n")
+        except Exception as e:
+            print(f"Erreur lors de la vérification du protocole OSPF : {e}")
+            file.write(f"Erreur lors de la verification du protocole OSPF : {e}")  
 
-        comparison_results_structured = compare_sections_structured(sections_from_avant_file, sections_from_apres_file, log_messages)
+        # Vérifier le protocol ISIS
+        try:
+            print("\nProtocole IS-IS :")
+            file.write("\nProtocole IS-IS :\n")
+            isis_adjacency = connection.send_command("show isis adjacency")
+            if "IS-IS instance is not running" in isis_adjacency: 
+                    print("IS-IS n'est pas configuré sur ce routeur.")
+                    file.write("IS-IS n'est pas configure sur ce routeur.\n")
+            else: 
+                    print("Interfaces isis actives :")
+                    file.write("Interfaces isis actives :\n")
+                    print(isis_adjacency)
+                    file.write(isis_adjacency + "\n")
+        except Exception as e:
+            print(f"Erreur lors de la vérification du protocole IS-IS : {e}")
+            file.write(f"Erreur lors de la verification du protocole IS-IS : {e}")  
 
-        comp_base_name = f"COMPARAISON_{username}_{router_hostname}.txt" # Text file for JSON dump of diff
-        comparison_file_path = os.path.join(GENERATED_FILES_DIR, comp_base_name)
-        comp_counter = 1
-        while os.path.exists(comparison_file_path):
-            comparison_file_path = os.path.join(GENERATED_FILES_DIR, f"COMPARAISON_{username}_{router_hostname}_{comp_counter}.txt"); comp_counter+=1
-        with open(comparison_file_path, 'w', encoding='utf-8') as f_comp:
-            json.dump(comparison_results_structured, f_comp, indent=2) # Store structured diff as JSON
-        fichiers_crees_apres.append(comparison_file_path)
-        log_messages.append(f"Rapport de comparaison (structuré JSON) sauvegardé dans: {comparison_file_path}")
+        # Vérifier le protocol MPLS
+        try:
+            print("\nProtocole MPLS :")
+            file.write("\nProtocole MPLS :\n")
+            mpls_interface = connection.send_command("show mpls interface")
+            if "MPLS not configured" in mpls_interface: 
+                    print("MPLS n'est pas configuré sur ce routeur.")
+                    file.write("MPLS n'est pas configure sur ce routeur.\n")
+            else: 
+                    print("les interfaces  MPLS est activés. :")
+                    file.write("les interfaces  MPLS  actives. :\n")
+                    print(mpls_interface)
+                    file.write(mpls_interface + "\n")
+        except Exception as e:
+            print(f"Erreur lors de la vérification du protocole MPLS : {e}")
+            file.write(f"Erreur lors de la verification du protocole MPLS : {e}")  
 
-        original_ident_file = ident_data.get("ident_file_path")
-        if original_ident_file and os.path.exists(original_ident_file):
-            try: os.remove(original_ident_file); log_messages.append(f"Fichier identifiants {original_ident_file} supprimé.")
-            except Exception as e_del_id: log_messages.append(f"Erreur suppression {original_ident_file}: {e_del_id}")
-        
-        log_messages.append(f"--- Fin run_apres_checks_and_compare pour {ip} ---")
-        return {
-            "status": "success", "message": "Vérifications APRES et comparaison terminées.",
-            "apres_file_path": apres_file_path_internal, 
-            "comparison_file_path": comparison_file_path,
-            "structured_data_apres": structured_output_data_apres, 
-            "comparison_results": comparison_results_structured, 
-            "log_messages": log_messages,
-            "fichiers_crees_apres": fichiers_crees_apres,
-            "connection_obj": connection 
-        }
+        # verefier le protocol LDP
+        try:
+            print("\nProtcole LDP :")
+            file.write("\nProtocole LDP :\n")
+            ldp_session = connection.send_command("show ldp session")
+            if "LDP instance is not running" in ldp_session: 
+              print("LDP n'est pas configuré sur ce routeur.")
+              file.write("LDP n'est pas configure sur ce routeur.\n")
+            else :
+                lignes = ldp_session.split('\n')
+                resultat_filtre = []
+                for ligne in lignes:
+                    colonnes = ligne.split()
+                    if len(colonnes) >= 5:  
+                        ligne_filtree = f"{colonnes[0]:<15} {colonnes[1]:<12} {colonnes[2]:<12} {''.join(colonnes[4:])}"
+                        resultat_filtre.append(ligne_filtree)
+                    else:
+                        resultat_filtre.append(ligne)
+                output_final = "\n".join(resultat_filtre)
+                print("Sessions LDP actives  :")
+                file.write("Sessions LDP actives :\n")
+                print(output_final)
+                file.write(output_final + "\n")
+        except Exception as e:
+            print(f"Erreur lors de la vérification du protocole LDP : {e}")
+            file.write(f"Erreur lors de la verification du protocole LDP : {e}\n")
 
-    except Exception as e_generic_apres:
-        # ... (error handling same as before) ...
-        import traceback
-        error_msg = f"APRES: Erreur majeure: {str(e_generic_apres)} (Type: {type(e_generic_apres).__name__})"
-        log_messages.append(error_msg + f"\nTraceback:\n{traceback.format_exc()}")
-        return {
-            "status": "error", "message": error_msg, 
-            "fichiers_crees": fichiers_crees_apres, 
-            "structured_data_apres": structured_output_data_apres, 
-            "comparison_results": {}, # Empty on major error
-            "log_messages": log_messages, 
-            "connection_obj": connection if 'connection' in locals() and connection else None
-        }
+        # Vérifier le protocol RSVP
+        try:
+            print("\nProtocole RSVP :")
+            file.write("\nProtocole RSVP :\n")
+            rsvp_interface = connection.send_command("show rsvp interface")
+            if "RSVP not configured" in rsvp_interface: 
+                    print("RSVP n'est pas configuré sur ce routeur.")
+                    file.write("RSVP n'est pas configure sur ce routeur.\n")
+            else: 
+                    file.write("Interfaces configurees avec RSVP :\n")
+                    print(rsvp_interface)
+                    file.write(rsvp_interface + "\n")
+        except Exception as e:
+            print(f"Erreur lors de la vérification du protocole RSVP : {e}")
+            file.write(f"Erreur lors de la verification du protocole RSVP : {e}")  
+                                           
+        # Vérifier le de protocol LLDP
+        try:
+            print("\nProtocole LLDP :")
+            file.write("\nProtocole LLDP :\n")
+            lldp_neigbors = connection.send_command("show lldp neighbor")
+            if not lldp_neigbors.strip():  # Si la sortie est vide
+                    print("LLDP n'est pas configuré ou aucun voisin n'a été détecté.")
+                    file.write("LLDP n'est pas configure ou aucun voisin n'a ete detecte.\n")
+            else:  # Si la sortie n'est pas vide
+                    print("Voisins LLDP découverts :")
+                    file.write("Voisins LLDP decouverts :\n")
+                    print(lldp_neigbors)
+                    file.write(lldp_neigbors + "\n")
+        except Exception as e:
+            print(f"Erreur lors de la vérification du protocole LLDP : {e}")
+            file.write(f"Erreur lors de la verification du protocole LLDP : {e}")
 
-if __name__ == '__main__':
-    print("APRES_API.py: Script chargé.")
+        # Vérifier l'état des LSP
+        try:
+            print("\nProtocole LSP :")
+            file.write("\nProtocole LSP :\n")
+            mpls_lsp = connection.send_command("show mpls lsp")
+            if "MPLS not configured" in mpls_lsp: 
+                    print("Aucune session lsp trouvé.")
+                    file.write("Aucune session lsp trouve.\n")
+            else: 
+                    print("statut des LSP :")
+                    file.write("statut des LSP :\n")
+                    print(mpls_lsp)
+                    file.write(mpls_lsp + "\n")
+        except Exception as e:
+            print(f"Erreur lors de la vérification du protocole LSP : {e}")
+            file.write(f"Erreur lors de la verification du protocole LSP : {e}")
+
+        # Vérifier la base de protocol BGP
+        try:
+            print("\nProtocole BGP :")
+            file.write("\nProtocole BGP :\n")
+            bgp_summary= connection.send_command("show bgp summary ")
+            if "BGP is not running" in bgp_summary: 
+                    print("BGP n'est pas configuré sur ce routeur.")
+                    file.write("BGP n'est pas configure sur ce routeur.\n")
+            else:  
+                    print(bgp_summary)
+                    file.write(bgp_summary + "\n")
+        except Exception as e:
+            print(f"Erreur lors de la vérification du protocole BGP : {e}")
+            file.write(f"Erreur lors de la verification du protocole BGP : {e}") 
+
+        # Afficher les services configurés
+        try:
+            print("\nServices configurés :")
+            file.write("\nServices configures :\n")
+            output_services = connection.send_command("show configuration system services")
+            services = set()  # Utiliser un ensemble pour éviter les doublons
+            for line in output_services.splitlines():
+                if line.strip().endswith(";"):  # Les services se terminent par un point-virgule
+                    service_name = line.strip().rstrip(";")
+                    services.add(service_name)
+            for service in sorted(services):  # Trier les services par ordre alphabétique
+                print(service)
+                file.write(service + "\n")
+        except Exception as e:
+            print(f"Erreur lors de la récupération des services configurés : {e}")
+            file.write(f"Erreur lors de la recuperation des services configures : {e}")  
+
+        # Afficher les protocoles configurés
+        try:
+            print("\nProtocoles configurés :")
+            file.write("\nProtocoles configures :\n")
+            output_protocols = connection.send_command("show configuration protocols")
+            protocols = set()  # Utiliser un ensemble pour éviter les doublons
+            for line in output_protocols.splitlines():
+                if "{" in line and not line.strip().startswith("}"):  # Les protocoles commencent par "{"
+                    protocol_name = line.split("{")[0].strip()
+                    protocols.add(protocol_name)
+            for protocol in sorted(protocols):  # Trier les protocoles par ordre alphabétique
+                print(protocol)
+                file.write(protocol + "\n")
+        except Exception as e:
+            print(f"Erreur lors de la récupération des protocoles configurés : {e}")
+            file.write(f"Erreur lors de la recuperation des protocoles configures : {e}")  
+
+
+        # Vérifier les ACL configurées
+        try:
+            print("\nListes de Contrôle d'Accès (ACL) :")
+            file.write("\nListes de Controle d'Acces (ACL) :\n")
+            # Récupérer la configuration complète des filtres de pare-feu
+            acl_output = connection.send_command("show configuration firewall")
+            # Afficher et stocker la réponse brute de la commande
+            if acl_output.strip():  # Vérifier si la sortie n'est pas vide
+                print("Réponse de la commande 'show configuration firewall' :")
+                file.write("Reponse de la commande 'show configuration firewall' :\n")
+                print(acl_output)
+                file.write(acl_output + "\n")
+            else:
+                print("Aucune ACL configurée trouvée.")
+                file.write("Aucune ACL configuree trouvee.\n")
+        except Exception as e:
+            print(f"Erreur lors de la vérification des ACL configurées : {e}")
+            file.write(f"Erreur lors de la verification des ACL configurees : {e}")  
+
+        # Vérifier les logs des erreurs critiques
+        try:
+            if not verifier_connexion(connection):
+                raise Exception("Connexion perdue avec le routeur")
+            print("\nLogs des erreurs critiques :")
+            file.write("\nLogs des erreurs critiques :\n")
+            print("Logs des erreurs critiques dans 'messages' :")
+            file.write("Logs des erreurs critiques dans 'messages' :\n")
+            logs_messages = connection.send_command('show log messages | match "error|warning|critical" | last 10')
+            # Filtrer les lignes indésirables
+            filtered_logs = [line for line in logs_messages.splitlines() if not line.strip().startswith("---(more")]
+            filtered_logs_str = "\n".join(filtered_logs)
+            print(filtered_logs_str)
+            file.write(filtered_logs_str + "\n")
+        except Exception as e:
+            print(f"Erreur lors de la récupération des logs des erreurs critiques dans 'messages' : {e}")
+            file.write(f"Erreur lors de la recuperation des logs des erreurs critiques dans 'messages' : {e}")
+            raise 
+        try:
+            if not verifier_connexion(connection):
+                raise Exception("Connexion perdue avec le routeur")
+            print("Logs des erreurs critiques dans 'chassisd' :")
+            file.write("Logs des erreurs critiques dans 'chassisd' :\n")
+            logs_chassisd = connection.send_command('show log chassisd | match "error|warning|critical" | last 10')
+            # Filtrer les lignes indésirables
+            filtered_logs = [line for line in logs_chassisd.splitlines() if not line.strip().startswith("---(more")]
+            filtered_logs_str = "\n".join(filtered_logs)
+            print(filtered_logs_str)
+            file.write(filtered_logs_str + "\n")
+        except Exception as e:
+            print(f"Erreur lors de la récupération des logs des erreurs critiques dans 'chassisd' : {e}")
+            file.write(f"Erreur lors de la recuperation des logs des erreurs critiques dans 'chassisd' : {e}")
+            raise
+
+        # Exécuter la commande pour afficher la configuration 
+        try:
+            if not verifier_connexion(connection):
+                raise Exception("Connexion perdue avec le routeur")
+            print("\nLa configuration totale :")
+            file.write("\nLa configuration totale :\n")
+            output = connection.send_command("show configuration | display set")
+            print(output)
+            file.write(output + "\n")
+        except Exception as e:
+            print(f"Erreur lors de la récupération de la configuration totale : {e}")
+            file.write(f"Erreur lors de la recuperation de la configuration totale : {e}")
+            raise  
+    
+    # Suppression du fichier d'identification
+    try:
+        if 'selected_file' in locals() and os.path.exists(selected_file):
+            os.remove(selected_file)
+    except Exception as e:
+        print(f"\nErreur suppression fichier identification: {str(e)}")
+
+    # Afficher des messages de confirmation
+    try: 
+        if not verifier_connexion(connection):
+            raise Exception("Connexion perdue avec le routeur")
+        file_path_txt = os.path.abspath(APRES)
+        print(f"\nLes résultats des vérifications ont été enregistrés dans le fichier '{APRES}' à l'emplacement suivant : {file_path_txt}.")
+    except Exception as e:
+        print(f"\nErreur lors de l'affichage des chemins des fichiers : {e}")
+        raise  
+
+except Exception as e:
+    print(f"\nUne erreur est survenue lors de l'exécution du script : {str(e)}")
+    if "Socket is closed" in str(e) or "Connexion perdue" in str(e):
+        print("La connexion au routeur a été interrompue.")
+    # Nettoyage
+    if 'fichiers_crees' in locals() and fichiers_crees:
+        nettoyer_fichiers(fichiers_crees)
+    if connection:
+        connection.disconnect()
+    # relancer le script
+    while True:
+        python_exec = sys.executable
+        script_path = os.path.abspath(__file__)
+        if ' ' in script_path:
+            script_path = f'"{script_path}"'
+        os.system(f"{python_exec} {script_path}")
+        sys.exit(0)
+
+finally:
+    # Nettoyage final
+    if connection:
+        connection.disconnect() 
+
+    # Comparaison
+    # Utilisation de générateurs pour lire les fichiers ligne par ligne
+    content_avant = read_file_by_line(AVANT)
+    content_apres = read_file_by_line(APRES)
+    # Extraction des sections avec traitement ligne par ligne
+    sections_avant = extract_sections(content_avant)
+    sections_apres = extract_sections(content_apres)
+    if not sections_avant or not sections_apres:
+        print("Erreur lors de la lecture des fichiers. Veuillez vérifier les fichiers d'entrée.", file=sys.stderr)
+        sys.exit(1)
+    differences = compare_sections(sections_avant, sections_apres)
+    display_differences(differences)
+    # Enregistrer les différences dans un fichier
+    comparaison = f"COMPARAISON_{username}_{router_hostname}.txt"
+    compteur = 1
+    while os.path.exists(comparaison):
+        comparaison = f"COMPARAISON_{username}_{router_hostname}_{compteur}.txt"
+        compteur += 1
+    write_differences_to_file(differences, comparaison)
+
+    # Gestion des fichiers (AVANT, APRES, comparaison)
+    print("\nPour libérer de l'espace, vous pouvez supprimer les fichiers générés. Confirmez pour chaque fichier :")
+    fichiers_a_supprimer = []
+    # Demande pour AVANT
+    if 'AVANT' in locals() and AVANT and os.path.exists(AVANT):
+        reponse = input(f"Souhaitez-vous supprimer le fichier ({AVANT}) ? (oui/non) : ").lower()
+        if reponse in ['o', 'oui', 'y', 'yes']:
+            fichiers_a_supprimer.append(AVANT)
+    # Demande pour APRES
+    if 'APRES' in locals() and APRES and os.path.exists(APRES):
+        reponse = input(f"Souhaitez-vous supprimer le fichier  ({APRES}) ? (oui/non) : ").lower()
+        if reponse in ['o', 'oui', 'y', 'yes']:
+            fichiers_a_supprimer.append(APRES)
+    # Demande pour le fichier de comparaison
+    if 'comparaison' in locals() and comparaison and os.path.exists(comparaison):
+        reponse = input(f"Souhaitez-vous supprimer le fichier ({comparaison}) ? (oui/non) : ").lower()
+        if reponse in ['o', 'oui', 'y', 'yes']:
+            fichiers_a_supprimer.append(comparaison)
+    # Demande pour le fichier de configuration 
+    if 'config_filename' in locals() and config_filename and os.path.exists(config_filename):
+        reponse = input(f"Souhaitez-vous supprimer le fichier ({config_filename}) ? (oui/non) : ").lower()
+        if reponse in ['o', 'oui', 'y', 'yes']:
+            fichiers_a_supprimer.append(config_filename)
+    # Suppression effective des fichiers
+    if fichiers_a_supprimer:
+        print("\nSuppression des fichiers :")
+        for fichier in fichiers_a_supprimer:
+            try:
+                os.remove(fichier)
+                print(f"- Le fichier {fichier} a été supprimé")
+            except Exception as e:
+                print(f"Erreur : Impossible de supprimer le fichier {fichier} : {e}.")

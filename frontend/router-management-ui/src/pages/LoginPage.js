@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { testConnection } from '../api/routerApi'; // runAvantChecks removed from here
 import TextField from '@mui/material/TextField';
@@ -19,7 +19,15 @@ const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
-  const auth = useAuth();
+  const { login, credentials } = useAuth();
+  const location = useLocation();
+
+  useEffect(() => {
+    // Redirect to dashboard if already logged in
+    if (credentials) {
+      navigate('/dashboard');
+    }
+  }, [credentials, navigate]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -31,9 +39,8 @@ const LoginPage = () => {
 
     const creds = { ip, username, password };
 
-    try {
-      await testConnection(creds);
-      auth.login(creds); 
+    try {      await testConnection(creds);
+      login(creds); 
       
       // Navigate immediately. DashboardPage will handle AVANT run.
       // No toast here about starting AVANT, DashboardPage will provide feedback.
@@ -42,15 +49,12 @@ const LoginPage = () => {
     } catch (err) {
       const errorMsg = err.response?.data?.message || err.message || 'Login failed. Please check credentials and router connectivity.';
       setError(errorMsg);
-      toast.error(`Login Failed: ${errorMsg}`); 
-      console.error('Login error:', err.response || err);
-      auth.logout(); 
+      toast.error(`Login Failed: ${errorMsg}`);      console.error('Login error:', err.response || err);
       setIsLoading(false);
     }
   };
 
   return (
-    // ... (rest of the JSX is the same as the previous version)
     <Container component="main" maxWidth="xs">
       <Paper elevation={3} sx={{ marginTop: 8, padding: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <Typography component="h1" variant="h5">

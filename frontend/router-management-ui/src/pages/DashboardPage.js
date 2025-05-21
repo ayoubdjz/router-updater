@@ -13,12 +13,14 @@ import { toast } from 'react-toastify';
 
 import UpdateRunner from '../components/Update/UpdateRunner';
 import ApresRunner from '../components/Apres/ApresRunner';
-// ConfirmationModal for APRES is removed
+import ConfirmationModal from '../components/Common/ConfirmationModal';
 import StructuredDataDisplay from '../components/Common/StructuredDataDisplay';
 import LogDisplay from '../components/Common/LogDisplay';
 import ComparisonModal from '../components/Common/ComparisonModal';
 import { useAuth } from '../contexts/AuthContext';
 import { runAvantChecks, unlockRouter } from '../api/routerApi';
+import LogModal from '../components/Common/LogModal';
+import UpdateModal from '../components/Update/UpdateModal';
 
 const DashboardPage = () => {
   const { sessionData, updateSession, resetWorkflow, credentials, logout } = useAuth();
@@ -31,16 +33,14 @@ const DashboardPage = () => {
 
   const [isActionLoading, setIsActionLoading] = useState(false);
   const [actionError, setActionError] = useState(''); 
-  const [dashboardActionLogs, setDashboardActionLogs] = useState([]);
-
-  // const [showApresConfirmModal, setShowApresConfirmModal] = useState(false); // REMOVED
+  const [dashboardActionLogs, setDashboardActionLogs] = useState([]);  const [showApresConfirmModal, setShowApresConfirmModal] = useState(false);
   const [showComparisonDetailModal, setShowComparisonDetailModal] = useState(false);
-
+  const [showAvantLogsModal, setShowAvantLogsModal] = useState(false);
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
 
   useEffect(() => {
-    // ... (AVANT auto-run useEffect - same as previous)
-    const shouldRunAvant = location.state?.runAvantOnLoad;
-    if (shouldRunAvant && !sessionData.avantCompleted && credentials && !isAvantLoading) { 
+    // If we have credentials but AVANT hasn't been run, trigger it
+    if (credentials && !sessionData.avantCompleted && !isAvantLoading) { 
       navigate(location.pathname, { state: { ...location.state, runAvantOnLoad: false }, replace: true }); 
       const performInitialAvantChecks = async () => {
         setIsAvantLoading(true); setAvantError(''); setAvantLogs([]);
@@ -79,15 +79,30 @@ const DashboardPage = () => {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps 
   }, [location.state, credentials, sessionData.avantCompleted, isAvantLoading]);
-
-
   const handleTriggerUpdate = () => {
-    updateSession({ updateAttempted: true, updateCompleted: false, viewState: 'update_config' });
+    setShowUpdateModal(true);
+  };
+
+  const handleConfirmUpdate = (path) => {
+    updateSession({ 
+      updateAttempted: true, 
+      updateCompleted: false, 
+      viewState: 'update_config',
+      updatePath: path 
+    });
   };
 
   const handleTriggerApres = () => { 
-    // Directly set state to run APRES when button is clicked
+    setShowApresConfirmModal(true);
+  };
+  const handleConfirmApres = () => {
+    setShowApresConfirmModal(false);
+    // Run APRES directly when user confirms
     updateSession({ viewState: 'apres_running' }); 
+  };
+
+  const handleCancelApres = () => {
+    setShowApresConfirmModal(false);
   };
 
   const handleUpdateProcessFinished = (updateSuccess) => {
@@ -124,10 +139,9 @@ const DashboardPage = () => {
         setDashboardActionLogs(prevLogs => [...prevLogs, `Error during force unlock: ${errorMsg}`]);
     } finally { setIsActionLoading(false); }
   };
-
   const showInitialAvantLoading = isAvantLoading || sessionData.viewState === 'avant_loading';
   const showInitialAvantError = avantError && !sessionData.avantCompleted && sessionData.viewState === 'avant_error';
-  const showAvantNotRunMessage = !sessionData.avantCompleted && !isAvantLoading && !avantError;
+  const showAvantNotRunMessage = !credentials || (!sessionData.avantCompleted && !isAvantLoading && !avantError);
   
   const showAvantResultsSection = sessionData.avantCompleted;
   const showUpdateConfigSection = sessionData.avantCompleted && sessionData.updateAttempted && !sessionData.updateCompleted && sessionData.viewState === 'update_config';
@@ -139,9 +153,13 @@ const DashboardPage = () => {
   }
   if (showInitialAvantError) { /* ... same error display ... */ 
       return ( <Paper elevation={3} sx={{ p: 3, mt: 4 }}> <Alert severity="error" sx={{mb:2}}> AVANT Failed: {avantError} </Alert> <LogDisplay logs={avantLogs} title="Initial AVANT Error Logs" /> <Button onClick={() => { logout(); navigate('/login', {replace: true}); }} variant="contained" sx={{mt:2}}>Login</Button> </Paper> );
-  }
-  if (showAvantNotRunMessage) { /* ... same display ... */ 
-      return ( <Paper elevation={3} sx={{p:3, textAlign:'center', mt:4}}> <Typography>AVANT not run.</Typography> <Button onClick={() => { logout(); navigate('/login', {replace: true}); }} variant="outlined" sx={{mt:2}}>Re-Login</Button> </Paper> );
+  }  if (showAvantNotRunMessage) {
+      return (
+        <Paper elevation={3} sx={{p:3, textAlign:'center', mt:4}}>
+          <Typography>Please wait while AVANT initializes...</Typography>
+          <CircularProgress sx={{ mt: 2 }} />
+        </Paper>
+      );
   }
   
   return (
@@ -156,20 +174,23 @@ const DashboardPage = () => {
 
       {/* --- AVANT Section --- */}
       {showAvantResultsSection && (
-        <Paper elevation={2} sx={{ p: {xs:2, md:3}, mb: 3, backgroundColor: '#ede7f6' /* Lighter purple */ }}>
+        <Paper elevation={2} sx={{ p: {xs:2, md:3}, mb: 3, backgroundColor: '#e3f2fd' /* Lighter purple */ }}>
           <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2, flexWrap: 'wrap', gap:1}}>
             <Typography variant="h5">AVANT Pre-Check Results</Typography>
-            {!sessionData.updateAttempted && !sessionData.apresCompleted && (
+            {!sessionData.apresCompleted && (
                 <Button variant="contained" color="secondary" onClick={handleTriggerUpdate}
                     disabled={isActionLoading || !sessionData.avantCompleted}
                 > Perform Software Update </Button>
             )}
           </Box>
-          <StructuredDataDisplay data={sessionData.avantData} titlePrefix="AVANT" />
-          <Typography variant="caption" display="block" gutterBottom sx={{mt:2, color:'text.secondary'}}>
+          <StructuredDataDisplay data={sessionData.avantData} titlePrefix="AVANT" />          <Typography variant="caption" display="block" gutterBottom sx={{mt:2, color:'text.secondary'}}>
               AVANT File: {sessionData.avant_file_path || "N/A"} | Config File: {sessionData.config_file_path || "N/A"} | Lock File: {sessionData.lock_file_path || "N/A"}
           </Typography>
-          <LogDisplay logs={avantLogs} title="Initial AVANT Execution Logs" /> 
+          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+            <Button variant="outlined" onClick={() => setShowAvantLogsModal(true)}>
+              Show AVANT Logs
+            </Button>
+          </Box>
         </Paper>
       )}
       
@@ -186,18 +207,10 @@ const DashboardPage = () => {
       {sessionData.avantCompleted && (
         <Paper elevation={2} sx={{ p: {xs:2, md:3}, mb: 3, backgroundColor: '#e3f2fd' /* Lighter blue */ }}>
           <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb:2, flexWrap: 'wrap', gap:1}}>
-            <Typography variant="h5">APRES Post-Check & Comparison</Typography>
-            {/* Show "Run APRES" button if:
-                - APRES is not completed AND
-                - APRES runner is not currently visible/running AND
-                - EITHER update was not attempted OR update process is finished (ready for APRES)
-            */}
-            {!sessionData.apresCompleted && !showApresRunner && 
-             (!sessionData.updateAttempted || sessionData.viewState === 'update_finished_prompt_apres' || sessionData.updateCompleted) && 
-            (
+            <Typography variant="h5">APRES Post-Check & Comparison</Typography>            {!sessionData.apresCompleted && !showApresRunner && (
                 <Button variant="contained" color="primary" onClick={handleTriggerApres}
                     disabled={isActionLoading} 
-                > Run APRES Now </Button>
+                > Run Post-Checks </Button>
             )}
             {/* Show "Show Comparison" button if APRES completed and comparison results exist */}
             {sessionData.apresCompleted && sessionData.comparisonResults && Object.keys(sessionData.comparisonResults).length > 0 && (
@@ -206,8 +219,7 @@ const DashboardPage = () => {
                 </Button>
             )}
           </Box>
-          
-          {showApresRunner && (
+            {showApresRunner && (
               <ApresRunner onApresProcessFinished={handleApresProcessFinished} />
           )}
 
@@ -216,20 +228,38 @@ const DashboardPage = () => {
                 <StructuredDataDisplay data={sessionData.apresData} titlePrefix="APRES" />
               </>
           )}
-          {!sessionData.apresCompleted && !showApresRunner && <Alert severity="info" variant="outlined" sx={{mt:1}}>Click "Run APRES Now" to perform post-checks and comparison.</Alert>}
         </Paper>
       )}
 
       {sessionData.lock_file_path && (
            <Button variant="outlined" color="warning" onClick={handleForceUnlockAndFullReset}
-            disabled={isActionLoading} sx={{my:2, display:'block', mx:'auto'}}
-           > Force Unlock Router & Reset Workflow </Button>
-       )}
-
+            disabled={isActionLoading} sx={{my:2, display:'block', mx:'auto'}}           > Force Unlock Router </Button>
+       )}      
       <ComparisonModal 
         open={showComparisonDetailModal} 
         onClose={() => setShowComparisonDetailModal(false)}
         comparisonResults={sessionData.comparisonResults}
+      />
+
+      <LogModal
+        open={showAvantLogsModal}
+        onClose={() => setShowAvantLogsModal(false)}
+        logs={avantLogs}
+        title="AVANT Execution Logs"
+      />      <ConfirmationModal
+        open={showApresConfirmModal}
+        onClose={handleCancelApres}
+        title="Run APRES Without Update?"
+        message="Would you like to run the APRES post-checks without performing a software update? This will compare the current router state with the initial AVANT checks."
+        confirmText="Run APRES"
+        cancelText="Cancel"
+        onConfirm={handleConfirmApres}
+      />
+
+      <UpdateModal
+        open={showUpdateModal}
+        onClose={() => setShowUpdateModal(false)}
+        onConfirm={handleConfirmUpdate}
       />
     </Box>
   );
