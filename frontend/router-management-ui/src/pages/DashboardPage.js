@@ -58,7 +58,7 @@ const DashboardPage = () => {
               avant_file_path: response.data.avant_file_path, config_file_path: response.data.config_file_path,
               avantCompleted: true, avantData: response.data.structured_data, viewState: 'avant_success'
             });
-            setAvantError(''); toast.success("AVANT pre-checks completed successfully!");
+            setAvantError(''); toast.success("Pre-checks completed successfully!");
           } else {
             const errMsg = `AVANT checks failed: ${response.data.message || 'Unknown AVANT error'}`;
             setAvantError(errMsg); toast.error(errMsg);
@@ -170,18 +170,33 @@ const DashboardPage = () => {
       </Typography>
 
       {actionError && <Alert severity="error" sx={{my:2}}>{actionError}</Alert>}
-      <LogDisplay logs={dashboardActionLogs} title="Dashboard Action Logs" />
+      <LogDisplay logs={dashboardActionLogs} title="Dashboard Action Logs" />      {/* --- Software Update Button (Always visible) --- */}
+      {showAvantResultsSection && (
+        <Button 
+          variant="contained" 
+          color="primary"
+          size="large"
+          onClick={handleTriggerUpdate}
+          disabled={isActionLoading || !sessionData.avantCompleted}
+          sx={{ 
+            display: 'block', 
+            mx: 'auto', 
+            mb: 3, 
+            py: 1.5,
+            px: 4,
+            fontSize: '1.1rem',
+            boxShadow: 3
+          }}
+        >
+          Perform Software Update
+        </Button>
+      )}
 
       {/* --- AVANT Section --- */}
       {showAvantResultsSection && (
         <Paper elevation={2} sx={{ p: {xs:2, md:3}, mb: 3, backgroundColor: '#e3f2fd' /* Lighter purple */ }}>
           <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2, flexWrap: 'wrap', gap:1}}>
-            <Typography variant="h5">AVANT Pre-Check Results</Typography>
-            {!sessionData.apresCompleted && (
-                <Button variant="contained" color="secondary" onClick={handleTriggerUpdate}
-                    disabled={isActionLoading || !sessionData.avantCompleted}
-                > Perform Software Update </Button>
-            )}
+            <Typography variant="h5">Pre-Check Informations</Typography>
           </Box>
           <StructuredDataDisplay data={sessionData.avantData} titlePrefix="AVANT" />          <Typography variant="caption" display="block" gutterBottom sx={{mt:2, color:'text.secondary'}}>
               AVANT File: {sessionData.avant_file_path || "N/A"} | Config File: {sessionData.config_file_path || "N/A"} | Lock File: {sessionData.lock_file_path || "N/A"}
@@ -199,15 +214,31 @@ const DashboardPage = () => {
           <Divider sx={{my:3}}><Chip label="Update Process Configuration" /></Divider>
           <UpdateRunner onUpdateProcessFinished={handleUpdateProcessFinished} />
         </>
+      )}      
+      {sessionData.avantCompleted && (
+        <Divider sx={{ my: 4 }}>
+          <Chip 
+            label="Post Update Informations" 
+            sx={{
+              px: 3,
+              py: 2.5,
+              fontSize: '1.1rem',
+              fontWeight: 500,
+              backgroundColor: '#e3f2fd',
+              borderRadius: '16px',
+              '& .MuiChip-label': {
+                px: 2
+              }
+            }}
+          />
+        </Divider>
       )}
-      
-      {sessionData.avantCompleted && <Divider sx={{my:3}}><Chip label="Post Operations" /></Divider> }
 
       {/* --- APRES Section --- */}
       {sessionData.avantCompleted && (
         <Paper elevation={2} sx={{ p: {xs:2, md:3}, mb: 3, backgroundColor: '#e3f2fd' /* Lighter blue */ }}>
           <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb:2, flexWrap: 'wrap', gap:1}}>
-            <Typography variant="h5">APRES Post-Check & Comparison</Typography>            {!sessionData.apresCompleted && !showApresRunner && (
+            <Typography variant="h5">Post-Update Informations</Typography>            {!sessionData.apresCompleted && !showApresRunner && (
                 <Button variant="contained" color="primary" onClick={handleTriggerApres}
                     disabled={isActionLoading} 
                 > Run Post-Checks </Button>
@@ -215,7 +246,7 @@ const DashboardPage = () => {
             {/* Show "Show Comparison" button if APRES completed and comparison results exist */}
             {sessionData.apresCompleted && sessionData.comparisonResults && Object.keys(sessionData.comparisonResults).length > 0 && (
                  <Button variant="outlined" onClick={() => setShowComparisonDetailModal(true)}>
-                    Show AVANT vs APRES Comparison
+                    Compare With Pre-Checks
                 </Button>
             )}
           </Box>
@@ -245,13 +276,13 @@ const DashboardPage = () => {
         open={showAvantLogsModal}
         onClose={() => setShowAvantLogsModal(false)}
         logs={avantLogs}
-        title="AVANT Execution Logs"
+        title="Pre-Checks Execution Logs"
       />      <ConfirmationModal
         open={showApresConfirmModal}
         onClose={handleCancelApres}
         title="Run APRES Without Update?"
-        message="Would you like to run the APRES post-checks without performing a software update? This will compare the current router state with the initial AVANT checks."
-        confirmText="Run APRES"
+        message="Would you like to run the APRES post-update checks without performing a software update? This will compare the current router state with the initial pre-checks."
+        confirmText="Run Post-Checks"
         cancelText="Cancel"
         onConfirm={handleConfirmApres}
       />

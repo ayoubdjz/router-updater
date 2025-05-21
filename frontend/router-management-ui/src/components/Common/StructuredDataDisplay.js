@@ -43,13 +43,56 @@ const renderDataContent = (data, sectionKey) => {
     return <Typography variant="body2" sx={{fontStyle: 'italic', p:1}}>No data available for this section.</Typography>;
   }
 
-
   if (typeof data === 'string') {
     if (data.toLowerCase().includes("n'est pas configuré") || data.toLowerCase().includes("aucun") || data.toLowerCase().includes("not configured") || data.toLowerCase().includes("not running")) {
         return <Chip label={data.trim()} color="info" variant="outlined" size="small" sx={{m:1}} />;
     }
-    if (data.includes('\n') || data.length > 150) { // Heuristic for preformatted text
-      return <Paper component="pre" variant="outlined" sx={{ p: 1.5, whiteSpace: 'pre-wrap', wordBreak: 'break-all', fontSize: '0.8rem', fontFamily: 'monospace', backgroundColor:'#f9f9f9' }}>{data}</Paper>;
+    // Special handling for critical logs and other long text content
+    const isLongContent = sectionKey.includes('critical_logs') || 
+                         sectionKey.includes('full_config') || 
+                         data.includes('\n') || 
+                         data.length > 150;
+      if (isLongContent) {
+      return (
+        <Paper 
+          component="pre" 
+          variant="outlined" 
+          sx={{ 
+            p: 2,
+            whiteSpace: 'pre-wrap',
+            wordBreak: 'break-word',
+            fontSize: '0.85rem',
+            fontFamily: 'Consolas, monospace',
+            backgroundColor: '#f8f9fa',
+            maxHeight: '500px', // Increased height
+            overflowY: 'auto',
+            border: '1px solid #e0e0e0',
+            borderRadius: '4px',
+            lineHeight: '1.5',
+            '& > code': {
+              display: 'block',
+              padding: '0.5rem',
+            },
+            '&::-webkit-scrollbar': {
+              width: '10px',
+              height: '10px',
+            },
+            '&::-webkit-scrollbar-track': {
+              backgroundColor: '#f1f1f1',
+              borderRadius: '4px',
+            },
+            '&::-webkit-scrollbar-thumb': {
+              backgroundColor: '#888',
+              borderRadius: '4px',
+              '&:hover': {
+                backgroundColor: '#555',
+              },
+            },
+          }}
+        >
+          {data}
+        </Paper>
+      );
     }
     return <Typography variant="body2" sx={{p:1}}>{data}</Typography>;
   } else if (Array.isArray(data)) {

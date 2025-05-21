@@ -203,7 +203,7 @@ def run_avant_checks(ip, username, password, log_messages):
         "critical_logs_messages": "",
         "critical_logs_chassisd": "",
         "full_config_set": "",
-        # "setting": [{"key"  :"value", "key2" : "value2"}, {"key"  :"valuqsde", "key2" : "value222"}] # Placeholder for any additional settings 
+        # "setting"  [{"key"  :"value", "key2" : "value2"}, {"key"  :"valuqsde", "key2" : "value222"}] # Placeholder for any additional settings 
          # Can be very large, consider if needed directly or just file path
     }
 
@@ -348,22 +348,20 @@ def run_avant_checks(ip, username, password, log_messages):
 
             fetch_and_store("firewall_config", "Listes de Contrôle d'Accès (ACL)", "show configuration firewall")
             
-            log_msg_cmd = 'show log messages | match "error|warning|critical" | last 10'
+            log_msg_cmd = 'show log messages | match "error|warning|critical" | last 10 | no-more'
             fetch_and_store("critical_logs_messages", "Logs erreurs critiques 'messages'", log_msg_cmd)
-            
-            chassisd_log_cmd = 'show log chassisd | match "error|warning|critical" | last 10'
+            chassisd_log_cmd = 'show log chassisd | match "error|warning|critical" | last 10 | no-more'
             fetch_and_store("critical_logs_chassisd", "Logs erreurs critiques 'chassisd'", chassisd_log_cmd)
-
             # Full Config (set format) - also to separate file
             if not verifier_connexion(connection, log_messages): raise Exception("Connexion perdue avant config totale AVANT.")
             title_cfg = "La configuration totale (set format)"
-            cmd_cfg = "show configuration | display set"
+            cmd_cfg = "show configuration | display set | no-more"
             log_messages.append(f"Récupération AVANT: {title_cfg}")
             file.write(f"\n{title_cfg}:\n")
             output_config_set = connection.send_command(cmd_cfg, read_timeout=180) # Config can be very large
             structured_output_data["full_config_set"] = output_config_set # Store for potential direct display
             file.write(output_config_set + "\n")
-            log_messages.append(f"OK AVANT: {title_cfg}")
+            log_messages.append(f"Config AVANT sauvegardée séparément: {config_file_path}")
 
             # Create separate config file (as before)
             base_config_filename = f"CONFIGURATION_{username}_{router_hostname}.txt"
