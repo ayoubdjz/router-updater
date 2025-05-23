@@ -8,6 +8,9 @@ python api.py
 
 
 ********* Frontend **********
+
+Installiw nodejs mena: https://nodejs.org/en
+
 cd ..
 cd frontend\router-management-ui
 npm install

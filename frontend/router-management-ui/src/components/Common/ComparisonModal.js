@@ -88,13 +88,13 @@ const ComparisonModal = ({ open, onClose, comparisonResults }) => {
               <Grid container spacing={2}>
                 <Grid item xs={12} md={6}>
                   <Typography variant="subtitle2" sx={{ mb: 1 }}>AVANT</Typography>
-                  <Paper component="pre" variant="outlined" sx={{ p: 1.5, whiteSpace: 'pre-wrap', wordBreak: 'break-all', minHeight: 120, backgroundColor: '#fff', fontFamily: 'monospace', fontSize: '0.9rem', overflowX: 'auto' }}>
+                  <Paper component="pre" variant="outlined" sx={{ p: 1.5, whiteSpace: 'pre-wrap', wordBreak: 'break-all', minHeight: 120, backgroundColor: '#fff', fontFamily: 'Consolas, Menlo, Monaco, Liberation Mono, Courier New, monospace', fontSize: '0.95rem', overflowX: 'auto', letterSpacing: 0 }}>
                     {getSectionContent(sectionKey, sectionData.avant_content)}
                   </Paper>
                 </Grid>
                 <Grid item xs={12} md={6}>
                   <Typography variant="subtitle2" sx={{ mb: 1 }}>APRES</Typography>
-                  <Paper component="pre" variant="outlined" sx={{ p: 1.5, whiteSpace: 'pre-wrap', wordBreak: 'break-all', minHeight: 120, backgroundColor: '#fff', fontFamily: 'monospace', fontSize: '0.9rem', overflowX: 'auto' }}>
+                  <Paper component="pre" variant="outlined" sx={{ p: 1.5, whiteSpace: 'pre-wrap', wordBreak: 'break-all', minHeight: 120, backgroundColor: '#fff', fontFamily: 'Consolas, Menlo, Monaco, Liberation Mono, Courier New, monospace', fontSize: '0.95rem', overflowX: 'auto', letterSpacing: 0 }}>
                     {getSectionContent(sectionKey, sectionData.apres_content)}
                   </Paper>
                 </Grid>

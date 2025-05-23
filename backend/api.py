@@ -125,73 +125,131 @@ def api_run_avant():
 @app.route('/api/run_update', methods=['POST'])
 def api_run_update():
     data = request.json
-    ident_data = data.get('ident_data')
-    password = data.get('password')
+    ident_data = data.get('ident_data')  # Contains device_details_for_update, lock_file_path, ip, username
+    password_from_req = data.get('password') # Password explicitly provided for the update operation
     image_file = data.get('image_file')
+    
     log_messages_update = []
-    result_from_update_module = None # To store full result
+    result_from_update_module = None # This will store the direct output from avant_api.run_update_procedure
+    current_connection = None  # This will hold the active connection object for this API call
 
-    if not all([ident_data, password, image_file]):
-        return jsonify(sanitize_for_json({"status": "error", "message": "Ident_data, password, and image_file are required."})), 400
+    if not all([ident_data, password_from_req, image_file]):
+        log_messages_update.append("API UPDATE ERREUR: ident_data, password, et image_file sont requis.")
+        # Sanitize even this basic error response if needed, though it's simple
+        return jsonify(sanitize_for_json({
+            "status": "error", 
+            "message": "ident_data, password, et image_file sont requis.",
+            "logs": log_messages_update
+        })), 400
 
-    ip = ident_data.get('ip')
-    username = ident_data.get('username')
     lock_file_path_from_ident = ident_data.get('lock_file_path')
-    connection_for_update = None 
+    # device_details_for_reconnect is crucial for run_update_procedure's internal reconnections.
+    # It's sourced from ident_data (output of run_avant) and updated with the current password.
+    device_details_for_reconnect = ident_data.get('device_details_for_update')
+
+    if not device_details_for_reconnect:
+        log_messages_update.append("API UPDATE ERREUR: 'device_details_for_update' manquant dans ident_data.")
+        return jsonify(sanitize_for_json({
+            "status": "error", 
+            "message": "Données de configuration (device_details_for_update) manquantes dans ident_data. Exécutez AVANT d'abord.",
+            "logs": log_messages_update
+        })), 400
+
+    # Ensure the device_details_for_reconnect uses the password explicitly sent for this update operation,
+    # and the correct host IP and username from ident_data.
+    device_details_for_reconnect['password'] = password_from_req
+    device_details_for_reconnect['host'] = ident_data.get('ip')
+    if 'username' not in device_details_for_reconnect or not device_details_for_reconnect['username']:
+        device_details_for_reconnect['username'] = ident_data.get('username')
+
 
     if not lock_file_path_from_ident or not os.path.exists(lock_file_path_from_ident):
         msg = (f"Fichier de verrou requis ({lock_file_path_from_ident}) non trouvé. "
                "Exécutez AVANT d'abord ou le flux de travail est interrompu.")
         log_messages_update.append(msg)
-        return jsonify(sanitize_for_json({"status": "error", "message": msg, "logs": log_messages_update})), 412
+        return jsonify(sanitize_for_json({"status": "error", "message": msg, "logs": log_messages_update})), 412 # Precondition Failed
 
     try:
-        update_device_details = {
-            'device_type': 'juniper', 'host': ip, 'username': username, 'password': password,
-            'timeout': 30, 'auth_timeout': 45, 'banner_timeout': 45,
-        }
-        log_messages_update.append(f"API UPDATE: Connexion à {ip} pour la mise à jour...")
-        connection_for_update = ConnectHandler(**update_device_details) # This is the connection object for this scope
-        if not avant_api.verifier_connexion(connection_for_update, log_messages_update):
+        log_messages_update.append(f"API UPDATE: Tentative de connexion à {device_details_for_reconnect['host']} pour la mise à jour...")
+        # Establish the initial connection for this API call using the prepared device details
+        current_connection = ConnectHandler(**device_details_for_reconnect)
+        log_messages_update.append(f"API UPDATE: Connecté avec succès à {device_details_for_reconnect['host']}.")
+
+        if not avant_api.verifier_connexion(current_connection, log_messages_update, context="UPDATE PRE-CHECK"):
+            # verifier_connexion appends its own logs to log_messages_update
             raise Exception("Échec de la vérification de la connexion avant la mise à jour.")
         
-        log_messages_update.append("API UPDATE: Lancement de la procédure de mise à jour...")
+        log_messages_update.append("API UPDATE: Lancement de la procédure de mise à jour via avant_api.run_update_procedure...")
+        
+        # Call avant_api.run_update_procedure.
+        # It will use current_connection and may return a new one if RE switchover occurs.
+        # It will also append its logs to log_messages_update.
         result_from_update_module = avant_api.run_update_procedure(
-            connection_for_update, # Pass the live connection
-            update_device_details, 
+            current_connection, 
+            device_details_for_reconnect, # For its own internal reconnections
             image_file, 
             log_messages_update
+            # skip_re0_final_switchback could be a param: data.get('skip_final_switchback', False)
         )
         
+        # The result_from_update_module contains {status, message, updated_junos_info, connection_obj, log_messages (same as log_messages_update)}
+        
+        # Update current_connection to the one returned by the procedure,
+        # as it might have changed due to RE switchovers handled within run_update_procedure.
+        returned_connection_obj = result_from_update_module.get("connection_obj")
+        
+        if returned_connection_obj:
+            if returned_connection_obj != current_connection: # If a new connection object was made and returned
+                log_messages_update.append(f"API UPDATE: Un nouvel objet de connexion a été retourné par run_update_procedure.")
+                if current_connection and current_connection.is_alive():
+                    log_messages_update.append("API UPDATE: Fermeture de l'objet de connexion initial qui n'est plus le principal.")
+                    current_connection.disconnect() # Disconnect the old one
+            current_connection = returned_connection_obj # This is now the definitive connection object to manage
+        # If no connection_obj is in result_from_update_module (e.g., on critical error within run_update_procedure),
+        # current_connection remains the one established at the start of this try block. It might have been closed 
+        # by run_update_procedure itself in its own error handling.
+
+        # Prepare the result from avant_api.run_update_procedure for sending to the client
         serializable_result = sanitize_for_json(result_from_update_module)
+        # Add context and ensure the most complete logs are sent
         serializable_result["ident_data"] = ident_data 
-        serializable_result["logs"] = log_messages_update
+        serializable_result["logs"] = log_messages_update # This list contains all logs
 
+        status_code = 500 # Default to server error
         if result_from_update_module.get("status") == "success":
-            return jsonify(serializable_result)
-        else:
-            return jsonify(serializable_result), 500
+            status_code = 200
+        elif result_from_update_module.get("status") == "success_with_warning":
+             status_code = 200 # Still a success from HTTP perspective; frontend handles warning
+        
+        log_messages_update.append(f"API UPDATE: Envoi de la réponse au client avec status {status_code}.")
+        return jsonify(serializable_result), status_code
 
-    except Exception as e:
-        error_msg = f"API UPDATE: Erreur majeure - {str(e)}"
-        log_messages_update.append(error_msg)
-        error_response = {
+    except Exception as e_api_update:
+        import traceback
+        error_msg = f"API UPDATE: Erreur majeure inattendue - {str(e_api_update)}"
+        log_messages_update.append(error_msg + f"\nTraceback:\n{traceback.format_exc()}")
+        
+        error_response_payload = {
             "status": "error", "message": error_msg, 
             "logs": log_messages_update, "ident_data": ident_data
         }
-        if result_from_update_module:
-             error_response["partial_result_summary"] = {
-                k:v for k,v in sanitize_for_json(result_from_update_module).items() if k not in ["logs"]
+        # If result_from_update_module exists (meaning avant_api.run_update_procedure was called and returned something)
+        if result_from_update_module: 
+             error_response_payload["partial_result_summary"] = {
+                k:v for k,v in sanitize_for_json(result_from_update_module).items() 
+                if k not in ["logs", "connection_obj"] # Exclude already handled/non-serializable
             }
-        return jsonify(error_response), 500
+        return jsonify(error_response_payload), 500
     finally:
-        # The connection_for_update is local to this function's scope for the update operation.
-        # run_update_procedure might return this same object or a new one if it handled reconnects.
-        # For simplicity, we assume run_update_procedure uses the passed connection.
-        if connection_for_update and connection_for_update.is_alive():
-            connection_for_update.disconnect()
-            log_messages_update.append("API UPDATE (finally): Connexion pour la mise à jour fermée.")
-
+        # current_connection is the definitive connection object after all operations.
+        if current_connection:
+            if current_connection.is_alive():
+                current_connection.disconnect()
+                log_messages_update.append("API UPDATE (finally): Connexion active pour la mise à jour fermée.")
+            else:
+                log_messages_update.append("API UPDATE (finally): Connexion pour la mise à jour trouvée mais déjà fermée (probablement gérée par avant_api).")
+        else:
+            log_messages_update.append("API UPDATE (finally): Aucune connexion pour la mise à jour trouvée à fermer (potentiellement jamais établie, ou déjà gérée par avant_api).")
 
 @app.route('/api/run_apres', methods=['POST'])
 def api_run_apres():

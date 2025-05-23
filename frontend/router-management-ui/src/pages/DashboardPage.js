@@ -12,15 +12,13 @@ import Alert from '@mui/material/Alert';
 import { toast } from 'react-toastify';
 import IconButton from '@mui/material/IconButton';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-
-import UpdateRunner from '../components/Update/UpdateRunner';
 import ApresRunner from '../components/Apres/ApresRunner';
 import ConfirmationModal from '../components/Common/ConfirmationModal';
 import StructuredDataDisplay from '../components/Common/StructuredDataDisplay';
 import LogDisplay from '../components/Common/LogDisplay';
 import ComparisonModal from '../components/Common/ComparisonModal';
 import { useAuth } from '../contexts/AuthContext';
-import { runAvantChecks, unlockRouter, listGeneratedFiles, getFileContent, deleteGeneratedFile } from '../api/routerApi';
+import { runAvantChecks, unlockRouter, listGeneratedFiles, getFileContent, deleteGeneratedFile, runUpdateProcedure } from '../api/routerApi';
 import LogModal from '../components/Common/LogModal';
 import UpdateModal from '../components/Update/UpdateModal';
 import Dialog from '@mui/material/Dialog';
@@ -49,6 +47,10 @@ const DashboardPage = () => {
   const [isLoadingFiles, setIsLoadingFiles] = useState(false);
   const [fileAction, setFileAction] = useState({ type: null, filename: null });
   const [fileViewer, setFileViewer] = useState({ open: false, content: '', filename: '' });
+
+  const [isUpdateLoading, setIsUpdateLoading] = useState(false);
+  const [updateLogs, setUpdateLogs] = useState([]);
+  const [updateResult, setUpdateResult] = useState(null);
 
   useEffect(() => {
     // If we have credentials but AVANT hasn't been run, trigger it
@@ -95,13 +97,43 @@ const DashboardPage = () => {
     setShowUpdateModal(true);
   };
 
-  const handleConfirmUpdate = (path) => {
-    updateSession({ 
-      updateAttempted: true, 
-      updateCompleted: false, 
-      viewState: 'update_config',
-      updatePath: path 
-    });
+  const handleConfirmUpdate = async (filename) => {
+    setShowUpdateModal(false);
+    setIsUpdateLoading(true);
+    setUpdateLogs([]);
+    setUpdateResult(null);
+    setActionError('');
+    setDashboardActionLogs([]);
+    try {
+      if (!sessionData.ident_data || !credentials?.password) {
+        setActionError('Missing credentials or session data.');
+        setIsUpdateLoading(false);
+        return;
+      }
+      setUpdateLogs([`Starting update with file: ${filename}`]);
+      const response = await runUpdateProcedure({
+        ident_data: sessionData.ident_data,
+        password: credentials.password,
+        image_file: filename
+      });
+      setUpdateLogs(response.data.logs || []);
+      setUpdateResult(response.data);
+      if (response.data.status === 'success') {
+        toast.success('Update completed successfully!');
+        updateSession({ updateCompleted: true, viewState: 'update_finished_ready_for_apres' });
+      } else {
+        toast.error(response.data.message || 'Update failed.');
+        updateSession({ updateCompleted: false, viewState: 'update_finished_ready_for_apres' });
+      }
+    } catch (err) {
+      const errorMsg = err.response?.data?.message || err.message || 'Update failed.';
+      setActionError(errorMsg);
+      setUpdateLogs(prev => [...prev, errorMsg]);
+      setUpdateResult({ status: 'error', message: errorMsg });
+      updateSession({ updateCompleted: false, viewState: 'update_finished_ready_for_apres' });
+    } finally {
+      setIsUpdateLoading(false);
+    }
   };
 
   const handleTriggerApres = () => { 
@@ -166,7 +198,7 @@ const DashboardPage = () => {
   }, [showAvantResultsSection]);
 
   if (showInitialAvantLoading) { /* ... same loading display ... */ 
-      return ( <Paper elevation={3} sx={{ p: 3, textAlign: 'center', mt: 4 }}> <CircularProgress size={60} /> <Typography variant="h6" sx={{ mt: 2 }}>Running AVANT...</Typography> <Box sx={{width: '80%', margin: '20px auto'}}> <LogDisplay logs={avantLogs} title="Initial AVANT Logs" /> </Box> </Paper> );
+      return ( <Paper elevation={3} sx={{ p: 3, textAlign: 'center', mt: 4 }}> <CircularProgress size={60} /> <Typography variant="h6" sx={{ mt: 2 }}>Running Pre-Checks</Typography> <Box sx={{width: '80%', margin: '20px auto'}}> <LogDisplay logs={avantLogs} title="Initial AVANT Logs" /> </Box> </Paper> );
   }
   if (showInitialAvantError) { /* ... same error display ... */ 
       return ( <Paper elevation={3} sx={{ p: 3, mt: 4 }}> <Alert severity="error" sx={{mb:2}}> AVANT Failed: {avantError} </Alert> <LogDisplay logs={avantLogs} title="Initial AVANT Error Logs" /> <Button onClick={() => { logout(); navigate('/login', {replace: true}); }} variant="contained" sx={{mt:2}}>Login</Button> </Paper> );
@@ -395,10 +427,26 @@ const DashboardPage = () => {
       )}
       
       {showUpdateConfigSection && (
-        <>
-          <Divider sx={{my:3}}><Chip label="Update Process Configuration" /></Divider>
-          <UpdateRunner onUpdateProcessFinished={handleUpdateProcessFinished} />
-        </>
+        <Paper elevation={2} sx={{ p: 3, mb: 3, backgroundColor: '#fffde7' }}>
+          <Typography variant="h6" sx={{ mb: 2 }}>Software Update Progress</Typography>
+          {isUpdateLoading && (
+            <Box sx={{ textAlign: 'center', my: 2 }}>
+              <CircularProgress size={40} />
+              <Typography sx={{ mt: 2 }}>Update in progress... Please wait. This may take several minutes.</Typography>
+            </Box>
+          )}
+          {updateLogs.length > 0 && <LogDisplay logs={updateLogs} title="Update Logs" />}
+          {updateResult && (
+            <Alert severity={updateResult.status === 'success' ? 'success' : 'error'} sx={{ mt: 2 }}>
+              {updateResult.message}
+            </Alert>
+          )}
+          {!isUpdateLoading && (
+            <Typography sx={{ mt: 2 }}>
+              You can now proceed to run post-update checks (APRES).
+            </Typography>
+          )}
+        </Paper>
       )}      
       {sessionData.avantCompleted && (
         <Divider sx={{ my: 4 }}>

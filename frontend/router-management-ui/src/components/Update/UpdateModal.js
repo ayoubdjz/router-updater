@@ -9,41 +9,50 @@ import Box from '@mui/material/Box';
 import Alert from '@mui/material/Alert';
 
 const UpdateModal = ({ open, onClose, onConfirm }) => {
-  const [path, setPath] = useState('');
+  const [filename, setFilename] = useState('');
   const [error, setError] = useState('');
 
   const handleSubmit = () => {
-    if (!path.trim()) {
-      setError('Please enter a valid path');
+    if (!filename.trim()) {
+      setError('Please enter a valid filename');
       return;
     }
-    onConfirm(path);
+    setError('');
+    onConfirm(filename.trim());
+    // Do NOT call onClose here; let parent close the modal after processing if needed
+  };
+
+  const handleCancel = () => {
+    setFilename('');
+    setError('');
     onClose();
   };
 
   return (
     <Dialog 
       open={open} 
-      onClose={onClose}
+      onClose={handleCancel}
       maxWidth="sm"
       fullWidth
     >
-      <DialogTitle>Software Update Configuration</DialogTitle>
+      <DialogTitle>Software Update</DialogTitle>
       <DialogContent>
         <Box sx={{ mt: 2 }}>
           {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
           <TextField
             fullWidth
-            label="Software Update Path"
-            value={path}
-            onChange={(e) => setPath(e.target.value)}
-            helperText="Enter the path to the software update file"
+            label="Software Update Filename"
+            value={filename}
+            onChange={(e) => setFilename(e.target.value)}
+            helperText="Example: jinstall-ppc-21.4R3.15-signed.tgz (do not include a path)"
             variant="outlined"
+            placeholder="jinstall-ppc-21.4R3.15-signed.tgz"
+            autoFocus
           />
         </Box>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose}>Cancel</Button>
+        <Button onClick={handleCancel}>Cancel</Button>
         <Button onClick={handleSubmit} variant="contained" color="primary">
           Run Update
         </Button>

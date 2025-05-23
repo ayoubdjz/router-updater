@@ -84,7 +84,7 @@ const ApresRunner = ({ onApresProcessFinished }) => {
 
   return (
     <Box sx={{ my: 2, p: 2, border: '1px dashed #ccc', borderRadius: 1, backgroundColor: isLoading ? '#f0f0f0' : 'transparent' }}>
-      <Typography variant="h6" gutterBottom>Processing APRES...</Typography>
+      <Typography variant="h6" gutterBottom>Running Post-Update checks</Typography>
       {error && <Alert severity="error" sx={{my:1}}>{error}</Alert>}
       {isLoading && <CircularProgress sx={{ display: 'block', margin: '20px auto' }} />}
       <LogDisplay logs={logs} title="Live APRES Execution Logs" />

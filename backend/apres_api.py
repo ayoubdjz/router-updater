@@ -95,7 +95,7 @@ def parse_interfaces_for_file_display_apres(up_obj_list, down_obj_list):
         line_str = f"{iface['name']} - Vitesse: {iface['speed']} - IP: {iface['ip_address']} - MAC: {iface['mac_address']}"
         down_display_lines.append(line_str)
     
-    return up_display_lines, "\n".join(down_display_lines) if down_display_lines else "Aucune interface inactive trouvée."
+    return up_display_lines, "\n".join(down_display_lines) if down_display_lines else "No interfaces down found"
 
 
 def normalize_text(text_input): 
@@ -181,7 +181,7 @@ def _parse_configured_protocols_output(output, log_messages, context="APRES"):
     if protocols:
         return sorted(list(protocols))
     else:
-        msg = "Aucun protocole configuré trouvé dans la sortie."
+        msg = "No configured protocols found on the output"
         return {"message": msg, "protocols": []}
 
 def _parse_firewall_acls_output(output, log_messages, context="APRES"):
@@ -189,7 +189,7 @@ def _parse_firewall_acls_output(output, log_messages, context="APRES"):
     if output_stripped:
         return output_stripped
     else:
-        msg = "Aucune ACL configurée trouvée dans la sortie."
+        msg = "No ACL configured on the output"
         return msg
 
 def run_apres_checks_and_compare(ident_data, password, log_messages, avant_connection=None): 
@@ -410,28 +410,28 @@ def run_apres_checks_and_compare(ident_data, password, log_messages, avant_conne
                 log_messages.append(f"APRES ECHEC: {section_title_routes_ap} - Résumé")
             
             fetch_and_store_apres("ospf_status", "Protocole OSPF", "show ospf interface brief", parser_func=None, is_raw=True, read_timeout=90, 
-                not_configured_check=(["OSPF instance is not running", "not running", "not configured"], "OSPF n'est pas configuré sur ce routeur."))
+                not_configured_check=(["OSPF instance is not running", "not running", "not configured"], "OSPF instance is not running"))
             fetch_and_store_apres("isis_status", "Protocole IS-IS", "show isis adjacency", parser_func=None, is_raw=True, read_timeout=90,
-                not_configured_check=(["ISIS is not running", "not running", "not configured"], "IS-IS n'est pas configuré sur ce routeur."))
+                not_configured_check=(["ISIS is not running", "not running", "not configured"], "IS-IS is not running"))
             fetch_and_store_apres("mpls_status", "Protocole MPLS", "show mpls interface", parser_func=None, is_raw=True, read_timeout=90,
-                not_configured_check=(["MPLS is not enabled", "not enabled", "not configured"], "MPLS n'est pas configuré sur ce routeur."))
+                not_configured_check=(["MPLS is not enabled", "not enabled", "not configured"], "MPLS =is not enabled"))
             fetch_and_store_apres("ldp_status", "Protocole LDP", "show ldp session", parser_func=None, is_raw=True, read_timeout=90,
-                not_configured_check=(["LDP is not running", "not running", "not configured"], "LDP n'est pas configuré sur ce routeur."))
+                not_configured_check=(["LDP is not running", "not running", "not configured"], "LDP is not running"))
             fetch_and_store_apres("rsvp_status", "Protocole RSVP", "show rsvp interface", parser_func=None, is_raw=True, read_timeout=90,
-                not_configured_check=(["RSVP is not enabled", "not enabled", "not configured"], "RSVP n'est pas configuré sur ce routeur."))
+                not_configured_check=(["RSVP is not enabled", "not enabled", "not configured"], "RSVP is not enabled"))
             fetch_and_store_apres("lldp_status", "Protocole LLDP", "show lldp neighbor", parser_func=None, is_raw=True, read_timeout=90,
-                not_configured_check=(["LLDP is not running", "not running", "not configured"], "LLDP n'est pas configuré sur ce routeur."))
+                not_configured_check=(["LLDP is not running", "not running", "not configured"], "LLDP is not running"))
             fetch_and_store_apres("lsp_status", "Protocole LSP", "show mpls lsp", parser_func=None, is_raw=True, read_timeout=90,
-                not_configured_check=(["No LSPs found", "not configured"], "Aucun LSP configuré sur ce routeur."))
+                not_configured_check=(["No LSPs found", "not configured"], "No LSPs found"))
             fetch_and_store_apres("bgp_summary", "Protocole BGP", "show bgp summary", parser_func=None, is_raw=True, read_timeout=90,
-                not_configured_check=(["BGP is not running", "not running", "not configured"], "BGP n'est pas configuré sur ce routeur."))
+                not_configured_check=(["BGP is not running", "not running", "not configured"], "BGP is not running"))
             
             def parse_svcs_ap(output, log_msgs_ignore, context_ignore): 
                 return sorted(list(set(l.strip().rstrip(";") for l in output.splitlines() if l.strip().endswith(";"))))
             fetch_and_store_apres("system_services", "Services configurés", "show configuration system services", 
                 parser_func=parse_svcs_ap, is_raw=False, read_timeout=90, not_configured_check=None)
             
-            fetch_and_store_apres("configured_protocols", "Protocoles configurés", "show configuration protocols", 
+            fetch_and_store_apres("configured_protocols", "Protocoles configurees", "show configuration protocols", 
                 parser_func=_parse_configured_protocols_output, is_raw=False, read_timeout=90, not_configured_check=None)
 
             fetch_and_store_apres("firewall_config", "Listes de Controle d'Acces (ACL)", "show configuration firewall",
@@ -514,10 +514,10 @@ def run_apres_checks_and_compare(ident_data, password, log_messages, avant_conne
 
         for key, value in list(structured_output_data_apres.items()): 
             if isinstance(value, str) and not value.strip() and not key.startswith("critical_logs"): 
-                structured_output_data_apres[key] = {"message": f"Aucune donnée trouvée pour {key}."}
+                structured_output_data_apres[key] = {"message": f"Aucune donnée trouvee pour {key}."}
             elif isinstance(value, list) and not value:
                 if key not in ["interfaces_up", "interfaces_down"]: # Allow these to be empty lists
-                    structured_output_data_apres[key] = {"message": f"Aucune donnée trouvée pour {key}."}
+                    structured_output_data_apres[key] = {"message": f"Aucune donnée trouvee pour {key}."}
         log_messages.append(f"--- Fin run_apres_checks_and_compare pour {ip} ---")
         return {
             "status": "success", "message": "Vérifications APRES et comparaison terminées.",
