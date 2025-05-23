@@ -7,8 +7,15 @@ import apres_api
 from netmiko import ConnectHandler, BaseConnection # Import BaseConnection for type checking
 from pathlib import Path
 
-app = Flask(__name__, static_folder='../frontend/router-management-ui/build', # Path to React's build static assets
-            template_folder='../frontend/router-management-ui/build')
+react_build_path = os.path.abspath("../../frontend/router-management-ui/build")
+
+app = Flask(
+    __name__,
+    static_folder=os.path.join(react_build_path, "static"),
+    template_folder=react_build_path,
+)
+
+
 CORS(app)
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -289,21 +296,19 @@ def delete_file(filename):
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
-@app.route('/', defaults={'path': ''})
-@app.route('/<path:path>')
-def serve_react_app(path):
-    if path.startswith('api/'):
-        return jsonify({"error": "API endpoint not found."}), 404
-    # Serve React's index.html for all other routes (for React Router support)
-    return render_template('index.html')
+@app.route("/", defaults={"path": ""})
+@app.route("/<path:path>")
+def serve_react(path):
+    file_path = os.path.join(app.template_folder, path)
+    if path != "" and os.path.exists(file_path):
+        return send_from_directory(app.template_folder, path)
+    else:
+        return send_from_directory(app.template_folder, "index.html")
 
-@app.route('/')
-def serve():
-    return send_from_directory(app.static_folder, 'index.html')
-
-@app.errorhandler(404)
-def not_found(e):
-    return send_from_directory(app.static_folder, 'index.html')
+# === Example API route ===
+@app.route("/api/test")
+def test():
+    return {"message": "Flask API is working"}
 
 if __name__ == '__main__':
     if not os.path.exists(GENERATED_FILES_DIR): 

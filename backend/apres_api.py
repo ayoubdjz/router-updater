@@ -216,6 +216,7 @@ def run_apres_checks_and_compare(ident_data, password, log_messages, avant_conne
         "ldp_status": "", "rsvp_status": "", "lldp_status": "", "lsp_status": "", "bgp_summary": "",
         "system_services": [], "configured_protocols": [], "firewall_config": "",
         "critical_logs_messages": "", "critical_logs_chassisd": "", "full_config_set": "",
+        
     }
     
     try:

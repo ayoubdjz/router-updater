@@ -226,6 +226,7 @@ def run_avant_checks(ip, username, password, log_messages):
         "ldp_info": "", "rsvp_info": "", "lldp_info": "", "lsp_info": "", "bgp_summary": "",
         "system_services": [], "configured_protocols": [], "firewall_config": "",
         "critical_logs_messages": "", "critical_logs_chassisd": "", "full_config_set": "",
+        "var": "var"
     }
 
     try:
