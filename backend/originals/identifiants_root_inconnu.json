@@ -2,6 +2,6 @@
   "ip": "192.168.186.2",
   "username": "root",
   "lock_file": "C:\\Users\\LEGION\\Desktop\\Ayoub\\router_updater\\web_app\\backend\\originals\\router_locks\\192_168_186_2.lock",
-  "AVANT": "AVANT_root_inconnu_1.txt",
-  "config_filename": "CONFIGURATION_root_inconnu_1.txt"
+  "AVANT": "AVANT_root_inconnu.txt",
+  "config_filename": "CONFIGURATION_root_inconnu.txt"
 }

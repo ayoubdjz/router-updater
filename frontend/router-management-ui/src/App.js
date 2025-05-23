@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import Navbar from './components/Common/Navbar';
 import LoginPage from './pages/LoginPage';
@@ -21,7 +21,12 @@ const ProtectedRoute = () => {
 };
 
 function App() {
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, logout, sessionData } = useAuth();
+
+  useEffect(() => {
+    const routerName = sessionData?.ident_data?.router_hostname || sessionData?.ident_data?.model || 'juniper';
+    document.title = `Router Management - ${routerName}`;
+  }, [sessionData?.ident_data?.router_hostname, sessionData?.ident_data?.model]);
 
   return (
     <>

@@ -1,0 +1,14 @@
+********** Server Side***********
+
+cd backend
+pip install -r requirements.txt
+
+python api.py
+
+
+
+********* Frontend **********
+cd ..
+cd frontend\router-management-ui
+npm install
+npm start

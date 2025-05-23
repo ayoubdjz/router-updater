@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify, send_from_directory, render_template
 from flask_cors import CORS
 import os
 import json
@@ -7,13 +7,14 @@ import APRES_API
 from netmiko import ConnectHandler, BaseConnection # Import BaseConnection for type checking
 from pathlib import Path
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='..frontend/router-management-ui/build/static', # Path to React's build static assets
+            template_folder='../frontend/router-management-ui/build')
 CORS(app)
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 GENERATED_FILES_DIR = os.path.join(SCRIPT_DIR, "generated_files")
 
-# --- Helper function to sanitize results for jsonify ---
+# --- Helper function to sanitize results for jsonify ---pa
 def sanitize_for_json(data_dict):
     if not isinstance(data_dict, dict):
         return data_dict # Should not happen if our functions return dicts
@@ -79,24 +80,17 @@ def api_run_avant():
 
     try:
         result_from_avant_module = AVANT_API.run_avant_checks(ip, username, password, log_messages_avant)
-        
         lock_file_path_from_avant_run = result_from_avant_module.get("lock_file_path") 
         connection_obj_from_avant_run = result_from_avant_module.get("connection_obj")
 
-        # Sanitize the result BEFORE any jsonify attempt, for both success and error paths from run_avant_checks
         serializable_result = sanitize_for_json(result_from_avant_module)
-        # Ensure logs collected by this endpoint are also included if not already part of result
-        serializable_result["logs"] = log_messages_avant 
+        serializable_result["logs"] = log_messages_avant
 
         if result_from_avant_module.get("status") == "error":
             if lock_file_path_from_avant_run:
                 AVANT_API.liberer_verrou(lock_file_path_from_avant_run, log_messages_avant)
-            # serializable_result should now be safe for jsonify
             return jsonify(serializable_result), 500
-        
-        # SUCCESS from run_avant_checks:
-        return jsonify(serializable_result) # serializable_result is now safe
-
+        return jsonify(serializable_result)
     except Exception as e_api_avant: 
         log_messages_avant.append(f"API /run_avant Erreur inattendue: {str(e_api_avant)}")
         if lock_file_path_from_avant_run: # If known from a partial result_from_avant_module
@@ -216,13 +210,10 @@ def api_run_apres():
     try:
         result_from_apres_module = APRES_API.run_apres_checks_and_compare(ident_data, password, log_messages_apres, avant_connection=None)
         connection_obj_from_apres_run = result_from_apres_module.get("connection_obj")
-        
         serializable_result = sanitize_for_json(result_from_apres_module)
         serializable_result["logs"] = log_messages_apres
-        
         if result_from_apres_module.get("status") == "error":
             return jsonify(serializable_result), 500
-        
         return jsonify(serializable_result)
 
     except Exception as e_api_apres:
@@ -297,6 +288,14 @@ def delete_file(filename):
             return jsonify({"status": "error", "message": "File not found."}), 404
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
+
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def serve_react_app(path):
+    if path.startswith('api/'):
+        return jsonify({"error": "API endpoint not found."}), 404
+    # Serve React's index.html for all other routes (for React Router support)
+    return render_template('index.html')
 
 if __name__ == '__main__':
     if not os.path.exists(GENERATED_FILES_DIR): 
