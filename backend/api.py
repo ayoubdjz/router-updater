@@ -2,12 +2,12 @@ from flask import Flask, request, jsonify, send_from_directory, render_template
 from flask_cors import CORS
 import os
 import json
-import AVANT_API 
-import APRES_API 
+import avant_api 
+import apres_api 
 from netmiko import ConnectHandler, BaseConnection # Import BaseConnection for type checking
 from pathlib import Path
 
-app = Flask(__name__, static_folder='..frontend/router-management-ui/build/static', # Path to React's build static assets
+app = Flask(__name__, static_folder='../frontend/router-management-ui/build', # Path to React's build static assets
             template_folder='../frontend/router-management-ui/build')
 CORS(app)
 
@@ -41,7 +41,7 @@ def test_router_connection():
 
     if not all([ip, username, password]):
         return jsonify({"status": "error", "message": "IP, username, and password are required."}), 400
-    if not AVANT_API.valider_ip(ip):
+    if not avant_api.valider_ip(ip):
         return jsonify({"status": "error", "message": "Adresse IP invalide."}), 400
 
     device = {'device_type': 'juniper', 'host': ip, 'username': username, 'password': password, 'timeout': 10}
@@ -50,7 +50,7 @@ def test_router_connection():
         log_messages.append(f"Test Connection: Attempting to connect to {ip}...")
         conn = ConnectHandler(**device)
         log_messages.append("Test Connection: Successfully connected.")
-        if AVANT_API.verifier_connexion(conn, log_messages):
+        if avant_api.verifier_connexion(conn, log_messages):
             conn.disconnect()
             log_messages.append("Test Connection: Verification successful, disconnected.")
             return jsonify({"status": "success", "message": f"Connexion à {ip} réussie.", "logs": log_messages})
@@ -79,7 +79,7 @@ def api_run_avant():
         return jsonify(sanitize_for_json({"status": "error", "message": "IP, username, and password are required."})), 400
 
     try:
-        result_from_avant_module = AVANT_API.run_avant_checks(ip, username, password, log_messages_avant)
+        result_from_avant_module = avant_api.run_avant_checks(ip, username, password, log_messages_avant)
         lock_file_path_from_avant_run = result_from_avant_module.get("lock_file_path") 
         connection_obj_from_avant_run = result_from_avant_module.get("connection_obj")
 
@@ -88,13 +88,13 @@ def api_run_avant():
 
         if result_from_avant_module.get("status") == "error":
             if lock_file_path_from_avant_run:
-                AVANT_API.liberer_verrou(lock_file_path_from_avant_run, log_messages_avant)
+                avant_api.liberer_verrou(lock_file_path_from_avant_run, log_messages_avant)
             return jsonify(serializable_result), 500
         return jsonify(serializable_result)
     except Exception as e_api_avant: 
         log_messages_avant.append(f"API /run_avant Erreur inattendue: {str(e_api_avant)}")
         if lock_file_path_from_avant_run: # If known from a partial result_from_avant_module
-             AVANT_API.liberer_verrou(lock_file_path_from_avant_run, log_messages_avant)
+             avant_api.liberer_verrou(lock_file_path_from_avant_run, log_messages_avant)
         
         # Construct a safe error response
         error_response = {
@@ -145,11 +145,11 @@ def api_run_update():
         }
         log_messages_update.append(f"API UPDATE: Connexion à {ip} pour la mise à jour...")
         connection_for_update = ConnectHandler(**update_device_details) # This is the connection object for this scope
-        if not AVANT_API.verifier_connexion(connection_for_update, log_messages_update):
+        if not avant_api.verifier_connexion(connection_for_update, log_messages_update):
             raise Exception("Échec de la vérification de la connexion avant la mise à jour.")
         
         log_messages_update.append("API UPDATE: Lancement de la procédure de mise à jour...")
-        result_from_update_module = AVANT_API.run_update_procedure(
+        result_from_update_module = avant_api.run_update_procedure(
             connection_for_update, # Pass the live connection
             update_device_details, 
             image_file, 
@@ -208,7 +208,7 @@ def api_run_apres():
         # Depending on strictness, could return 412 here.
 
     try:
-        result_from_apres_module = APRES_API.run_apres_checks_and_compare(ident_data, password, log_messages_apres, avant_connection=None)
+        result_from_apres_module = apres_api.run_apres_checks_and_compare(ident_data, password, log_messages_apres, avant_connection=None)
         connection_obj_from_apres_run = result_from_apres_module.get("connection_obj")
         serializable_result = sanitize_for_json(result_from_apres_module)
         serializable_result["logs"] = log_messages_apres
@@ -229,7 +229,7 @@ def api_run_apres():
         return jsonify(error_response), 500
     finally:
         if lock_file_to_release: 
-            AVANT_API.liberer_verrou(lock_file_to_release, log_messages_apres)
+            avant_api.liberer_verrou(lock_file_to_release, log_messages_apres)
         
         if connection_obj_from_apres_run and connection_obj_from_apres_run.is_alive():
             connection_obj_from_apres_run.disconnect()
@@ -245,7 +245,7 @@ def api_unlock_router():
     if not lock_file_path:
         return jsonify({"status": "error", "message": "lock_file_path is required."}), 400
 
-    if AVANT_API.liberer_verrou(lock_file_path, log_messages):
+    if avant_api.liberer_verrou(lock_file_path, log_messages):
         return jsonify({"status": "success", "message": f"Tentative de libération du verrou {lock_file_path} effectuée.", "logs": log_messages})
     else:
         return jsonify({"status": "error", "message": f"Échec de la tentative de libération du verrou {lock_file_path}. Vérifiez les logs.", "logs": log_messages}), 500
@@ -280,7 +280,7 @@ def delete_file(filename):
         
         file_path = os.path.join(GENERATED_FILES_DIR, filename)
         if os.path.exists(file_path):
-            if os.path.abspath(AVANT_API.LOCK_DIR) in os.path.abspath(file_path):
+            if os.path.abspath(avant_api.LOCK_DIR) in os.path.abspath(file_path):
                  return jsonify({"status": "error", "message": "Cannot delete lock files via this generic file endpoint. Use /api/unlock_router."}), 403
             os.remove(file_path)
             return jsonify({"status": "success", "message": f"File {filename} deleted."})
@@ -297,10 +297,18 @@ def serve_react_app(path):
     # Serve React's index.html for all other routes (for React Router support)
     return render_template('index.html')
 
+@app.route('/')
+def serve():
+    return send_from_directory(app.static_folder, 'index.html')
+
+@app.errorhandler(404)
+def not_found(e):
+    return send_from_directory(app.static_folder, 'index.html')
+
 if __name__ == '__main__':
     if not os.path.exists(GENERATED_FILES_DIR): 
         os.makedirs(GENERATED_FILES_DIR)
-    if not os.path.exists(AVANT_API.LOCK_DIR): 
-        os.makedirs(AVANT_API.LOCK_DIR)
+    if not os.path.exists(avant_api.LOCK_DIR): 
+        os.makedirs(avant_api.LOCK_DIR)
     
     app.run(debug=True, host='0.0.0.0', port=5001)
