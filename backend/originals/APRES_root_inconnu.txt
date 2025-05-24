@@ -7,18 +7,18 @@ Routing Engine status:
     DRAM                      2048 MB (2048 MB installed)
     Memory utilization          41 percent
     CPU utilization:
-      User                       1 percent
+      User                       2 percent
       Background                 0 percent
-      Kernel                    14 percent
-      Interrupt                  6 percent
-      Idle                      79 percent
+      Kernel                     2 percent
+      Interrupt                  5 percent
+      Idle                      91 percent
     Model                          RE-VMX
     Serial ID                      VM5543516AC4
     Start time                     2025-05-24 04:34:46 UTC
-    Uptime                         5 hours, 58 minutes, 32 seconds
+    Uptime                         6 hours, 54 minutes, 57 seconds
     Last reboot reason             0x10:misc hardware reason 
     Load averages:                 1 minute   5 minute  15 minute
-                                       0.64       0.18       0.23
+                                       0.03       0.04       0.03
 
 
 Informations sur les interfaces :

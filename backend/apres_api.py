@@ -148,10 +148,10 @@ def parse_interfaces_for_file_display_apres(up_obj_list, down_obj_list):
     return up_display_lines, "\n".join(down_display_lines) if down_display_lines else "Aucune interface inactive trouvee."
 
 # --- Start of APRES.py comparison logic integration ---
-def apres_normalize_text(text):
+def normalize_text(text):
     try:
         if isinstance(text, list):
-            return [apres_normalize_text(line) for line in text]
+            return [normalize_text(line) for line in text]
         text = unicodedata.normalize('NFKD', text).encode('ASCII', 'ignore').decode('ASCII')
         return text.lower()
     except Exception as e:
@@ -196,30 +196,22 @@ def extract_sections(file_content):
     # Unified section extraction for both AVANT and APRES
     sections = OrderedDict()
     current_section = None
-    current_section_orig = None
     for line in file_content:
-        if line is None:
+        if line is None: 
             return OrderedDict()
         stripped_line = line.strip()
-        if not stripped_line:
-            continue  # skip empty lines
         try:
-            # Accept both ' :' and ':' as section delimiters
-            if stripped_line.endswith(' :') or (stripped_line.endswith(':') and not stripped_line.endswith(' :')):
-                normalized = normalize_section_header(stripped_line)
-                current_section = normalized
-                current_section_orig = stripped_line
-                if current_section not in sections:
-                    sections[current_section] = {"header": current_section_orig, "lines": []}
+            if stripped_line.endswith(" :"):
+                current_section = stripped_line
+                sections[current_section] = []
             elif current_section:
-                sections[current_section]["lines"].append(stripped_line)
+                sections[current_section].append(stripped_line)
         except Exception as e:
             print(f"Erreur lors de l'extraction des sections : {e}", file=sys.stderr)
     return sections
 
 
 def compare_sections(sections_avant, sections_apres):
-    # Unified comparison for both AVANT and APRES
     differences = OrderedDict()
     try:
         all_sections = OrderedDict()
@@ -228,30 +220,26 @@ def compare_sections(sections_avant, sections_apres):
         for section in sections_apres.keys():
             all_sections[section] = True
         for section in all_sections.keys():
-            avant_lines = sections_avant.get(section, {"header": section, "lines": []})["lines"]
-            apres_lines = sections_apres.get(section, {"header": section, "lines": []})["lines"]
-            # Compare line by line, but also handle empty/added/removed
-            removed = []
-            added = []
-            max_len = max(len(avant_lines), len(apres_lines))
-            for i in range(max_len):
-                if i < len(avant_lines) and i < len(apres_lines):
-                    if apres_normalize_text(avant_lines[i]) == apres_normalize_text(apres_lines[i]):
-                        removed.append("\u2713 (Identique)")
-                        added.append("\u2713 (Identique)")
-                    else:
-                        removed.append(avant_lines[i])
-                        added.append(apres_lines[i])
-                elif i < len(avant_lines):
-                    removed.append(avant_lines[i])
-                    added.append("\u2717 (Supprim\u00e9e)")
-                elif i < len(apres_lines):
-                    removed.append("\u2717 (Aucune)")
-                    added.append(apres_lines[i])
-            # Only add if there is a difference
-            if any(r != "\u2713 (Identique)" or a != "\u2713 (Identique)" for r, a in zip(removed, added)):
-                header_display = sections_avant.get(section, sections_apres.get(section, {"header": section}))['header']
-                differences[header_display] = {"removed": removed, "added": added}
+            content1 = sections_avant.get(section, [])
+            content2 = sections_apres.get(section, [])
+            norm1 = set(normalize_text(content1))
+            norm2 = set(normalize_text(content2))
+            if norm1 != norm2:
+                # Modifier ici pour ajouter des messages explicites
+                added = [line for line in content2 if normalize_text(line) in norm2 - norm1]
+                removed = [line for line in content1 if normalize_text(line) in norm1 - norm2]
+                # Si added est vide mais qu'il y a des removed, ajouter un message
+                if not added and removed:
+                    added = ["✗ (Supprimée)"]
+                # Si removed est vide mais qu'il y a des added, ajouter un message
+                if not removed and added:
+                    removed = ["✗ (Aucune)"]
+                differences[section] = {
+                    "file1": content1,
+                    "file2": content2,
+                    "added": added,
+                    "removed": removed
+                }
     except Exception as e:
         print(f"Erreur lors de la comparaison des sections : {e}", file=sys.stderr)
     return differences
@@ -331,9 +319,9 @@ def _format_single_section_for_report(section_name, section_content, headers_map
     matched_header = headers_map.get(section_name)
     # Fallback for slight variations in header names (e.g. accents, double spaces)
     if not matched_header:
-        normalized_key_form = apres_normalize_text(section_name).replace(":", "").strip()
+        normalized_key_form = normalize_text(section_name).replace(":", "").strip()
         for k_map, v_map_header in headers_map.items():
-            if apres_normalize_text(k_map).replace(":", "").strip() == normalized_key_form:
+            if normalize_text(k_map).replace(":", "").strip() == normalized_key_form:
                 matched_header = v_map_header
                 break
     if matched_header:
@@ -678,6 +666,8 @@ def run_apres_checks_and_compare(ident_data, password, log_messages, avant_conne
             if not sections_from_apres_file:
                  comparison_report_string_for_api += f"Impossible d'extraire les sections du fichier APRES: {apres_file_path_internal}\n"
         
+        print(sections_from_apres_file)
+        print(sections_from_avant_file)
         # Proceed with comparison even if one set of sections is empty, to show all as added/removed
         differences_data = compare_sections(sections_from_avant_file, sections_from_apres_file)
         display_differences(differences_data)

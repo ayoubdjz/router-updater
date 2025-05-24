@@ -6,20 +6,20 @@ La version du systeme Junos est : 14.1R4.8
 Informations du moteur de routage :
 Routing Engine status:
     DRAM                      2048 MB (2048 MB installed)
-    Memory utilization          41 percent
+    Memory utilization          40 percent
     CPU utilization:
       User                       1 percent
       Background                 0 percent
-      Kernel                     1 percent
+      Kernel                     0 percent
       Interrupt                  6 percent
       Idle                      93 percent
     Model                          RE-VMX
     Serial ID                      VM5543516AC4
     Start time                     2025-05-24 04:34:46 UTC
-    Uptime                         6 hours, 5 minutes, 28 seconds
+    Uptime                         7 hours, 22 minutes, 42 seconds
     Last reboot reason             0x10:misc hardware reason 
     Load averages:                 1 minute   5 minute  15 minute
-                                       0.00       0.04       0.13
+                                       0.03       0.19       0.40
 
 Informations sur les interfaces :
 Les Interfaces up :

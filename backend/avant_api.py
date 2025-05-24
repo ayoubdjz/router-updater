@@ -299,7 +299,7 @@ def run_avant_checks(ip, username, password, log_messages):
         # --- Section: Informations de base du routeur ---
         section_title_basic = "Informations de base du routeur"
         structured_output_data["basic_info"]["section_title"] = section_title_basic
-        temp_avant_file_obj.write(f"{section_title_basic}:\n")
+        temp_avant_file_obj.write(f"{section_title_basic} :\n")
         
         output_version_str = ""
         junos_version, router_model = "inconnu", "inconnu" # router_hostname already "inconnu"
@@ -376,7 +376,7 @@ def run_avant_checks(ip, username, password, log_messages):
                     err_msg_conn_lost = f"Connexion perdue avant collecte de: {title_for_file}"
                     log_messages.append(f"ERREUR AVANT: {err_msg_conn_lost}")
                     structured_output_data[data_key_structured] = f"ERREUR: {err_msg_conn_lost}"
-                    file.write(f"\n{title_for_file}:\n") 
+                    file.write(f"\n{title_for_file} :\n") 
                     file.write(f"ERREUR: Connexion perdue.\n")
                     raise Exception(f"AVANT: {err_msg_conn_lost}")
 
@@ -453,7 +453,7 @@ def run_avant_checks(ip, username, password, log_messages):
                 raise Exception("AVANT: Connexion perdue avant collecte des interfaces")
             section_title_interfaces = "Informations sur les interfaces"
             log_messages.append(f"AVANT Récupération: {section_title_interfaces}")
-            file.write(f"\n{section_title_interfaces}:\n")
+            file.write(f"\n{section_title_interfaces} :\n")
             try:
                 cmd_terse = "show interfaces terse | no-more"
                 cmd_detail = "show interfaces detail | no-more"
@@ -494,8 +494,8 @@ def run_avant_checks(ip, username, password, log_messages):
 
             fetch_and_store_avant("arp_table", "Informations ARP", "show arp", is_raw_if_no_parser=True, read_timeout=90)
             
-            file.write("\nInformations sur les routes:\n")
-            file.write("Resume des routes:\n")
+            file.write("\nInformations sur les routes :\n")
+            file.write("Resume des routes :\n")
             fetch_and_store_avant(
                 data_key_structured="route_summary", 
                 title_for_file="Resume des routes", 
@@ -517,7 +517,7 @@ def run_avant_checks(ip, username, password, log_messages):
             
             try:
                 if not verifier_connexion(connection, log_messages, "AVANT Collect LLDP"): raise Exception("Connexion perdue LLDP")
-                file.write("\nProtocole LLDP:\n")
+                file.write("\nProtocole LLDP :\n")
                 lldp_output = connection.send_command("show lldp neighbor | no-more", read_timeout=90)
                 if not lldp_output.strip():
                     msg = "LLDP n'est pas configuré ou aucun voisin n'a été détecté."
@@ -525,7 +525,7 @@ def run_avant_checks(ip, username, password, log_messages):
                     file.write(msg + "\n")
                     structured_output_data["lldp_info"] = msg
                 else:
-                    file.write("Voisins LLDP découverts:\n")
+                    file.write("Voisins LLDP découverts :\n")
                     file.write(lldp_output.strip() + "\n")
                     structured_output_data["lldp_info"] = lldp_output.strip()
                 log_messages.append("AVANT OK: Protocole LLDP")
@@ -1158,4 +1158,3 @@ if __name__ == '__main__':
     #
     # elif res_avant.get('connection_obj') and res_avant['connection_obj'].is_alive(): # if avant failed but conn exists
     #        res_avant['connection_obj'].disconnect()
-    print("\n--- Fin des tests locaux (si activés) ---")

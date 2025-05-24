@@ -1,23 +1,408 @@
 
 Rapport des changements :
 
-Informations du moteur de routage :
+Informations de base du routeur :
+
+-------------------------------------------------------------------------------------
+                            AVANT                              |        APRÈS        
+-------------------------------------------------------------------------------------
+Le hostname du routeur est : inconnu                           | ✗ (Supprimée)       
+Informations du moteur de routage:                             | ✓ (Identique)       
+Routing Engine status:                                         | ✓ (Identique)       
+DRAM                      2048 MB (2048 MB installed)          | ✓ (Identique)       
+Memory utilization          41 percent                         | ✓ (Identique)       
+CPU utilization:                                               | ✓ (Identique)       
+User                       3 percent                           | ✓ (Identique)       
+Background                 0 percent                           | ✓ (Identique)       
+Kernel                     2 percent                           | ✓ (Identique)       
+Interrupt                  5 percent                           | ✓ (Identique)       
+Idle                      90 percent                           | ✓ (Identique)       
+Model                          RE-VMX                          | ✓ (Identique)       
+Serial ID                      VM5543516AC4                    | ✓ (Identique)       
+Start time                     2025-05-24 04:34:46 UTC         | ✓ (Identique)       
+Uptime                         6 hours, 37 minutes, 24 seconds | ✓ (Identique)       
+Last reboot reason             0x10:misc hardware reason       | ✓ (Identique)       
+Load averages:                 1 minute   5 minute  15 minute  | ✓ (Identique)       
+0.00       0.03       0.05                                     | ✓ (Identique)       
+-------------------------------------------------------------------------------------
+
+
+Informations sur les interfaces :
+
+------------------------------------------------------------------------------------------------------------
+                                        AVANT                                         |        APRÈS        
+------------------------------------------------------------------------------------------------------------
+Les Interfaces up:                                                                    | ✗ (Supprimée)       
+ge-0/0/0 - Vitesse: 1000mbps - IP: N/A (Physical) - MAC: 00:05:86:71:fd:00            | ✓ (Identique)       
+ge-0/0/0.0 - Vitesse: 1000mbps - IP: 192.168.110.2/24 - MAC: 00:05:86:71:fd:00        | ✓ (Identique)       
+lc-0/0/0 - Vitesse: 800mbps - IP: N/A (Physical) - MAC: Unspecified                   | ✓ (Identique)       
+lc-0/0/0.32769 - Vitesse: 800mbps - IP: N/A - MAC: Unspecified                        | ✓ (Identique)       
+pfe-0/0/0 - Vitesse: 800mbps - IP: N/A (Physical) - MAC: Unspecified                  | ✓ (Identique)       
+pfe-0/0/0.16383 - Vitesse: 800mbps - IP: N/A - MAC: Unspecified                       | ✓ (Identique)       
+pfh-0/0/0 - Vitesse: 800mbps - IP: N/A (Physical) - MAC: Unspecified                  | ✓ (Identique)       
+pfh-0/0/0.16383 - Vitesse: 800mbps - IP: N/A - MAC: Unspecified                       | ✓ (Identique)       
+ge-0/0/1 - Vitesse: 1000mbps - IP: N/A (Physical) - MAC: 00:05:86:71:fd:01            | ✓ (Identique)       
+ge-0/0/2 - Vitesse: 1000mbps - IP: N/A (Physical) - MAC: 00:05:86:71:fd:02            | ✓ (Identique)       
+ge-0/0/3 - Vitesse: 1000mbps - IP: N/A (Physical) - MAC: 00:05:86:71:fd:03            | ✓ (Identique)       
+ge-0/0/4 - Vitesse: 1000mbps - IP: N/A (Physical) - MAC: 00:05:86:71:fd:04            | ✓ (Identique)       
+ge-0/0/5 - Vitesse: 1000mbps - IP: N/A (Physical) - MAC: 00:05:86:71:fd:05            | ✓ (Identique)       
+ge-0/0/6 - Vitesse: 1000mbps - IP: N/A (Physical) - MAC: 00:05:86:71:fd:06            | ✓ (Identique)       
+ge-0/0/7 - Vitesse: 1000mbps - IP: N/A (Physical) - MAC: 00:05:86:71:fd:07            | ✓ (Identique)       
+ge-0/0/8 - Vitesse: 1000mbps - IP: N/A (Physical) - MAC: 00:05:86:71:fd:08            | ✓ (Identique)       
+ge-0/0/9 - Vitesse: 1000mbps - IP: N/A (Physical) - MAC: 00:05:86:71:fd:09            | ✓ (Identique)       
+cbp0 - Vitesse: Unspecified - IP: N/A (Physical) - MAC: 00:05:86:71:fd:11             | ✓ (Identique)       
+demux0 - Vitesse: Unspecified - IP: N/A (Physical) - MAC: Unspecified                 | ✓ (Identique)       
+dsc - Vitesse: Unspecified - IP: N/A (Physical) - MAC: Unspecified                    | ✓ (Identique)       
+em0 - Vitesse: 1000mbps - IP: N/A (Physical) - MAC: 50:00:00:01:00:00                 | ✓ (Identique)       
+em1 - Vitesse: 1000mbps - IP: N/A (Physical) - MAC: 50:00:00:01:00:01                 | ✓ (Identique)       
+em1.0 - Vitesse: 1000mbps - IP: 172.16.0.1/16 - MAC: 50:00:00:01:00:01                | ✓ (Identique)       
+em2 - Vitesse: 1000mbps - IP: N/A (Physical) - MAC: 50:00:00:01:00:02                 | ✓ (Identique)       
+em3 - Vitesse: 1000mbps - IP: N/A (Physical) - MAC: 50:00:00:01:00:03                 | ✓ (Identique)       
+em4 - Vitesse: 1000mbps - IP: N/A (Physical) - MAC: 50:00:00:01:00:04                 | ✓ (Identique)       
+em5 - Vitesse: 1000mbps - IP: N/A (Physical) - MAC: 50:00:00:01:00:05                 | ✓ (Identique)       
+gre - Vitesse: Unlimited - IP: N/A (Physical) - MAC: N/A                              | ✓ (Identique)       
+ipip - Vitesse: Unlimited - IP: N/A (Physical) - MAC: N/A                             | ✓ (Identique)       
+irb - Vitesse: Unspecified - IP: N/A (Physical) - MAC: 00:05:86:72:00:f0              | ✓ (Identique)       
+lo0 - Vitesse: Unspecified - IP: N/A (Physical) - MAC: Unspecified                    | ✓ (Identique)       
+lo0.16384 - Vitesse: Unspecified - IP: 127.0.0.1 - MAC: Unspecified                   | ✓ (Identique)       
+lo0.16385 - Vitesse: Unspecified - IP: 128.0.0.1 - MAC: Unspecified                   | ✓ (Identique)       
+lo0.32768 - Vitesse: Unspecified - IP: N/A - MAC: Unspecified                         | ✓ (Identique)       
+lsi - Vitesse: Unlimited - IP: N/A (Physical) - MAC: Unspecified                      | ✓ (Identique)       
+mtun - Vitesse: Unlimited - IP: N/A (Physical) - MAC: N/A                             | ✓ (Identique)       
+pimd - Vitesse: Unlimited - IP: N/A (Physical) - MAC: N/A                             | ✓ (Identique)       
+pime - Vitesse: Unlimited - IP: N/A (Physical) - MAC: N/A                             | ✓ (Identique)       
+pip0 - Vitesse: Unspecified - IP: N/A (Physical) - MAC: 00:05:86:71:00:b0             | ✓ (Identique)       
+pp0 - Vitesse: Unspecified - IP: N/A (Physical) - MAC: Unspecified                    | ✓ (Identique)       
+tap - Vitesse: Unlimited - IP: N/A (Physical) - MAC: Unspecified                      | ✓ (Identique)       
+vtep - Vitesse: Unlimited - IP: N/A (Physical) - MAC: Unspecified                     | ✓ (Identique)       
+Les Interfaces down:                                                                  | ✓ (Identique)       
+Aucune interface inactive trouv��e.                                                   | ✓ (Identique)       
+                                                                                      | ✓ (Identique)       
+Informations ARP:                                                                     | ✓ (Identique)       
+MAC Address       Address         Name                      Interface           Flags | ✓ (Identique)       
+00:50:56:c0:00:08 192.168.110.1   192.168.110.1             ge-0/0/0.0          none  | ✓ (Identique)       
+00:0c:29:80:ff:c8 192.168.110.128 192.168.110.128           ge-0/0/0.0          none  | ✓ (Identique)       
+Total entries: 2                                                                      | ✓ (Identique)       
+                                                                                      | ✓ (Identique)       
+------------------------------------------------------------------------------------------------------------
+
+
+Resume des routes :
+
+-----------------------------------------------------------------
+                  AVANT                    |        APRÈS        
+-----------------------------------------------------------------
+Resume des routes:                         | ✗ (Supprimée)       
+Protocole OSPF:                            | ✓ (Identique)       
+OSPF n'est pas configur�� sur ce routeur.  | ✓ (Identique)       
+Protocole IS-IS:                           | ✓ (Identique)       
+IS-IS n'est pas configur�� sur ce routeur. | ✓ (Identique)       
+Protocole MPLS:                            | ✓ (Identique)       
+MPLS n'est pas configur�� sur ce routeur.  | ✓ (Identique)       
+Protocole LDP:                             | ✓ (Identique)       
+LDP n'est pas configur�� sur ce routeur.   | ✓ (Identique)       
+Protocole RSVP:                            | ✓ (Identique)       
+RSVP n'est pas configur�� sur ce routeur.  | ✓ (Identique)       
+-----------------------------------------------------------------
+
+
+Protocole LLDP :
 
 ======================================================== AVANT =========================================================
-Memory utilization          40 percent
-User                       2 percent
-Kernel                     2 percent
-Interrupt                  5 percent
-Idle                      90 percent
-Uptime                         5 hours, 58 minutes, 17 seconds
-0.04       0.03       0.18
+LLDP n'est pas configur�� ou aucun voisin n'a ��t�� d��tect��.
+Protocole LSP:
+Aucune session lsp trouv��.
+Protocole BGP:
+BGP n'est pas configur�� sur ce routeur.
+Services configur��s:
+ssh
+Protocoles configur��s:
+Aucun protocole configur�� trouv��.
+Listes de Contr��le d'Acc��s (ACL):
+Aucune ACL configur��e trouv��e.
+Logs des erreurs critiques - messages:
+May 24 04:35:17   /kernel: em0error setting host MAC filter table
+May 24 04:35:17   /kernel: em1error setting host MAC filter table
+May 24 04:35:17   /kernel: em2error setting host MAC filter table
+May 24 04:35:17   /kernel: em3error setting host MAC filter table
+May 24 04:35:17   /kernel: em4error setting host MAC filter table
+May 24 04:35:17   /kernel: em5error setting host MAC filter table
+May 24 04:36:21   chassisd[2955]: CHASSISD_FILE_OPEN: File open: /dev/acb, error: 2 -- No such file or directory
+May 24 04:36:21   chassisd[2955]: CHASSISD_FILE_OPEN: File open: /dev/acb, error: 2 -- No such file or directory
+May 24 04:36:23   /kernel: KERN_ARP_DUPLICATE_ADDR: duplicate IP address 192.168.110.2! sent from address: 00:50:56:e7:df:30 (error count = 1)
+Logs des erreurs critiques - chassisd:
+May  1 15:40:28  fpc_down slot 0 reason Error cargs 0x0
+May  1 15:40:28  fpc_offline_now - slot 0, reason: Error, error Unresponsive transition state 1
+May  1 15:40:28  FPC#0 - power off [addr 0x11] reason: Error
+May  1 15:40:28  send: red alarm set, device FPC 0, reason FPC 0 Hard errors
+May  1 16:09:19  ch_power_off_frus_cleanup_exit: Chassisd exiting with error-code= 69
+May  1 16:14:47  rtsock_inform_fru_offline: inform peer type 17, index 0 offline, error 0
+May  1 16:14:47  rtsock_reset_self_ping_statistics: reset fpc_slot 0 self_ping stats, error 0
+May  1 16:14:47  fpc_offline_now - slot 0, reason: None, error Chassis connection dropped transition state 1
+May  1 16:14:55  ch_power_off_frus_cleanup_exit: Chassisd exiting with error-code= 69
+La configuration totale:
+set version 14.1R4.8
+set system root-authentication encrypted-password "$1$3AeZEBSp$twF2DWjYrFSqjJhI/CfLD0"
+set system services ssh
+set system syslog user * any emergency
+set system syslog file messages any notice
+set system syslog file messages authorization info
+set system syslog file interactive-commands interactive-commands any
+set interfaces ge-0/0/0 unit 0 family inet address 192.168.110.2/24
 
 ======================================================== APRÈS =========================================================
-Memory utilization          41 percent
-User                       1 percent
-Kernel                    14 percent
-Interrupt                  6 percent
-Idle                      79 percent
-Uptime                         5 hours, 58 minutes, 32 seconds
-0.64       0.18       0.23
+LLDP n'est pas configure ou aucun voisin n'a ete detecte.
 ========================================================================================================================
+
+Informations du moteur de routage :
+
+-------------------------------------------------------------------------------------
+       AVANT         |                             APRÈS                             
+-------------------------------------------------------------------------------------
+✗ (Aucune)           | Routing Engine status:                                        
+✓ (Identique)        | DRAM                      2048 MB (2048 MB installed)         
+✓ (Identique)        | Memory utilization          41 percent                        
+✓ (Identique)        | CPU utilization:                                              
+✓ (Identique)        | User                       2 percent                          
+✓ (Identique)        | Background                 0 percent                          
+✓ (Identique)        | Kernel                     2 percent                          
+✓ (Identique)        | Interrupt                  5 percent                          
+✓ (Identique)        | Idle                      91 percent                          
+✓ (Identique)        | Model                          RE-VMX                         
+✓ (Identique)        | Serial ID                      VM5543516AC4                   
+✓ (Identique)        | Start time                     2025-05-24 04:34:46 UTC        
+✓ (Identique)        | Uptime                         6 hours, 54 minutes, 57 seconds
+✓ (Identique)        | Last reboot reason             0x10:misc hardware reason      
+✓ (Identique)        | Load averages:                 1 minute   5 minute  15 minute 
+✓ (Identique)        | 0.03       0.04       0.03                                    
+✓ (Identique)        |                                                               
+✓ (Identique)        |                                                               
+-------------------------------------------------------------------------------------
+
+
+Les Interfaces up :
+
+---------------------------------------------------------------------------------------------
+       AVANT         |                                 APRÈS                                 
+---------------------------------------------------------------------------------------------
+✗ (Aucune)           | ge-0/0/0 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 00:05:86:71:fd:00,
+✓ (Identique)        | ge-0/0/0.0 - Vitesse: 1000mbps - IP: 192.168.110.2                    
+✓ (Identique)        | lc-0/0/0 - Vitesse: 800mbps - IP: Aucune IP - MAC: Unspecified,       
+✓ (Identique)        | lc-0/0/0.32769 - Vitesse: 800mbps - IP: Aucune IP                     
+✓ (Identique)        | pfe-0/0/0 - Vitesse: 800mbps - IP: Aucune IP - MAC: Unspecified,      
+✓ (Identique)        | pfe-0/0/0.16383 - Vitesse: 800mbps - IP: Aucune IP                    
+✓ (Identique)        | pfh-0/0/0 - Vitesse: 800mbps - IP: Aucune IP - MAC: Unspecified,      
+✓ (Identique)        | pfh-0/0/0.16383 - Vitesse: 800mbps - IP: Aucune IP                    
+✓ (Identique)        | ge-0/0/1 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 00:05:86:71:fd:01,
+✓ (Identique)        | ge-0/0/2 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 00:05:86:71:fd:02,
+✓ (Identique)        | ge-0/0/3 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 00:05:86:71:fd:03,
+✓ (Identique)        | ge-0/0/4 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 00:05:86:71:fd:04,
+✓ (Identique)        | ge-0/0/5 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 00:05:86:71:fd:05,
+✓ (Identique)        | ge-0/0/6 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 00:05:86:71:fd:06,
+✓ (Identique)        | ge-0/0/7 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 00:05:86:71:fd:07,
+✓ (Identique)        | ge-0/0/8 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 00:05:86:71:fd:08,
+✓ (Identique)        | ge-0/0/9 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 00:05:86:71:fd:09,
+✓ (Identique)        | cbp0 - Vitesse: Unspecified - IP: Aucune IP - MAC: 00:05:86:71:fd:11, 
+✓ (Identique)        | demux0 - Vitesse: Unspecified - IP: Aucune IP - MAC: Unspecified,     
+✓ (Identique)        | dsc - Vitesse: Unspecified - IP: Aucune IP - MAC: Unspecified,        
+✓ (Identique)        | em0 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 50:00:00:01:00:00,     
+✓ (Identique)        | em1 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 50:00:00:01:00:01,     
+✓ (Identique)        | em1.0 - Vitesse: 1000mbps - IP: fe80::5200:ff:fe01:1                  
+✓ (Identique)        | em2 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 50:00:00:01:00:02,     
+✓ (Identique)        | em3 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 50:00:00:01:00:03,     
+✓ (Identique)        | em4 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 50:00:00:01:00:04,     
+✓ (Identique)        | em5 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 50:00:00:01:00:05,     
+✓ (Identique)        | gre - Vitesse: Unlimited - IP: Aucune IP                              
+✓ (Identique)        | ipip - Vitesse: Unlimited - IP: Aucune IP                             
+✓ (Identique)        | irb - Vitesse: Unspecified - IP: Aucune IP - MAC: 00:05:86:72:00:f0,  
+✓ (Identique)        | lo0 - Vitesse: Unspecified - IP: Aucune IP - MAC: Unspecified,        
+✓ (Identique)        | lo0.16384 - Vitesse: Unspecified - IP: 127.0.0.1                      
+✓ (Identique)        | lo0.16385 - Vitesse: Unspecified - IP: fe80::200:f:fc00:0             
+✓ (Identique)        | lo0.32768 - Vitesse: Unspecified - IP: Aucune IP                      
+✓ (Identique)        | lsi - Vitesse: Unlimited - IP: Aucune IP - MAC: Unspecified,          
+✓ (Identique)        | mtun - Vitesse: Unlimited - IP: Aucune IP                             
+✓ (Identique)        | pimd - Vitesse: Unlimited - IP: Aucune IP                             
+✓ (Identique)        | pime - Vitesse: Unlimited - IP: Aucune IP                             
+✓ (Identique)        | pip0 - Vitesse: Unspecified - IP: Aucune IP - MAC: 00:05:86:71:00:b0, 
+✓ (Identique)        | pp0 - Vitesse: Unspecified - IP: Aucune IP - MAC: Unspecified,        
+✓ (Identique)        | tap - Vitesse: Unlimited - IP: Aucune IP - MAC: Unspecified,          
+✓ (Identique)        | vtep - Vitesse: Unlimited - IP: Aucune IP - MAC: Unspecified,         
+---------------------------------------------------------------------------------------------
+
+
+Les Interfaces down :
+
+---------------------------------------------------------
+       AVANT         |               APRÈS               
+---------------------------------------------------------
+✗ (Aucune)           | Aucune interface inactive trouvee.
+✓ (Identique)        |                                   
+---------------------------------------------------------
+
+
+Informations ARP :
+
+------------------------------------------------------------------------------------------------------------
+       AVANT         |                                         APRÈS                                        
+------------------------------------------------------------------------------------------------------------
+✗ (Aucune)           | MAC Address       Address         Name                      Interface           Flags
+✓ (Identique)        | 00:50:56:c0:00:08 192.168.110.1   192.168.110.1             ge-0/0/0.0          none 
+✓ (Identique)        | 00:0c:29:80:ff:c8 192.168.110.128 192.168.110.128           ge-0/0/0.0          none 
+✓ (Identique)        | Total entries: 2                                                                     
+✓ (Identique)        |                                                                                      
+✓ (Identique)        |                                                                                      
+------------------------------------------------------------------------------------------------------------
+
+
+Protocole OSPF :
+
+---------------------------------------------------------------
+       AVANT         |                  APRÈS                  
+---------------------------------------------------------------
+✗ (Aucune)           | OSPF n'est pas configure sur ce routeur.
+✓ (Identique)        |                                         
+---------------------------------------------------------------
+
+
+Protocole IS-IS :
+
+----------------------------------------------------------------
+       AVANT         |                   APRÈS                  
+----------------------------------------------------------------
+✗ (Aucune)           | IS-IS n'est pas configure sur ce routeur.
+✓ (Identique)        |                                          
+----------------------------------------------------------------
+
+
+Protocole MPLS :
+
+---------------------------------------------------------------
+       AVANT         |                  APRÈS                  
+---------------------------------------------------------------
+✗ (Aucune)           | MPLS n'est pas configure sur ce routeur.
+✓ (Identique)        |                                         
+---------------------------------------------------------------
+
+
+Protocole LDP :
+
+--------------------------------------------------------------
+       AVANT         |                  APRÈS                 
+--------------------------------------------------------------
+✗ (Aucune)           | LDP n'est pas configure sur ce routeur.
+✓ (Identique)        |                                        
+--------------------------------------------------------------
+
+
+Protocole RSVP :
+
+---------------------------------------------------------------
+       AVANT         |                  APRÈS                  
+---------------------------------------------------------------
+✗ (Aucune)           | RSVP n'est pas configure sur ce routeur.
+✓ (Identique)        |                                         
+---------------------------------------------------------------
+
+
+Protocole LSP :
+
+-------------------------------------------------
+       AVANT         |           APRÈS           
+-------------------------------------------------
+✗ (Aucune)           | Aucune session lsp trouve.
+✓ (Identique)        |                           
+-------------------------------------------------
+
+
+Protocole BGP :
+
+--------------------------------------------------------------
+       AVANT         |                  APRÈS                 
+--------------------------------------------------------------
+✗ (Aucune)           | BGP n'est pas configure sur ce routeur.
+✓ (Identique)        |                                        
+--------------------------------------------------------------
+
+
+Services configures :
+
+-------------------------------------------
+       AVANT         |        APRÈS        
+-------------------------------------------
+✗ (Aucune)           | ssh                 
+✓ (Identique)        |                     
+-------------------------------------------
+
+
+Protocoles configures :
+
+-------------------------------------------
+       AVANT         |        APRÈS        
+-------------------------------------------
+✗ (Aucune)           |                     
+-------------------------------------------
+
+
+Listes de Controle d'Acces (ACL) :
+
+-----------------------------------------------------
+       AVANT         |             APRÈS             
+-----------------------------------------------------
+✗ (Aucune)           | Aucune ACL configuree trouvee.
+✓ (Identique)        |                               
+-----------------------------------------------------
+
+
+Logs des erreurs critiques dans 'messages' :
+
+======================================================== AVANT =========================================================
+✗ (Aucune)
+
+======================================================== APRÈS =========================================================
+May 24 04:35:17   /kernel: em0error setting host MAC filter table
+May 24 04:35:17   /kernel: em1error setting host MAC filter table
+May 24 04:35:17   /kernel: em2error setting host MAC filter table
+May 24 04:35:17   /kernel: em3error setting host MAC filter table
+May 24 04:35:17   /kernel: em4error setting host MAC filter table
+May 24 04:35:17   /kernel: em5error setting host MAC filter table
+May 24 04:36:21   chassisd[2955]: CHASSISD_FILE_OPEN: File open: /dev/acb, error: 2 -- No such file or directory
+May 24 04:36:21   chassisd[2955]: CHASSISD_FILE_OPEN: File open: /dev/acb, error: 2 -- No such file or directory
+May 24 04:36:23   /kernel: KERN_ARP_DUPLICATE_ADDR: duplicate IP address 192.168.110.2! sent from address: 00:50:56:e7:df:30 (error count = 1)
+
+========================================================================================================================
+
+Logs des erreurs critiques dans 'chassisd' :
+
+======================================================== AVANT =========================================================
+✗ (Aucune)
+
+======================================================== APRÈS =========================================================
+May  1 15:40:28  fpc_down slot 0 reason Error cargs 0x0
+May  1 15:40:28  fpc_offline_now - slot 0, reason: Error, error Unresponsive transition state 1
+May  1 15:40:28  FPC#0 - power off [addr 0x11] reason: Error
+May  1 15:40:28  send: red alarm set, device FPC 0, reason FPC 0 Hard errors
+May  1 16:09:19  ch_power_off_frus_cleanup_exit: Chassisd exiting with error-code= 69
+May  1 16:14:47  rtsock_inform_fru_offline: inform peer type 17, index 0 offline, error 0
+May  1 16:14:47  rtsock_reset_self_ping_statistics: reset fpc_slot 0 self_ping stats, error 0
+May  1 16:14:47  fpc_offline_now - slot 0, reason: None, error Chassis connection dropped transition state 1
+May  1 16:14:55  ch_power_off_frus_cleanup_exit: Chassisd exiting with error-code= 69
+
+
+========================================================================================================================
+
+La configuration totale :
+
+-------------------------------------------------------------------------------------------------------------
+       AVANT         |                                         APRÈS                                         
+-------------------------------------------------------------------------------------------------------------
+✗ (Aucune)           | set version 14.1R4.8                                                                  
+✓ (Identique)        | set system root-authentication encrypted-password "$1$3AeZEBSp$twF2DWjYrFSqjJhI/CfLD0"
+✓ (Identique)        | set system services ssh                                                               
+✓ (Identique)        | set system syslog user * any emergency                                                
+✓ (Identique)        | set system syslog file messages any notice                                            
+✓ (Identique)        | set system syslog file messages authorization info                                    
+✓ (Identique)        | set system syslog file interactive-commands interactive-commands any                  
+✓ (Identique)        | set interfaces ge-0/0/0 unit 0 family inet address 192.168.110.2/24                   
+✓ (Identique)        |                                                                                       
+-------------------------------------------------------------------------------------------------------------
+
