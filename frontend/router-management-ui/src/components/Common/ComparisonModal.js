@@ -11,6 +11,23 @@ import Paper from '@mui/material/Paper';
 // Expects: comparisonResults = { section_key: { avant_content: [...], apres_content: [...] } }
 // If you want to pass in two objects (avantData, apresData), adjust accordingly.
 const ComparisonModal = ({ open, onClose, comparisonResults }) => {
+  // If the backend now returns a string, display it as a single pre-formatted block
+  if (typeof comparisonResults === 'string') {
+    return (
+      <Dialog open={open} onClose={onClose} maxWidth="lg" fullWidth scroll="paper">
+        <DialogTitle sx={{ borderBottom: 1, borderColor: 'divider' }}>AVANT vs APRES Visual Comparison</DialogTitle>
+        <DialogContent dividers sx={{ backgroundColor: '#f9f9f9', p: { xs: 1, sm: 2 } }}>
+          <Paper component="pre" variant="outlined" sx={{ p: 2, whiteSpace: 'pre-wrap', wordBreak: 'break-all', backgroundColor: '#fff', fontFamily: 'Consolas, Menlo, Monaco, Liberation Mono, Courier New, monospace', fontSize: '1rem', overflowX: 'auto', letterSpacing: 0 }}>
+            {comparisonResults}
+          </Paper>
+        </DialogContent>
+        <DialogActions sx={{ borderTop: 1, borderColor: 'divider', p: 2 }}>
+          <Button onClick={onClose} variant="outlined">Close</Button>
+        </DialogActions>
+      </Dialog>
+    );
+  }
+
   // If the backend now just returns two objects: avantData, apresData
   // You can adjust this logic to accept those directly.
   if (!comparisonResults || Object.keys(comparisonResults).length === 0) {

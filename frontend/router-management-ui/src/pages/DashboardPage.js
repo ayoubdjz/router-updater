@@ -1,46 +1,52 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
-import Grid from '@mui/material/Grid'; 
+import Grid from '@mui/material/Grid';
 import Divider from '@mui/material/Divider';
-import Chip from '@mui/material/Chip';
 import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
 import { toast } from 'react-toastify';
 import IconButton from '@mui/material/IconButton';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+// import DeleteIcon from '@mui/icons-material/Delete'; // Not used in the provided snippet, but kept if relevant elsewhere
 import ApresRunner from '../components/Apres/ApresRunner';
 import ConfirmationModal from '../components/Common/ConfirmationModal';
 import StructuredDataDisplay from '../components/Common/StructuredDataDisplay';
 import LogDisplay from '../components/Common/LogDisplay';
 import ComparisonModal from '../components/Common/ComparisonModal';
 import { useAuth } from '../contexts/AuthContext';
-import { runAvantChecks, unlockRouter, listGeneratedFiles, getFileContent, deleteGeneratedFile, runUpdateProcedure } from '../api/routerApi';
+import { runAvantChecks, /* runUpdateProcedure, */ unlockRouter, listGeneratedFiles, getFileContent, deleteGeneratedFile } from '../api/routerApi'; // runUpdateProcedure removed
 import LogModal from '../components/Common/LogModal';
-import UpdateModal from '../components/Update/UpdateModal';
+// import UpdateModal from '../components/Update/UpdateModal'; // Removed
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 
 const DashboardPage = () => {
+  // --- Hooks ---
   const { sessionData, updateSession, resetWorkflow, credentials, logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
 
+  // --- State ---
   const [isAvantLoading, setIsAvantLoading] = useState(false);
   const [avantError, setAvantError] = useState('');
   const [avantLogs, setAvantLogs] = useState([]);
+  const [avantCriticalError, setAvantCriticalError] = useState(null);
 
-  const [isActionLoading, setIsActionLoading] = useState(false);
-  const [actionError, setActionError] = useState(''); 
-  const [dashboardActionLogs, setDashboardActionLogs] = useState([]);  const [showApresConfirmModal, setShowApresConfirmModal] = useState(false);
+  const [isActionLoading, setIsActionLoading] = useState(false); // General purpose loading for dashboard actions like unlock
+  const [actionError, setActionError] = useState(''); // General purpose error for dashboard actions
+  const [dashboardActionLogs, setDashboardActionLogs] = useState([]);
+
+  const [showApresConfirmModal, setShowApresConfirmModal] = useState(false);
   const [showComparisonDetailModal, setShowComparisonDetailModal] = useState(false);
   const [showAvantLogsModal, setShowAvantLogsModal] = useState(false);
-  const [showUpdateModal, setShowUpdateModal] = useState(false);
+  // const [showUpdateModal, setShowUpdateModal] = useState(false); // Removed
+
   const [avantFileAction, setAvantFileAction] = useState({ loading: false, type: null });
 
   const [generatedFiles, setGeneratedFiles] = useState([]);
@@ -48,255 +54,124 @@ const DashboardPage = () => {
   const [fileAction, setFileAction] = useState({ type: null, filename: null });
   const [fileViewer, setFileViewer] = useState({ open: false, content: '', filename: '' });
 
-  const [isUpdateLoading, setIsUpdateLoading] = useState(false);
-  const [updateLogs, setUpdateLogs] = useState([]);
-  const [updateResult, setUpdateResult] = useState(null);
+  // const [isUpdateLoading, setIsUpdateLoading] = useState(false); // Removed
+  // const [updateLogs, setUpdateLogs] = useState([]); // Removed
 
-  useEffect(() => {
-    // If we have credentials but AVANT hasn't been run, trigger it
-    if (credentials && !sessionData.avantCompleted && !isAvantLoading) { 
-      navigate(location.pathname, { state: { ...location.state, runAvantOnLoad: false }, replace: true }); 
-      const performInitialAvantChecks = async () => {
-        setIsAvantLoading(true); setAvantError(''); setAvantLogs([]);
-        updateSession({ 
-          ident_data: null, lock_file_path: null, avant_file_path: null, config_file_path: null,
-          avantCompleted: false, avantData: null, updateAttempted: false, updateCompleted: false,
-          apresCompleted: false, apresData: null, comparisonResults: null, viewState: 'avant_loading'
-        });
-        try {
-          const response = await runAvantChecks(credentials);
-          setAvantLogs(response.data.logs || []);
-          if (response.data.status === 'success') {
-            updateSession({
-              ident_data: response.data.ident_data, lock_file_path: response.data.ident_data.lock_file_path,
-              avant_file_path: response.data.avant_file_path, config_file_path: response.data.config_file_path,
-              avantCompleted: true, avantData: response.data.structured_data, viewState: 'avant_success'
-            });
-            setAvantError(''); toast.success("Pre-checks completed successfully!");
-          } else {
-            const errMsg = `AVANT checks failed: ${response.data.message || 'Unknown AVANT error'}`;
-            setAvantError(errMsg); toast.error(errMsg);
-            updateSession({ avantCompleted: false, viewState: 'avant_error' });
-          }
-        } catch (err) {
-          const errorMsg = err.response?.data?.message || err.message || 'An error occurred during initial AVANT checks.';
-          setAvantError(errorMsg); toast.error(errorMsg);
-          const errLogs = err.response?.data?.logs || [];
-          setAvantLogs(prevLogs => [...prevLogs, `Network/Request Error: ${errorMsg}`, ...errLogs]);
-          updateSession({ avantCompleted: false, viewState: 'avant_error' });
-          if(err.response?.status === 401 || err.response?.status === 403) {
-            logout(); navigate('/login', { replace: true, state: { error: "Session issue during AVANT. Please login again." }});
-          }
-        } finally { setIsAvantLoading(false); }
-      };
-      performInitialAvantChecks();
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps 
-  }, [location.state, credentials, sessionData.avantCompleted, isAvantLoading]);
-  const handleTriggerUpdate = () => {
-    setShowUpdateModal(true);
-  };
+  const [lastFailedAction, setLastFailedAction] = useState(null);
+  const [apresCriticalError, setApresCriticalError] = useState(null);
 
-  const handleConfirmUpdate = async (filename) => {
-    setShowUpdateModal(false);
-    setIsUpdateLoading(true);
-    setUpdateLogs([]);
-    setUpdateResult(null);
-    setActionError('');
-    setDashboardActionLogs([]);
-    try {
-      if (!sessionData.ident_data || !credentials?.password) {
-        setActionError('Missing credentials or session data.');
-        setIsUpdateLoading(false);
-        return;
-      }
-      setUpdateLogs([`Starting update with file: ${filename}`]);
-      const response = await runUpdateProcedure({
-        ident_data: sessionData.ident_data,
-        password: credentials.password,
-        image_file: filename
-      });
-      setUpdateLogs(response.data.logs || []);
-      setUpdateResult(response.data);
-      if (response.data.status === 'success') {
-        toast.success('Update completed successfully!');
-        updateSession({ updateCompleted: true, viewState: 'update_finished_ready_for_apres' });
-      } else {
-        toast.error(response.data.message || 'Update failed.');
-        updateSession({ updateCompleted: false, viewState: 'update_finished_ready_for_apres' });
-      }
-    } catch (err) {
-      const errorMsg = err.response?.data?.message || err.message || 'Update failed.';
-      setActionError(errorMsg);
-      setUpdateLogs(prev => [...prev, errorMsg]);
-      setUpdateResult({ status: 'error', message: errorMsg });
-      updateSession({ updateCompleted: false, viewState: 'update_finished_ready_for_apres' });
-    } finally {
-      setIsUpdateLoading(false);
-    }
-  };
+  // --- Refs ---
+  const initialAvantFetchInProgressRef = useRef(false);
 
-  const handleTriggerApres = () => { 
-    setShowApresConfirmModal(true);
-  };
-  const handleConfirmApres = () => {
-    setShowApresConfirmModal(false);
-    // Run APRES directly when user confirms
-    updateSession({ viewState: 'apres_running' }); 
-  };
+  // --- Handler Functions (Defined BEFORE useEffect and conditional rendering logic) ---
 
-  const handleCancelApres = () => {
-    setShowApresConfirmModal(false);
-  };
+  const handleReloadAvant = useCallback(async () => {
+    setAvantCriticalError(null);
+    setAvantError('');
+    setAvantLogs([]);
+    setIsAvantLoading(false); // Ensure this is reset so useEffect logic can proceed
+    initialAvantFetchInProgressRef.current = false; // Reset ref
 
-  const handleUpdateProcessFinished = (updateSuccess) => {
-    // After update attempt, the "Run APRES" button in the APRES section will become more prominent or enabled.
-    // User clicks it to run APRES. No automatic modal.
-    updateSession({ viewState: 'update_finished_ready_for_apres' }); // New state to signify update done, APRES next
-    if(updateSuccess) {
-        toast.success("Software update process reported success. You can now run APRES checks.");
-    } else {
-        toast.warn("Software update process reported issues. Check logs. You can still attempt APRES checks.");
-    }
-  };
-  
-  // handleProceedWithApres and handleSkipApres are no longer needed
-
-  const handleApresProcessFinished = (apresSuccess) => {
-    updateSession({ viewState: 'workflow_complete' });
-    // Toast for APRES success/failure is handled within ApresRunner
-  };
-  
-  const handleForceUnlockAndFullReset = async () => { /* ... same as before ... */ 
-    if (!sessionData.lock_file_path) {
-        toast.warn("No lock file path known."); setActionError("No lock file path known."); return;
-    }
-    setIsActionLoading(true); setActionError(''); setDashboardActionLogs([]);
-    try {
-        const unlockResponse = await unlockRouter(sessionData.lock_file_path);
-        const unlockMsg = `Force Unlock: ${unlockResponse.data.message || 'Unlock attempted.'}`;
-        setDashboardActionLogs(prev => [...prev, unlockMsg, ...(unlockResponse.data.logs || [])]);
-        toast.info(unlockMsg); resetWorkflow();
-    } catch (err) {
-        const errorMsg = err.response?.data?.message || err.message || 'Failed to force unlock router.';
-        setActionError(errorMsg); toast.error(errorMsg);
-        setDashboardActionLogs(prevLogs => [...prevLogs, `Error during force unlock: ${errorMsg}`]);
-    } finally { setIsActionLoading(false); }
-  };
-  const showInitialAvantLoading = isAvantLoading || sessionData.viewState === 'avant_loading';
-  const showInitialAvantError = avantError && !sessionData.avantCompleted && sessionData.viewState === 'avant_error';
-  const showAvantNotRunMessage = !credentials || (!sessionData.avantCompleted && !isAvantLoading && !avantError);
-  
-  const showAvantResultsSection = sessionData.avantCompleted;
-  const showUpdateConfigSection = sessionData.avantCompleted && sessionData.updateAttempted && !sessionData.updateCompleted && sessionData.viewState === 'update_config';
-  const showApresRunner = sessionData.avantCompleted && sessionData.viewState === 'apres_running' && !sessionData.apresCompleted;
-  const showApresResultsDisplay = sessionData.apresCompleted && sessionData.apresData;
-
-  // Move this useEffect to the top level, before any early returns
-  useEffect(() => {
-    if (showAvantResultsSection) fetchGeneratedFiles();
-  }, [showAvantResultsSection]);
-
-  if (showInitialAvantLoading) { /* ... same loading display ... */ 
-      return ( <Paper elevation={3} sx={{ p: 3, textAlign: 'center', mt: 4 }}> <CircularProgress size={60} /> <Typography variant="h6" sx={{ mt: 2 }}>Running Pre-Checks</Typography> <Box sx={{width: '80%', margin: '20px auto'}}> <LogDisplay logs={avantLogs} title="Initial AVANT Logs" /> </Box> </Paper> );
-  }
-  if (showInitialAvantError) { /* ... same error display ... */ 
-      return ( <Paper elevation={3} sx={{ p: 3, mt: 4 }}> <Alert severity="error" sx={{mb:2}}> AVANT Failed: {avantError} </Alert> <LogDisplay logs={avantLogs} title="Initial AVANT Error Logs" /> <Button onClick={() => { logout(); navigate('/login', {replace: true}); }} variant="contained" sx={{mt:2}}>Login</Button> </Paper> );
-  }  if (showAvantNotRunMessage) {
-      return (
-        <Paper elevation={3} sx={{p:3, textAlign:'center', mt:4}}>
-          <Typography>Please wait while AVANT initializes...</Typography>
-          <CircularProgress sx={{ mt: 2 }} />
-        </Paper>
-      );
-  }
-  
-  // --- AVANT Reload Handler ---
-  const handleReloadAvant = async () => {
-    setIsAvantLoading(true); setAvantError(''); setAvantLogs([]);
-    updateSession({ 
+    updateSession({
       ident_data: null, lock_file_path: null, avant_file_path: null, config_file_path: null,
-      avantCompleted: false, avantData: null, updateAttempted: false, updateCompleted: false,
-      apresCompleted: false, apresData: null, comparisonResults: null, viewState: 'avant_loading'
+      avantCompleted: false, avantData: null,
+      // Removed updateAttempted: false, updateCompleted: false,
+      apresCompleted: false, apresData: null, comparisonResults: null,
+      viewState: 'initial'
     });
-    try {
-      const response = await runAvantChecks(credentials);
-      setAvantLogs(response.data.logs || []);
-      if (response.data.status === 'success') {
+    // The main useEffect for AVANT will now re-evaluate and re-trigger if conditions are met.
+  }, [updateSession]);
+
+  const handleReloadApres = useCallback(() => {
+    setApresCriticalError(null); // Clear APRES critical error
+    updateSession({
+      viewState: 'apres_running', // This should re-trigger the ApresRunner
+      apresCompleted: false,
+      apresData: null,
+      comparisonResults: null
+    });
+  }, [updateSession]);
+
+  // Removed handleTriggerUpdate and handleConfirmUpdate
+
+  const handleTriggerApres = useCallback(() => {
+    setShowApresConfirmModal(true);
+  }, []);
+
+  const handleConfirmApres = useCallback(() => {
+    setShowApresConfirmModal(false);
+    setApresCriticalError(null); // Clear previous APRES error before running
+    updateSession({ viewState: 'apres_running' });
+  }, [updateSession]);
+
+  const handleCancelApres = useCallback(() => {
+    setShowApresConfirmModal(false);
+  }, []);
+
+  const handleApresProcessFinished = useCallback((apresSuccess, apresData, comparisonResults, criticalErrorMsg) => {
+    if (criticalErrorMsg) {
+        setApresCriticalError(criticalErrorMsg);
         updateSession({
-          ident_data: response.data.ident_data, lock_file_path: response.data.lock_file_path,
-          avant_file_path: response.data.avant_file_path, config_file_path: response.data.config_file_path,
-          avantCompleted: true, avantData: response.data.structured_data, viewState: 'avant_success'
+            apresCompleted: false,
+            apresData: null, // Clear data on critical error
+            comparisonResults: null,
+            viewState: 'apres_error' // A new state to signify APRES critical failure
         });
-        setAvantError(''); toast.success("Pre-checks completed successfully!");
-      } else {
-        const errMsg = `AVANT checks failed: ${response.data.message || 'Unknown AVANT error'}`;
-        setAvantError(errMsg); toast.error(errMsg);
-        updateSession({ avantCompleted: false, viewState: 'avant_error' });
-      }
-    } catch (err) {
-      const errorMsg = err.response?.data?.message || err.message || 'An error occurred during AVANT reload.';
-      setAvantError(errorMsg); toast.error(errorMsg);
-      const errLogs = err.response?.data?.logs || [];
-      setAvantLogs(prevLogs => [...prevLogs, `Network/Request Error: ${errorMsg}`, ...errLogs]);
-      updateSession({ avantCompleted: false, viewState: 'avant_error' });
-      if(err.response?.status === 401 || err.response?.status === 403) {
-        logout(); navigate('/login', { replace: true, state: { error: "Session issue during AVANT. Please login again." }});
-      }
-    } finally { setIsAvantLoading(false); }
-  };
-
-  // --- APRES Reload Handler ---
-  const handleReloadApres = () => {
-    updateSession({ viewState: 'apres_running', apresCompleted: false });
-  };
-
-  // Handler to view AVANT file
-  const handleViewAvantFile = () => {
-    if (!sessionData.avant_file_path) return;
-    setAvantFileAction({ loading: true, type: 'view' });
-    const fileName = sessionData.avant_file_path.split(/[/\\]/).pop();
-    window.open(`/api/files/${encodeURIComponent(fileName)}`, '_blank');
-    setTimeout(() => setAvantFileAction({ loading: false, type: null }), 500); // quick reset
-  };
-
-  // Handler to delete AVANT file
-  const handleDeleteAvantFile = async () => {
-    if (!sessionData.avant_file_path) return;
-    if (!window.confirm('Delete this AVANT file?')) return;
-    setAvantFileAction({ loading: true, type: 'delete' });
-    try {
-      const fileName = sessionData.avant_file_path.split(/[/\\]/).pop();
-      const res = await fetch(`/api/files/${encodeURIComponent(fileName)}`, { method: 'DELETE' });
-      const data = await res.json();
-      if (res.ok) {
-        toast.success(data.message || 'AVANT file deleted.');
-        updateSession({ avant_file_path: null, avantData: null });
-      } else {
-        toast.error(data.message || 'Failed to delete AVANT file.');
-      }
-    } catch (err) {
-      toast.error('Error deleting AVANT file.');
-    } finally {
-      setAvantFileAction({ loading: false, type: null });
+        toast.error(`Post-checks failed critically: ${criticalErrorMsg}`);
+    } else {
+        setApresCriticalError(null); // Clear any previous critical error on success/non-critical issue
+        updateSession({
+            apresCompleted: true, // Even if not 100% "success", it "completed"
+            apresData: apresData,
+            comparisonResults: comparisonResults,
+            viewState: apresSuccess ? 'workflow_complete' : 'apres_completed_with_issues',
+            // If APRES was successful, assume lock is released as per API design.
+            ...(apresSuccess ? { lock_file_path: null } : {})
+        });
+        if (apresSuccess) {
+            toast.success("Post-checks completed successfully.");
+        } else {
+            toast.warn("Post-checks completed with issues. Please review the details.");
+        }
     }
-  };
+  }, [updateSession]);
 
-  // Fetch generated files list
-  const fetchGeneratedFiles = async () => {
+  const handleForceUnlockAndFullReset = useCallback(async () => {
+    if (!sessionData.lock_file_path) {
+      const msg = "No lock file path known to attempt unlock.";
+      toast.warn(msg); setActionError(msg); return;
+    }
+    setIsActionLoading(true); setActionError(''); setDashboardActionLogs([`Attempting force unlock for: ${sessionData.lock_file_path}`]);
+    try {
+      const unlockResponse = await unlockRouter(sessionData.lock_file_path);
+      const unlockMsg = `Force Unlock: ${unlockResponse.data.message || 'Unlock attempted.'}`;
+      setDashboardActionLogs(prev => [...prev, unlockMsg, ...(unlockResponse.data.logs || [])]);
+      toast.info(unlockMsg);
+      resetWorkflow(); // Resets session, should trigger full re-evaluation including AVANT
+    } catch (err) {
+      const errorMsg = err.response?.data?.message || err.message || 'Failed to force unlock router.';
+      setActionError(errorMsg); toast.error(errorMsg);
+      setDashboardActionLogs(prevLogs => [...prevLogs, `Error during force unlock: ${errorMsg}`]);
+    } finally {
+      setIsActionLoading(false);
+    }
+  }, [sessionData.lock_file_path, resetWorkflow]);
+
+  const fetchGeneratedFiles = useCallback(async () => {
+    if (!sessionData.avantCompleted || avantCriticalError) return; // Don't fetch if AVANT isn't successfully done
     setIsLoadingFiles(true);
     try {
       const res = await listGeneratedFiles();
       setGeneratedFiles(res.data.files || []);
     } catch (err) {
-      toast.error('Failed to fetch generated files.');
+      toast.error('Failed to fetch generated files list.');
+      setGeneratedFiles([]);
     } finally {
       setIsLoadingFiles(false);
     }
-  };
+  }, [sessionData.avantCompleted, avantCriticalError]);
 
-  // FileManager-style handlers
-  const handleViewFile = async (filename) => {
+  const handleViewFile = useCallback(async (filename) => {
     setFileAction({ type: 'view', filename });
     try {
       const res = await getFileContent(filename);
@@ -306,16 +181,15 @@ const DashboardPage = () => {
     } finally {
       setFileAction({ type: null, filename: null });
     }
-  };
+  }, []);
 
-  const handleDeleteFile = async (filename) => {
-    if (!window.confirm(`Delete file ${filename}?`)) return;
+  const handleDeleteFile = useCallback(async (filename) => {
+    if (!window.confirm(`Are you sure you want to delete the file: ${filename}? This action cannot be undone.`)) return;
     setFileAction({ type: 'delete', filename });
     try {
       const res = await deleteGeneratedFile(filename);
       toast.success(res.data.message || `File ${filename} deleted.`);
       setGeneratedFiles((prev) => prev.filter((f) => f !== filename));
-      // If AVANT file deleted, update session
       if (filename === sessionData.avant_file_path?.split(/[/\\]/).pop()) {
         updateSession({ avant_file_path: null, avantData: null });
       }
@@ -330,208 +204,265 @@ const DashboardPage = () => {
     } finally {
       setFileAction({ type: null, filename: null });
     }
-  };
+  }, [sessionData.avant_file_path, sessionData.config_file_path, sessionData.lock_file_path, updateSession]);
 
-  const handleCloseFileViewer = () => {
+  const handleCloseFileViewer = useCallback(() => {
     setFileViewer({ open: false, content: '', filename: '' });
-  };
+  }, []);
 
+  const handleViewAvantFile = useCallback(() => {
+    if (!sessionData.avant_file_path) return;
+    setAvantFileAction({ loading: true, type: 'view' });
+    const fileName = sessionData.avant_file_path.split(/[/\\]/).pop();
+    window.open(`/api/files/${encodeURIComponent(fileName)}`, '_blank');
+    setTimeout(() => setAvantFileAction({ loading: false, type: null }), 500);
+  }, [sessionData.avant_file_path]);
+
+  const handleRetry = useCallback(async () => {
+    if (!lastFailedAction) return;
+    const { type /*, params */ } = lastFailedAction; // params might not be needed if update is removed
+    setLastFailedAction(null); // Clear before retrying
+
+    if (type === 'avant') {
+      await handleReloadAvant();
+    } else if (type === 'apres') {
+      handleReloadApres();
+    }
+  }, [lastFailedAction, handleReloadAvant, handleReloadApres]); // Removed handleConfirmUpdate
+
+  // --- Effects ---
+  useEffect(() => {
+    // Initial AVANT checks
+    if (avantCriticalError || sessionData.avantCompleted || !credentials || isAvantLoading || initialAvantFetchInProgressRef.current) {
+        if(avantCriticalError || sessionData.avantCompleted) initialAvantFetchInProgressRef.current = false;
+        return;
+    }
+
+    const performInitialAvantChecks = async () => {
+      initialAvantFetchInProgressRef.current = true;
+      setIsAvantLoading(true);
+      setAvantError(''); setAvantLogs([]);
+      updateSession({
+        ident_data: null, lock_file_path: null, avant_file_path: null, config_file_path: null,
+        avantCompleted: false, avantData: null, // Removed updateAttempted, updateCompleted
+        apresCompleted: false, apresData: null, comparisonResults: null, viewState: 'avant_loading'
+      });
+
+      try {
+        const response = await runAvantChecks(credentials);
+        setAvantLogs(response.data.logs || []);
+        if (response.data.status === 'success') {
+          updateSession({
+            ident_data: response.data.ident_data,
+            lock_file_path: response.data.ident_data?.lock_file_path,
+            avant_file_path: response.data.avant_file_path,
+            config_file_path: response.data.config_file_path,
+            avantCompleted: true, avantData: response.data.structured_data, viewState: 'avant_success'
+          });
+          setAvantError(''); toast.success("Pre-checks completed successfully!");
+        } else {
+          const errMsg = `AVANT checks failed: ${response.data.message || 'Unknown AVANT error'}`;
+          setAvantError(errMsg); setAvantCriticalError(errMsg);
+          toast.error('An error occurred during pre-checks. Please retry.');
+          updateSession({ avantCompleted: false, viewState: 'avant_error' });
+        }
+      } catch (err) {
+        const errorMsg = err.response?.data?.message || err.message || 'Network/Request Error during AVANT checks.';
+        setAvantError(errorMsg); setAvantCriticalError(errorMsg);
+        const errLogs = err.response?.data?.logs || [];
+        setAvantLogs(prevLogs => [...prevLogs, `Error: ${errorMsg}`, ...errLogs]);
+        toast.error(errorMsg);
+        updateSession({ avantCompleted: false, viewState: 'avant_error' });
+        if (err.response?.status === 401 || err.response?.status === 403) {
+          logout();
+          navigate('/login', { replace: true, state: { error: "Session issue during AVANT. Please login again." } });
+        }
+      } finally {
+        setIsAvantLoading(false);
+        initialAvantFetchInProgressRef.current = false;
+      }
+    };
+    if (credentials && !sessionData.avantCompleted && !avantCriticalError && !isAvantLoading && !initialAvantFetchInProgressRef.current) {
+        performInitialAvantChecks();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [credentials, sessionData.avantCompleted, avantCriticalError, isAvantLoading, updateSession, logout, navigate]);
+
+
+  useEffect(() => {
+    if (sessionData.avantCompleted && !avantCriticalError) {
+      fetchGeneratedFiles();
+    }
+  }, [sessionData.avantCompleted, avantCriticalError, fetchGeneratedFiles]);
+
+
+  // --- Conditional Rendering Logic / View States ---
+  const showInitialAvantLoadingState = isAvantLoading && !avantCriticalError && !sessionData.avantCompleted;
+  const showAvantCriticalErrorState = avantCriticalError && !sessionData.avantCompleted;
+  const showAvantNotRunMessage = !credentials || (!sessionData.avantCompleted && !isAvantLoading && !avantCriticalError && !showInitialAvantLoadingState);
+  const showAvantResultsSection = sessionData.avantCompleted && !avantCriticalError;
+  const showApresRunner = showAvantResultsSection && sessionData.viewState === 'apres_running' && !sessionData.apresCompleted && !apresCriticalError;
+  const showApresResultsDisplay = sessionData.apresCompleted && sessionData.apresData && !apresCriticalError;
+
+  // --- Early Returns (Order Matters) ---
+  if (showInitialAvantLoadingState) {
+    return (
+      <Paper elevation={3} sx={{ p: 3, textAlign: 'center', mt: 4 }}>
+        <CircularProgress size={60} /> <Typography variant="h6" sx={{ mt: 2 }}>Running Pre-Checks</Typography>
+        <Box sx={{ width: '80%', margin: '20px auto' }}><LogDisplay logs={avantLogs} title="Initial AVANT Logs" /></Box>
+      </Paper>
+    );
+  }
+
+  if (showAvantCriticalErrorState) {
+    return (
+      <Paper elevation={3} sx={{ p: 3, mt: 4, textAlign: 'center' }}>
+        <Alert severity="error" sx={{ mb: 2 }}>AVANT Pre-Checks Failed Critically: {avantCriticalError}</Alert>
+        <Box sx={{mt: 2, display: 'flex', justifyContent: 'center', gap: 2, flexWrap: 'wrap' }}>
+            <Button onClick={handleReloadAvant} variant="contained">Retry Pre-Checks</Button>
+            <Button onClick={() => { logout(); navigate('/login', { replace: true }); }} variant="outlined">Logout</Button>
+            {sessionData.lock_file_path && (
+                <Button onClick={handleForceUnlockAndFullReset} variant="text" color="error" size="small">Force Unlock & Reset Workflow</Button>
+            )}
+        </Box>
+      </Paper>
+    );
+  }
+
+  if (showAvantNotRunMessage) {
+    return (
+      <Paper elevation={3} sx={{ p: 3, textAlign: 'center', mt: 4 }}>
+        <Typography>Please wait for Pre-Checks to initialize or complete login...</Typography>
+        <CircularProgress sx={{ mt: 2 }} />
+      </Paper>
+    );
+  }
+
+  // --- Main Component JSX ---
   return (
     <Box sx={{ width: '100%' }}>
       <Typography variant="h4" gutterBottom sx={{ textAlign: 'center', mb: 1 }}>Router Operations</Typography>
       <Typography variant="subtitle1" sx={{ textAlign: 'center', mb: 3 }}>
-        Device: {sessionData.ident_data?.ip} (Hostname: {sessionData.ident_data?.router_hostname || 'N/A'})
+        Device: {sessionData.ident_data?.ip || 'N/A'} (Hostname: {sessionData.ident_data?.router_hostname || 'N/A'})
       </Typography>
 
-      {actionError && <Alert severity="error" sx={{my:2}}>{actionError}</Alert>}
-      <LogDisplay logs={dashboardActionLogs} title="Dashboard Action Logs" />      {/* --- Software Update Button (Always visible) --- */}
-      {showAvantResultsSection && (
-        <Button 
-          variant="contained" 
-          color="primary"
-          size="large"
-          onClick={handleTriggerUpdate}
-          disabled={isActionLoading || !sessionData.avantCompleted}
-          sx={{ 
-            display: 'block', 
-            mx: 'auto', 
-            mb: 3, 
-            py: 1.5,
-            px: 4,
-            fontSize: '1.1rem',
-            boxShadow: 3
-          }}
-        >
-          Perform Software Update
-        </Button>
+      {actionError && <Alert severity="error" sx={{ my: 2 }}>{actionError}</Alert>}
+      {lastFailedAction && (
+        <Alert severity="warning" sx={{ my: 2 }} action={
+          <Button color="inherit" size="small" onClick={handleRetry}>RETRY ({lastFailedAction.type.toUpperCase()})</Button>
+        }>
+          Last action ({lastFailedAction.type}) failed. You can try again.
+        </Alert>
       )}
+      {dashboardActionLogs.length > 0 && <LogDisplay logs={dashboardActionLogs} title="Dashboard Action Logs" />}
 
-      {/* --- AVANT Section --- */}
+      {/* AVANT Results Section */}
       {showAvantResultsSection && (
-        <Paper elevation={2} sx={{ p: {xs:2, md:3}, mb: 3, backgroundColor: '#e3f2fd' }}>
-          <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2, flexWrap: 'wrap', gap:1}}>
-            <Typography variant="h5">Pre-Check Informations</Typography>
-            <Button variant="outlined" color="secondary" onClick={handleReloadAvant} disabled={isAvantLoading} sx={{ml:2}}>
-              {isAvantLoading ? <CircularProgress size={20} sx={{mr:1}} /> : null} Reload
+        <Paper elevation={2} sx={{ p: { xs: 2, md: 3 }, mb: 3, backgroundColor: 'hsl(207, 73%, 94%)' /* light blue */ }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2, flexWrap: 'wrap', gap: 1 }}>
+            <Typography variant="h5">Pre-Check Information</Typography>
+            <Button variant="outlined" color="secondary" onClick={handleReloadAvant} disabled={isAvantLoading}>
+              {isAvantLoading ? <CircularProgress size={20} sx={{ mr: 1 }} /> : null} Reload Pre-Checks
             </Button>
           </Box>
           <StructuredDataDisplay data={sessionData.avantData} titlePrefix="AVANT" />
           <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
-            <Button variant="outlined" onClick={() => setShowAvantLogsModal(true)}>
-              Show AVANT Logs
-            </Button>
+            <Button variant="outlined" onClick={() => setShowAvantLogsModal(true)}>Show Pre-Checks Logs</Button>
           </Box>
-          <Divider sx={{my:3}}><Typography variant="subtitle1" sx={{fontWeight:700, letterSpacing:1, color:'#1976d2', px:1}}>Generated Files (View)</Typography></Divider>
-          <Box>
-            {isLoadingFiles ? <CircularProgress sx={{ display: 'block', margin: 'auto', my:2 }} /> :
-              generatedFiles.length === 0 ? (
-                <Typography sx={{fontStyle:'italic'}}>No files found in generated_files directory.</Typography>
-              ) : (
-                <Grid container spacing={2}>
-                  {generatedFiles.map((file) => (
-                    <Grid item xs={12} md={6} lg={4} key={file}>
-                      <Paper elevation={1} sx={{p:2, display:'flex', alignItems:'center', justifyContent:'space-between', mb:1}}>
-                        <Box>
-                          <Typography variant="subtitle2" sx={{fontWeight:600}}>{file}</Typography>
-                        </Box>
-                        <Box sx={{display:'flex', gap:1}}>
-                          <IconButton 
-                            edge="end" aria-label="view" 
-                            onClick={() => handleViewFile(file)}
-                            disabled={fileAction.type && fileAction.filename !== file}
-                          >
-                            {fileAction.type === 'view' && fileAction.filename === file ? <CircularProgress size={20} /> : <VisibilityIcon />}
-                          </IconButton>
-                        </Box>
-                      </Paper>
-                    </Grid>
-                  ))}
-                </Grid>
-              )
-            }
-          </Box>
-          <Dialog open={fileViewer.open} onClose={handleCloseFileViewer} maxWidth="md" fullWidth scroll="paper">
-            <DialogTitle>Viewing: {fileViewer.filename}</DialogTitle>
-            <DialogContent dividers>
-              <Paper elevation={0} sx={{ p: 2, maxHeight: '70vh', overflow: 'auto', backgroundColor: '#f5f5f5' }}>
-                <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all', margin: 0, fontSize: '0.875rem' }}>
-                  {fileViewer.content}
-                </pre>
-              </Paper>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleCloseFileViewer}>Close</Button>
-            </DialogActions>
-          </Dialog>
+          <Divider sx={{ my: 3 }}><Typography variant="subtitle1" sx={{ fontWeight: 700, color: '#1976d2' }}>Generated Files</Typography></Divider>
+          {isLoadingFiles ? <CircularProgress sx={{ display: 'block', margin: 'auto', my: 2 }} /> :
+            generatedFiles.length === 0 ? (
+              <Typography sx={{ fontStyle: 'italic', textAlign: 'center' }}>No additional files found.</Typography>
+            ) : (
+              <Grid container spacing={1.5}>
+                {generatedFiles.map((file) => (
+                  <Grid item xs={12} sm={6} md={4} key={file}>
+                    <Paper elevation={1} sx={{ p: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <Typography variant="body2" sx={{ wordBreak: 'break-all', mr:1, flexGrow: 1 }}>{file}</Typography>
+                      <Box sx={{ display: 'flex', gap: 0.5, flexShrink: 0 }}>
+                        <IconButton size="small" title={`View ${file}`} onClick={() => handleViewFile(file)} disabled={fileAction.type === 'view' && fileAction.filename === file}>
+                          {(fileAction.type === 'view' && fileAction.filename === file) ? <CircularProgress size={16} /> : <VisibilityIcon fontSize="small" />}
+                        </IconButton>
+                      </Box>
+                    </Paper>
+                  </Grid>
+                ))}
+              </Grid>
+            )}
         </Paper>
       )}
-      
-      {showUpdateConfigSection && (
-        <Paper elevation={2} sx={{ p: 3, mb: 3, backgroundColor: '#fffde7' }}>
-          <Typography variant="h6" sx={{ mb: 2 }}>Software Update Progress</Typography>
-          {isUpdateLoading && (
-            <Box sx={{ textAlign: 'center', my: 2 }}>
-              <CircularProgress size={40} />
-              <Typography sx={{ mt: 2 }}>Update in progress... Please wait. This may take several minutes.</Typography>
-            </Box>
-          )}
-          {updateLogs.length > 0 && <LogDisplay logs={updateLogs} title="Update Logs" />}
-          {updateResult && (
-            <Alert severity={updateResult.status === 'success' ? 'success' : 'error'} sx={{ mt: 2 }}>
-              {updateResult.message}
-            </Alert>
-          )}
-          {!isUpdateLoading && (
-            <Typography sx={{ mt: 2 }}>
-              You can now proceed to run post-update checks (APRES).
-            </Typography>
-          )}
-        </Paper>
-      )}      
-      {sessionData.avantCompleted && (
+
+      {/* --- Separator between Pre-Check and Post-Checks Sections --- */}
+      {showAvantResultsSection && (
         <Divider sx={{ my: 4 }}>
-          <Chip 
-            label="Post Update Informations" 
-            sx={{
-              px: 3,
-              py: 2.5,
-              fontSize: '1.1rem',
-              fontWeight: 500,
-              backgroundColor: '#e3f2fd',
-              borderRadius: '16px',
-              '& .MuiChip-label': {
-                px: 2
-              }
-            }}
-          />
+          <Typography variant="h6" sx={{ color: '#1976d2', fontWeight: 700, letterSpacing: 1 }}>
+            Post-Checks Section
+          </Typography>
         </Divider>
       )}
 
-      {/* --- APRES Section --- */}
-      {sessionData.avantCompleted && (
-        <Paper elevation={2} sx={{ p: {xs:2, md:3}, mb: 3, backgroundColor: '#e3f2fd' }}>
-          <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb:2, flexWrap: 'wrap', gap:1}}>
-            <Typography variant="h5">Post-Update Informations</Typography>
-            <Button 
-              variant="outlined" 
-              color="secondary" 
-              onClick={handleReloadApres} 
-              disabled={!sessionData.apresCompleted || showApresRunner} 
-              sx={{ml:2, alignSelf: 'flex-end'}}
-            >
-              {showApresRunner ? <CircularProgress size={20} sx={{mr:1}} /> : null} Reload
-            </Button>
-          </Box>
-          {!sessionData.apresCompleted && !showApresRunner && (
-            <Button variant="contained" color="primary" onClick={handleTriggerApres}
-              disabled={isActionLoading} sx={{mb:2}}
-            > Run Post-Checks </Button>
+      {/* APRES Section */}
+      {showAvantResultsSection && (
+        <>
+          {apresCriticalError && (
+            <Paper elevation={2} sx={{ p: 3, mb: 3, backgroundColor: 'hsl(0, 70%, 94%)' /* light red */, textAlign: 'center' }}>
+              <Alert severity="error" sx={{ mb: 2 }}>Post-Checks Failed Critically: {apresCriticalError}</Alert>
+              <Button variant="contained" color="primary" onClick={handleReloadApres}>Retry Post-Checks</Button>
+            </Paper>
           )}
-          {showApresRunner && (
-            <ApresRunner onApresProcessFinished={handleApresProcessFinished} />
+
+          {!apresCriticalError && (
+            <Paper elevation={2} sx={{ p: { xs: 2, md: 3 }, mb: 3, backgroundColor: 'hsl(207, 73%, 94%)' /* light purple in intent, actual color might differ */ }}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2, flexWrap: 'wrap', gap: 1 }}>
+                <Typography variant="h5">Post-Checks Information</Typography>
+                {(!showApresRunner && !sessionData.apresCompleted) && (
+                  <Button variant="contained" color="secondary" onClick={handleTriggerApres} disabled={isActionLoading}>Run Post-Checks</Button>
+                )}
+                {sessionData.apresCompleted && (
+                   <Button variant="outlined" color="secondary" onClick={handleReloadApres} disabled={showApresRunner}>
+                    {showApresRunner ? <CircularProgress size={20} sx={{mr:1}}/> : null} Reload Post-Checks</Button>
+                )}
+              </Box>
+
+              {showApresRunner && ( <ApresRunner onApresProcessFinished={handleApresProcessFinished} /> )}
+              {/* For debugging APRES data: console.log('sessionData.apresData for display:', sessionData.apresData) */}
+              {showApresResultsDisplay && (
+                <>
+                  <StructuredDataDisplay data={sessionData.apresData} titlePrefix="APRES" />
+                  {sessionData.comparisonResults && Object.keys(sessionData.comparisonResults).length > 0 && (
+                    <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
+                      <Button variant="outlined" onClick={() => setShowComparisonDetailModal(true)}>Compare Pre/Post Checks</Button>
+                    </Box>
+                  )}
+                </>
+              )}
+               {sessionData.viewState === 'apres_completed_with_issues' && !apresCriticalError && (
+                <Alert severity="warning" sx={{mt:2}}>Post-checks completed with some discrepancies. Review logs and comparison.</Alert>
+              )}
+            </Paper>
           )}
-          {showApresResultsDisplay && (
-            <>
-              <StructuredDataDisplay data={sessionData.apresData} titlePrefix="APRES" />
-            </>
-          )}
-          {/* Compare button moved below content */}
-          {sessionData.apresCompleted && sessionData.comparisonResults && Object.keys(sessionData.comparisonResults).length > 0 && (
-            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
-              <Button variant="outlined" onClick={() => setShowComparisonDetailModal(true)}>
-                Compare With Pre-Checks
-              </Button>
-            </Box>
-          )}
-        </Paper>
+        </>
       )}
-     
-      <ComparisonModal 
-        open={showComparisonDetailModal} 
-        onClose={() => setShowComparisonDetailModal(false)}
-        comparisonResults={sessionData.comparisonResults}
-      />
 
-      <LogModal
-        open={showAvantLogsModal}
-        onClose={() => setShowAvantLogsModal(false)}
-        logs={avantLogs}
-        title="Pre-Checks Execution Logs"
-      />      <ConfirmationModal
-        open={showApresConfirmModal}
-        onClose={handleCancelApres}
-        title="Run APRES Without Update?"
-        message="Would you like to run the APRES post-update checks without performing a software update? This will compare the current router state with the initial pre-checks."
-        confirmText="Run Post-Checks"
-        cancelText="Cancel"
-        onConfirm={handleConfirmApres}
+      {/* Modals */}
+      <ComparisonModal open={showComparisonDetailModal} onClose={() => setShowComparisonDetailModal(false)} comparisonResults={sessionData.comparisonResults}/>
+      <LogModal open={showAvantLogsModal} onClose={() => setShowAvantLogsModal(false)} logs={avantLogs} title="Pre-Checks Execution Logs"/>
+      <ConfirmationModal open={showApresConfirmModal} onClose={handleCancelApres} title="Run Post-Checks"
+        message="Are you ready to run the post-checks? This will compare the current state against the initial pre-checks."
+        confirmText="Run Post-Checks" cancelText="Cancel" onConfirm={handleConfirmApres}
       />
-
-      <UpdateModal
-        open={showUpdateModal}
-        onClose={() => setShowUpdateModal(false)}
-        onConfirm={handleConfirmUpdate}
-      />
+      {/* <UpdateModal open={showUpdateModal} onClose={() => setShowUpdateModal(false)} onConfirm={handleConfirmUpdate} isLoading={isUpdateLoading} logs={updateLogs}/> // Removed */}
+      <Dialog open={fileViewer.open} onClose={handleCloseFileViewer} maxWidth="lg" fullWidth scroll="paper">
+        <DialogTitle>Viewing: {fileViewer.filename}</DialogTitle>
+        <DialogContent dividers>
+          <Paper elevation={0} sx={{ p: 2, maxHeight: '75vh', overflow: 'auto', backgroundColor: '#f5f5f5' }}>
+            <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all', margin: 0, fontSize: '0.875rem' }}>
+              {fileViewer.content || "No content or file is empty."}
+            </pre>
+          </Paper>
+        </DialogContent>
+        <DialogActions><Button onClick={handleCloseFileViewer}>Close</Button></DialogActions>
+      </Dialog>
     </Box>
   );
 };

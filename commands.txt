@@ -13,5 +13,5 @@ Installiw nodejs mena: https://nodejs.org/en
 
 cd ..
 cd frontend\router-management-ui
-npm install
-npm start
+pnpm install
+pnpm start
