@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:5001/api'; // Your Flask API URL
+export const API_BASE_URL = 'http://localhost:5001/api'; // Your Flask API URL
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
@@ -20,8 +20,15 @@ export const runAvantChecks = (credentials) => {
 };
 
 // --- UPDATE ---
+// This function signature is kept for consistency, but the actual streaming
+// will be handled by `fetch` directly in DashboardPage.js to manage SSE.
+// This function can still be used if a non-streaming initiation is ever needed
+// or if it's refactored to return a promise that wraps the fetch stream.
 export const runUpdateProcedure = (updateData) => {
   // updateData should contain { ident_data, password, image_file }
+  // For actual streaming, DashboardPage.js uses fetch directly.
+  // This POST could be used to *initiate* a task that then streams,
+  // but the current implementation streams directly from this POST.
   return apiClient.post('/run_update', updateData);
 };
 
@@ -42,8 +49,6 @@ export const listGeneratedFiles = () => {
 };
 
 export const getFileContent = (filename) => {
-  // This will return the raw content, browser might try to download
-  // For display, you might fetch and then show in a <pre> tag or dedicated viewer
   return apiClient.get(`/files/${filename}`, { responseType: 'text' });
 };
 

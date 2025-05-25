@@ -9,16 +9,16 @@ Routing Engine status:
     CPU utilization:
       User                       1 percent
       Background                 0 percent
-      Kernel                     0 percent
-      Interrupt                  7 percent
-      Idle                      92 percent
+      Kernel                     2 percent
+      Interrupt                  6 percent
+      Idle                      90 percent
     Model                          RE-VMX
     Serial ID                      VM5543516AC4
     Start time                     2025-05-25 12:10:03 UTC
-    Uptime                         3 hours, 35 minutes, 18 seconds
+    Uptime                         4 hours, 7 minutes, 44 seconds
     Last reboot reason             0x10:misc hardware reason 
     Load averages:                 1 minute   5 minute  15 minute
-                                       0.02       0.02       0.00
+                                       0.00       0.11       0.31
 
 
 Informations sur les interfaces :

@@ -10,37 +10,37 @@ Routing Engine status:
     CPU utilization:
       User                       1 percent
       Background                 0 percent
-      Kernel                     0 percent
-      Interrupt                  6 percent
+      Kernel                     1 percent
+      Interrupt                  5 percent
       Idle                      93 percent
     Model                          RE-VMX
     Serial ID                      VM5543516AC4
-    Start time                     2025-05-24 04:34:46 UTC
-    Uptime                         7 hours, 22 minutes, 42 seconds
+    Start time                     2025-05-24 12:55:31 UTC
+    Uptime                         3 minutes, 25 seconds
     Last reboot reason             0x10:misc hardware reason 
     Load averages:                 1 minute   5 minute  15 minute
-                                       0.03       0.19       0.40
+                                       0.25       0.47       0.23
 
 Informations sur les interfaces :
 Les Interfaces up :
-ge-0/0/0 - Vitesse: 1000mbps - IP: Aucune IP (Physique) - MAC: 00:05:86:71:fd:00
-ge-0/0/0.0 - Vitesse: 1000mbps - IP: 192.168.110.2/24 - MAC: 00:05:86:71:fd:00
+ge-0/0/0 - Vitesse: 1000mbps - IP: Aucune IP (Physique) - MAC: 00:05:86:71:50:00
+ge-0/0/0.0 - Vitesse: 1000mbps - IP: 192.168.110.2/24 - MAC: 00:05:86:71:50:00
 lc-0/0/0 - Vitesse: 800mbps - IP: Aucune IP (Physique) - MAC: Unspecified
 lc-0/0/0.32769 - Vitesse: 800mbps - IP: Aucune IP - MAC: Unspecified
 pfe-0/0/0 - Vitesse: 800mbps - IP: Aucune IP (Physique) - MAC: Unspecified
 pfe-0/0/0.16383 - Vitesse: 800mbps - IP: Aucune IP - MAC: Unspecified
 pfh-0/0/0 - Vitesse: 800mbps - IP: Aucune IP (Physique) - MAC: Unspecified
 pfh-0/0/0.16383 - Vitesse: 800mbps - IP: Aucune IP - MAC: Unspecified
-ge-0/0/1 - Vitesse: 1000mbps - IP: Aucune IP (Physique) - MAC: 00:05:86:71:fd:01
-ge-0/0/2 - Vitesse: 1000mbps - IP: Aucune IP (Physique) - MAC: 00:05:86:71:fd:02
-ge-0/0/3 - Vitesse: 1000mbps - IP: Aucune IP (Physique) - MAC: 00:05:86:71:fd:03
-ge-0/0/4 - Vitesse: 1000mbps - IP: Aucune IP (Physique) - MAC: 00:05:86:71:fd:04
-ge-0/0/5 - Vitesse: 1000mbps - IP: Aucune IP (Physique) - MAC: 00:05:86:71:fd:05
-ge-0/0/6 - Vitesse: 1000mbps - IP: Aucune IP (Physique) - MAC: 00:05:86:71:fd:06
-ge-0/0/7 - Vitesse: 1000mbps - IP: Aucune IP (Physique) - MAC: 00:05:86:71:fd:07
-ge-0/0/8 - Vitesse: 1000mbps - IP: Aucune IP (Physique) - MAC: 00:05:86:71:fd:08
-ge-0/0/9 - Vitesse: 1000mbps - IP: Aucune IP (Physique) - MAC: 00:05:86:71:fd:09
-cbp0 - Vitesse: Unspecified - IP: Aucune IP (Physique) - MAC: 00:05:86:71:fd:11
+ge-0/0/1 - Vitesse: 1000mbps - IP: Aucune IP (Physique) - MAC: 00:05:86:71:50:01
+ge-0/0/2 - Vitesse: 1000mbps - IP: Aucune IP (Physique) - MAC: 00:05:86:71:50:02
+ge-0/0/3 - Vitesse: 1000mbps - IP: Aucune IP (Physique) - MAC: 00:05:86:71:50:03
+ge-0/0/4 - Vitesse: 1000mbps - IP: Aucune IP (Physique) - MAC: 00:05:86:71:50:04
+ge-0/0/5 - Vitesse: 1000mbps - IP: Aucune IP (Physique) - MAC: 00:05:86:71:50:05
+ge-0/0/6 - Vitesse: 1000mbps - IP: Aucune IP (Physique) - MAC: 00:05:86:71:50:06
+ge-0/0/7 - Vitesse: 1000mbps - IP: Aucune IP (Physique) - MAC: 00:05:86:71:50:07
+ge-0/0/8 - Vitesse: 1000mbps - IP: Aucune IP (Physique) - MAC: 00:05:86:71:50:08
+ge-0/0/9 - Vitesse: 1000mbps - IP: Aucune IP (Physique) - MAC: 00:05:86:71:50:09
+cbp0 - Vitesse: Unspecified - IP: Aucune IP (Physique) - MAC: 00:05:86:71:50:11
 demux0 - Vitesse: Unspecified - IP: Aucune IP (Physique) - MAC: Unspecified
 dsc - Vitesse: Unspecified - IP: Aucune IP (Physique) - MAC: Unspecified
 em0 - Vitesse: 1000mbps - IP: Aucune IP (Physique) - MAC: 50:00:00:01:00:00
@@ -52,7 +52,7 @@ em4 - Vitesse: 1000mbps - IP: Aucune IP (Physique) - MAC: 50:00:00:01:00:04
 em5 - Vitesse: 1000mbps - IP: Aucune IP (Physique) - MAC: 50:00:00:01:00:05
 gre - Vitesse: Unlimited - IP: Aucune IP (Physique)
 ipip - Vitesse: Unlimited - IP: Aucune IP (Physique)
-irb - Vitesse: Unspecified - IP: Aucune IP (Physique) - MAC: 00:05:86:72:00:f0
+irb - Vitesse: Unspecified - IP: Aucune IP (Physique) - MAC: 00:05:86:71:53:f0
 lo0 - Vitesse: Unspecified - IP: Aucune IP (Physique) - MAC: Unspecified
 lo0.16384 - Vitesse: Unspecified - IP: 127.0.0.1 - MAC: Unspecified
 lo0.16385 - Vitesse: Unspecified - IP: 128.0.0.1 - MAC: Unspecified
@@ -61,7 +61,7 @@ lsi - Vitesse: Unlimited - IP: Aucune IP (Physique) - MAC: Unspecified
 mtun - Vitesse: Unlimited - IP: Aucune IP (Physique)
 pimd - Vitesse: Unlimited - IP: Aucune IP (Physique)
 pime - Vitesse: Unlimited - IP: Aucune IP (Physique)
-pip0 - Vitesse: Unspecified - IP: Aucune IP (Physique) - MAC: 00:05:86:71:00:b0
+pip0 - Vitesse: Unspecified - IP: Aucune IP (Physique) - MAC: 00:05:86:71:53:b0
 pp0 - Vitesse: Unspecified - IP: Aucune IP (Physique) - MAC: Unspecified
 tap - Vitesse: Unlimited - IP: Aucune IP (Physique) - MAC: Unspecified
 vtep - Vitesse: Unlimited - IP: Aucune IP (Physique) - MAC: Unspecified
@@ -71,8 +71,6 @@ Aucune interface inactive trouvee.
 Informations ARP :
 MAC Address       Address         Name                      Interface           Flags
 00:50:56:c0:00:08 192.168.110.1   192.168.110.1             ge-0/0/0.0          none
-00:0c:29:80:ff:c8 192.168.110.128 192.168.110.128           ge-0/0/0.0          none
-Total entries: 2
 
 Informations sur les routes :
 
@@ -119,15 +117,15 @@ Aucune ACL configurée trouvée.
 Logs des erreurs critiques :
 
 Logs des erreurs critiques dans 'messages' :
-May 24 04:35:17   /kernel: em0error setting host MAC filter table
-May 24 04:35:17   /kernel: em1error setting host MAC filter table
-May 24 04:35:17   /kernel: em2error setting host MAC filter table
-May 24 04:35:17   /kernel: em3error setting host MAC filter table
-May 24 04:35:17   /kernel: em4error setting host MAC filter table
-May 24 04:35:17   /kernel: em5error setting host MAC filter table
-May 24 04:36:21   chassisd[2955]: CHASSISD_FILE_OPEN: File open: /dev/acb, error: 2 -- No such file or directory
-May 24 04:36:21   chassisd[2955]: CHASSISD_FILE_OPEN: File open: /dev/acb, error: 2 -- No such file or directory
-May 24 04:36:23   /kernel: KERN_ARP_DUPLICATE_ADDR: duplicate IP address 192.168.110.2! sent from address: 00:50:56:e7:df:30 (error count = 1)
+May 24 12:56:16   /kernel: em1error setting host MAC filter table
+May 24 12:56:16   /kernel: em1error setting host MAC filter table
+May 24 12:56:16   /kernel: em2error setting host MAC filter table
+May 24 12:56:16   /kernel: em3error setting host MAC filter table
+May 24 12:56:16   cfmd[2320]: In dfwd_ev_client_timer_connect - Function 'dfwd_ev_client_start_retry_timer(session)' returned error 1.
+May 24 12:56:16   /kernel: em4error setting host MAC filter table
+May 24 12:56:16   /kernel: em5error setting host MAC filter table
+May 24 12:57:52   chassisd[2957]: CHASSISD_FILE_OPEN: File open: /dev/acb, error: 2 -- No such file or directory
+May 24 12:57:52   chassisd[2957]: CHASSISD_FILE_OPEN: File open: /dev/acb, error: 2 -- No such file or directory
 
 Logs des erreurs critiques dans 'chassisd' :
 May  1 15:40:28  fpc_down slot 0 reason Error cargs 0x0
@@ -142,7 +140,7 @@ May  1 16:14:55  ch_power_off_frus_cleanup_exit: Chassisd exiting with error-cod
 
 La configuration totale :
 set version 14.1R4.8
-set system root-authentication encrypted-password "$1$3AeZEBSp$twF2DWjYrFSqjJhI/CfLD0"
+set system root-authentication encrypted-password "$1$lVq1xUv9$uYjUOgFLvM.NjiWCyEY/5."
 set system services ssh
 set system syslog user * any emergency
 set system syslog file messages any notice

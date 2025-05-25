@@ -1158,3 +1158,4 @@ if __name__ == '__main__':
     #
     # elif res_avant.get('connection_obj') and res_avant['connection_obj'].is_alive(): # if avant failed but conn exists
     #        res_avant['connection_obj'].disconnect()
+    print("\n--- Fin des tests locaux (si activés) ---")
