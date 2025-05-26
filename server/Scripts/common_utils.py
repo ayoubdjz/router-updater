@@ -345,7 +345,7 @@ def fetch_and_store(
         else:
             data_to_store = output_cmd.strip() if isinstance(output_cmd, str) else str(output_cmd)
             structured_output_data[data_key_structured] = data_to_store
-            return data_to_store
+            return output_cmd
     except Exception as e:
         # Do not update structured_output_data here; let collector handle it
         raise

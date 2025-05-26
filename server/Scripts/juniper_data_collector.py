@@ -13,7 +13,7 @@ logs = []  # Global log list to collect logs from all functions
 
 
 
-def collect_basic_info(connection, file_handle, structured_output_data):
+def collect_basic_info(connection, file_handle, structured_output_data, logs):
     key = 'basic_info'
     cmd = 'show version'
     junos_version = "inconnu"
@@ -67,7 +67,7 @@ def collect_basic_info(connection, file_handle, structured_output_data):
     return router_hostname, router_model, junos_version
 
 
-def collect_routing_engine_info(connection, file_handle, structured_output_data):
+def collect_routing_engine_info(connection, file_handle, structured_output_data, logs):
     key = 'routing_engine'
     cmd = 'show chassis routing-engine'
     try:
@@ -85,7 +85,7 @@ def collect_routing_engine_info(connection, file_handle, structured_output_data)
         structured_output_data[key] = msg
         raise
 
-def collect_interface_info(connection, file_handle, structured_output_data):
+def collect_interface_info(connection, file_handle, structured_output_data, logs):
     key_terse = 'interfaces_terse'
     cmd_terse = 'show interfaces terse | no-more'
     key_detail = 'interfaces_detail'
@@ -182,7 +182,7 @@ def collect_interface_info(connection, file_handle, structured_output_data):
         structured_output_data['interfaces'] = msg
         raise
 
-def collect_arp_info(connection, file_handle, structured_output_data):
+def collect_arp_info(connection, file_handle, structured_output_data, logs):
     key = 'arp_table'
     cmd = 'show arp'
     try:
@@ -196,7 +196,7 @@ def collect_arp_info(connection, file_handle, structured_output_data):
         file_handle.write(f"Erreur lors de la recuperation des informations ARP : {e}\n")
         structured_output_data[key] = f"Erreur lors de la récupération des informations ARP : {e}"
 
-def collect_route_summary(connection, file_handle, structured_output_data):
+def collect_route_summary(connection, file_handle, structured_output_data, logs):
     key = 'route_summary'
     cmd = 'show route summary'
     try:
@@ -219,7 +219,7 @@ def collect_route_summary(connection, file_handle, structured_output_data):
         structured_output_data[key] = f"Erreur lors de la récupération des informations sur les routes : {e}"
         raise 
 
-def collect_ospf_info(connection, file_handle, structured_output_data):
+def collect_ospf_info(connection, file_handle, structured_output_data, logs):
     key = 'ospf_info'
     cmd = 'show ospf interface brief'
     try:
@@ -239,7 +239,7 @@ def collect_ospf_info(connection, file_handle, structured_output_data):
         file_handle.write(f"Erreur lors de la verification du protocole OSPF : {e}")
         structured_output_data[key] = f"Erreur lors de la vérification du protocole OSPF : {e}"
 
-def collect_isis_info(connection, file_handle, structured_output_data):
+def collect_isis_info(connection, file_handle, structured_output_data, logs):
     key = 'isis_info'
     cmd = 'show isis adjacency'
     try:
@@ -259,7 +259,7 @@ def collect_isis_info(connection, file_handle, structured_output_data):
         file_handle.write(f"Erreur lors de la verification du protocole IS-IS : {e}")
         structured_output_data[key] = f"Erreur lors de la vérification du protocole IS-IS : {e}"
 
-def collect_mpls_info(connection, file_handle, structured_output_data):
+def collect_mpls_info(connection, file_handle, structured_output_data, logs):
     key = 'mpls_info'
     cmd = 'show mpls interface'
     try:
@@ -279,7 +279,7 @@ def collect_mpls_info(connection, file_handle, structured_output_data):
         file_handle.write(f"Erreur lors de la verification du protocole MPLS : {e}")
         structured_output_data[key] = f"Erreur lors de la vérification du protocole MPLS : {e}"
 
-def collect_ldp_info(connection, file_handle, structured_output_data):
+def collect_ldp_info(connection, file_handle, structured_output_data, logs):
     key = 'ldp_info'
     cmd = 'show ldp session'
     try:
@@ -309,7 +309,7 @@ def collect_ldp_info(connection, file_handle, structured_output_data):
         file_handle.write(f"Erreur lors de la verification du protocole LDP : {e}\n")
         structured_output_data[key] = f"Erreur lors de la vérification du protocole LDP : {e}"
 
-def collect_rsvp_info(connection, file_handle, structured_output_data):
+def collect_rsvp_info(connection, file_handle, structured_output_data, logs):
     key = 'rsvp_info'
     cmd = 'show rsvp interface'
     try:
@@ -328,7 +328,7 @@ def collect_rsvp_info(connection, file_handle, structured_output_data):
         file_handle.write(f"Erreur lors de la verification du protocole RSVP : {e}")
         structured_output_data[key] = f"Erreur lors de la vérification du protocole RSVP : {e}"
 
-def collect_lldp_info(connection, file_handle, structured_output_data):
+def collect_lldp_info(connection, file_handle, structured_output_data, logs):
     key = 'lldp_info'
     cmd = 'show lldp neighbor'
     try:
@@ -348,7 +348,7 @@ def collect_lldp_info(connection, file_handle, structured_output_data):
         file_handle.write(f"Erreur lors de la verification du protocole LLDP : {e}")
         structured_output_data[key] = f"Erreur lors de la vérification du protocole LLDP : {e}"
 
-def collect_lsp_info(connection, file_handle, structured_output_data):
+def collect_lsp_info(connection, file_handle, structured_output_data, logs):
     key = 'lsp_info'
     cmd = 'show mpls lsp'
     try:
@@ -368,7 +368,7 @@ def collect_lsp_info(connection, file_handle, structured_output_data):
         file_handle.write(f"Erreur lors de la verification du protocole LSP : {e}")
         structured_output_data[key] = f"Erreur lors de la vérification du protocole LSP : {e}"
 
-def collect_bgp_info(connection, file_handle, structured_output_data):
+def collect_bgp_info(connection, file_handle, structured_output_data, logs):
     key = 'bgp_summary'
     cmd = 'show bgp summary'
     try:
@@ -387,7 +387,7 @@ def collect_bgp_info(connection, file_handle, structured_output_data):
         structured_output_data[key] = f"Erreur lors de la vérification du protocole BGP : {e}"
     # Non-critical
 
-def collect_system_services(connection, file_handle, structured_output_data):
+def collect_system_services(connection, file_handle, structured_output_data, logs):
     key = 'system_services'
     cmd = 'show configuration system services'
     try:
@@ -407,7 +407,7 @@ def collect_system_services(connection, file_handle, structured_output_data):
         file_handle.write(f"Erreur lors de la recuperation des services configures : {e}")
         structured_output_data[key] = f"Erreur lors de la récupération des services configurés : {e}"
 
-def collect_configured_protocols(connection, file_handle, structured_output_data):
+def collect_configured_protocols(connection, file_handle, structured_output_data, logs):
     key = 'configured_protocols'
     cmd = 'show configuration protocols'
     try:
@@ -427,7 +427,7 @@ def collect_configured_protocols(connection, file_handle, structured_output_data
         file_handle.write(f"Erreur lors de la recuperation des protocoles configures : {e}")
         structured_output_data[key] = f"Erreur lors de la récupération des protocoles configurés : {e}"
 
-def collect_firewall_acls(connection, file_handle, structured_output_data):
+def collect_firewall_acls(connection, file_handle, structured_output_data, logs):
     key = 'firewall_config'
     cmd = 'show configuration firewall'
     try:
@@ -447,7 +447,7 @@ def collect_firewall_acls(connection, file_handle, structured_output_data):
         file_handle.write(f"Erreur lors de la verification des ACL configurees : {e}")
         structured_output_data[key] = f"Erreur lors de la vérification des ACL configurées : {e}"
 
-def collect_critical_logs(connection, file_handle, structured_output_data):
+def collect_critical_logs(connection, file_handle, structured_output_data, logs):
     key_msg = 'critical_logs_messages'
     cmd_msg = 'show log messages | match "error|warning|critical" | last 10'
     key_chassisd = 'critical_logs_chassisd'
@@ -485,7 +485,7 @@ def collect_critical_logs(connection, file_handle, structured_output_data):
         structured_output_data[key_chassisd] = f"Erreur lors de la récupération des logs des erreurs critiques dans 'chassisd' : {e}"
         raise
 
-def collect_full_configuration(connection, file_handle, structured_output_data, username, router_hostname_for_filename):
+def collect_full_configuration(connection, file_handle, structured_output_data, logs, username, router_hostname_for_filename):
     key = 'full_config_set'
     cmd = 'show configuration | display set'
     config_filename = None
