@@ -307,3 +307,45 @@ def nettoyer_fichiers_disque(fichiers_a_supprimer):
                 print(f"Fichier supprimé : {fichier}")
         except Exception as e:
             print(f"Erreur lors de la suppression du fichier {fichier}: {e}")
+
+def fetch_and_store(
+    connection,
+    structured_output_data,
+    data_key_structured,
+    cmd,
+    parser_func=None,
+    read_timeout=90
+):
+    """
+    Fetch data from the router, parse, and store in structured_output_data[data_key_structured].
+    - connection: Netmiko connection object
+    - structured_output_data: dict to store results
+    - data_key_structured: key in structured_output_data
+    - cmd: command to send
+    - parser_func: function to parse output (optional)
+    - read_timeout: timeout for command
+    Returns: output (parsed or raw)
+    Raises: Exception on error (collectors handle error in structured_output_data)
+    """
+    if not verifier_connexion(connection):
+        raise Exception(f"Connexion perdue avant collecte de: {data_key_structured}")
+    try:
+        cmd_to_send = cmd.strip()
+        if "show " in cmd_to_send and not cmd_to_send.endswith("| no-more") and not cmd_to_send.endswith("no-more"):
+            cmd_to_send = f"{cmd_to_send} | no-more"
+        output_cmd = connection.send_command(cmd_to_send, read_timeout=read_timeout)
+        if isinstance(output_cmd, str):
+            output_lines = output_cmd.splitlines()
+            cleaned_lines = [line for line in output_lines if not line.strip().startswith("---(more")]
+            output_cmd = "\n".join(cleaned_lines)
+        if parser_func:
+            parsed_data = parser_func(output_cmd)
+            structured_output_data[data_key_structured] = parsed_data
+            return parsed_data
+        else:
+            data_to_store = output_cmd.strip() if isinstance(output_cmd, str) else str(output_cmd)
+            structured_output_data[data_key_structured] = data_to_store
+            return data_to_store
+    except Exception as e:
+        # Do not update structured_output_data here; let collector handle it
+        raise

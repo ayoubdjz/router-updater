@@ -1,14 +1,21 @@
-from common_utils import verifier_connexion # Assuming verifier_connexion is in common_utils
+from common_utils import verifier_connexion, fetch_and_store
 import os
+
+logs = []  # Global log list to collect logs from all functions
 
 # Each function will:
 # 1. Verify connection.
 # 2. Print section header to console and write to file_handle.
 # 3. Send command(s).
-# 4. Process output, print to console, write to file_handle.
-# 5. Handle specific errors, print to console, write to file_handle, and raise Exception for critical errors.
+# 4. Process output, logs.append to console, write to file_handle.
+# 5. Handle specific errors, logs.append to console, write to file_handle, and raise Exception for critical errors.
 
-def collect_basic_info(connection, file_handle):
+
+
+
+def collect_basic_info(connection, file_handle, structured_output_data):
+    key = 'basic_info'
+    cmd = 'show version'
     junos_version = "inconnu"
     router_model = "inconnu"
     router_hostname = "inconnu"
@@ -16,18 +23,18 @@ def collect_basic_info(connection, file_handle):
         if not verifier_connexion(connection):
             raise Exception("Connexion perdue avec le routeur avant récupération des infos de base")
         
-        print("\nInformations de base du routeur :")
+        logs.append("\nInformations de base du routeur :")
         file_handle.write("Informations de base du routeur :\n")
-        output = connection.send_command('show version', read_timeout=20)
+        output = fetch_and_store(connection, structured_output_data, key, cmd)
 
         for line in output.splitlines():
             if line.startswith("Hostname:"):
                 router_hostname = line.split("Hostname:", 1)[1].strip()
-                print(f"Le hostname du routeur est : {router_hostname}")
+                logs.append(f"Le hostname du routeur est : {router_hostname}")
                 file_handle.write(f"Le hostname du routeur est : {router_hostname}\n")
             elif line.startswith("Model:"):
                 router_model = line.split("Model:", 1)[1].strip()
-                print(f"Le modèle du routeur est : {router_model}")
+                logs.append(f"Le modèle du routeur est : {router_model}")
                 file_handle.write(f"Le modele du routeur est : {router_model}\n")
             elif "Junos:" in line and not line.strip().startswith("JUNOS "): # Avoid "JUNOS Base OS boot"
                 # More robustly find Junos version line
@@ -38,18 +45,19 @@ def collect_basic_info(connection, file_handle):
                             junos_version = parts[i+1].strip().split('[')[0] # Get version before brackets
                             break
                 if junos_version != "inconnu":
-                    print(f"La version du système Junos est : {junos_version}")
+                    logs.append(f"La version du système Junos est : {junos_version}")
                     file_handle.write(f"La version du systeme Junos est : {junos_version}\n")
         
         if router_hostname == "inconnu" and router_model == "inconnu" and junos_version == "inconnu":
              file_handle.write("Impossible de parser les informations de base du routeur à partir de la sortie.\n")
-             print("Avertissement: Impossible de parser les informations de base du routeur.")
+             logs.append("Avertissement: Impossible de parser les informations de base du routeur.")
 
 
     except Exception as e:
         error_msg = f"Erreur lors de la récupération des informations de base du routeur : {str(e)}"
-        print(error_msg)
+        logs.append(error_msg)
         file_handle.write(f"\n{error_msg}\n")
+        structured_output_data[key] = error_msg
         junos_version = "inconnu"
         router_model = "inconnu"
         router_hostname = "inconnu"
@@ -59,29 +67,36 @@ def collect_basic_info(connection, file_handle):
     return router_hostname, router_model, junos_version
 
 
-def collect_routing_engine_info(connection, file_handle):
+def collect_routing_engine_info(connection, file_handle, structured_output_data):
+    key = 'routing_engine'
+    cmd = 'show chassis routing-engine'
     try:
         if not verifier_connexion(connection):
             raise Exception("Connexion perdue avec le routeur")
-        print("\nInformations du moteur de routage :")
+        logs.append("\nInformations du moteur de routage :")
         file_handle.write("\nInformations du moteur de routage :\n")
-        routing_engine_output = connection.send_command("show chassis routing-engine", read_timeout=20)
-        print(routing_engine_output)
+        routing_engine_output = fetch_and_store(connection, structured_output_data, key, cmd)
+        logs.append(routing_engine_output)
         file_handle.write(routing_engine_output + "\n")
     except Exception as e:
         msg = f"Erreur lors de la récupération des informations du moteur de routage : {e}"
-        print(msg)
+        logs.append(msg)
         file_handle.write(msg + "\n")
+        structured_output_data[key] = msg
         raise
 
-def collect_interface_info(connection, file_handle):
+def collect_interface_info(connection, file_handle, structured_output_data):
+    key_terse = 'interfaces_terse'
+    cmd_terse = 'show interfaces terse | no-more'
+    key_detail = 'interfaces_detail'
+    cmd_detail = 'show interfaces detail | no-more'
     try:
         if not verifier_connexion(connection):
                 raise Exception("Connexion perdue avec le routeur")
-        print("\nInformations sur les interfaces :")
+        logs.append("\nInformations sur les interfaces :")
         file_handle.write("\nInformations sur les interfaces :\n")
-        output_terse = connection.send_command("show interfaces terse | no-more")
-        output_detail = connection.send_command("show interfaces detail | no-more")
+        output_terse = fetch_and_store(connection, structured_output_data, key_terse, cmd_terse)
+        output_detail = fetch_and_store(connection, structured_output_data, key_detail, cmd_detail)
         interfaces_up = []
         interfaces_down = []
         interfaces_info = {}
@@ -128,7 +143,7 @@ def collect_interface_info(connection, file_handle):
                         logical_ip = line.split("Local:")[1].split(",")[0].strip()
                         interfaces_ip[logical_name] = logical_ip
         # Affichage des interfaces up
-        print("Les Interfaces up :")
+        logs.append("Les Interfaces up :")
         file_handle.write("Les Interfaces up :\n")
         if interfaces_up:
             for intf in interfaces_up:
@@ -138,13 +153,13 @@ def collect_interface_info(connection, file_handle):
                 output = f"{intf} - Vitesse: {speed} - IP: {ip_address}"
                 if mac_address: 
                     output += f" - MAC: {mac_address}"
-                print(output)
+                logs.append(output)
                 file_handle.write(output + "\n")
         else:
-            print("Aucune interface active trouvée.")
+            logs.append("Aucune interface active trouvée.")
             file_handle.write("Aucune interface active trouvee.\n")
         # Affichage des interfaces down
-        print("Les Interfaces down :")
+        logs.append("Les Interfaces down :")
         file_handle.write("Les Interfaces down :\n")
         if interfaces_down:
             for intf in interfaces_down:
@@ -154,115 +169,128 @@ def collect_interface_info(connection, file_handle):
                 output = f"{intf} - Vitesse: {speed} - IP: {ip_address}"
                 if mac_address:  
                     output += f" - MAC: {mac_address}"
-                print(output)
+                logs.append(output)
                 file_handle.write(output + "\n")
         else:
-            print("Aucune interface inactive trouvée.")
+            logs.append("Aucune interface inactive trouvée.")
             file_handle.write("Aucune interface inactive trouvee.\n")
             
     except Exception as e:
         msg = f"Erreur lors de la récupération des informations des interfaces : {e}"
-        print(msg)
+        logs.append(msg)
         file_handle.write(msg + "\n")
+        structured_output_data['interfaces'] = msg
         raise
 
-def collect_arp_info(connection, file_handle):
+def collect_arp_info(connection, file_handle, structured_output_data):
+    key = 'arp_table'
+    cmd = 'show arp'
     try:
-        print("\nInformations ARP :")
+        logs.append("\nInformations ARP :")
         file_handle.write("\nInformations ARP :\n")
-        # Exécuter la commande show arp
-        arp_output = connection.send_command("show arp")
-        # Afficher le résultat brut directement
-        print(arp_output)
-        file_handle.write(arp_output + "\n")   
+        output = fetch_and_store(connection, structured_output_data, key, cmd)
+        logs.append(output)
+        file_handle.write(output + "\n")   
     except Exception as e:
-        print(f"Erreur lors de la récupération des informations ARP : {e}")
+        logs.append(f"Erreur lors de la récupération des informations ARP : {e}")
         file_handle.write(f"Erreur lors de la recuperation des informations ARP : {e}\n")
+        structured_output_data[key] = f"Erreur lors de la récupération des informations ARP : {e}"
 
-def collect_route_summary(connection, file_handle):
+def collect_route_summary(connection, file_handle, structured_output_data):
+    key = 'route_summary'
+    cmd = 'show route summary'
     try:
         if not verifier_connexion(connection):
             raise Exception("Connexion perdue avec le routeur")
-        print("\nInformations sur les routes :")
+        logs.append("\nInformations sur les routes :")
         file_handle.write("\nInformations sur les routes :\n")
-        print("Résumé des routes :")
+        logs.append("Résumé des routes :")
         file_handle.write("Resume des routes :\n")
-        route_summary = connection.send_command("show route summary")
-        if route_summary.strip():  # Vérifier si la sortie n'est pas vide
-            print(route_summary)
-            file_handle.write(route_summary + "\n")
+        output = fetch_and_store(connection, structured_output_data, key, cmd)
+        if output.strip():
+            logs.append(output)
+            file_handle.write(output + "\n")
         else:
-            print("Aucun résumé de route trouvé.")
+            logs.append("Aucun résumé de route trouvé.")
             file_handle.write("Aucun resume de route trouve.\n")
     except Exception as e:
-        print(f"Erreur lors de la récupération des informations sur les routes : {e}")
+        logs.append(f"Erreur lors de la récupération des informations sur les routes : {e}")
         file_handle.write(f"Erreur lors de la recuperation des informations sur les routes : {e}")
+        structured_output_data[key] = f"Erreur lors de la récupération des informations sur les routes : {e}"
         raise 
 
-def collect_ospf_info(connection, file_handle):
+def collect_ospf_info(connection, file_handle, structured_output_data):
+    key = 'ospf_info'
+    cmd = 'show ospf interface brief'
     try:
-            print("\nProtocole OSPF :")
-            file_handle.write("\nProtocole OSPF :\n")
-            ospf_interfaces = connection.send_command("show ospf interface brief")
-            if "OSPF instance is not running" in ospf_interfaces: 
-                print("OSPF n'est pas configuré sur ce routeur.")
-                file_handle.write("OSPF n'est pas configure sur ce routeur.\n")
-            else:
-                print("Interfaces OSPF actives :")
-                file_handle.write("Interfaces OSPF actives :\n")
-                print(ospf_interfaces)
-                file_handle.write(ospf_interfaces + "\n")
+        logs.append("\nProtocole OSPF :")
+        file_handle.write("\nProtocole OSPF :\n")
+        output = fetch_and_store(connection, structured_output_data, key, cmd)
+        if "OSPF instance is not running" in output:
+            logs.append("OSPF n'est pas configuré sur ce routeur.")
+            file_handle.write("OSPF n'est pas configure sur ce routeur.\n")
+        else:
+            logs.append("Interfaces OSPF actives :")
+            file_handle.write("Interfaces OSPF actives :\n")
+            logs.append(output)
+            file_handle.write(output + "\n")
     except Exception as e:
-        print(f"Erreur lors de la vérification du protocole OSPF : {e}")
+        logs.append(f"Erreur lors de la vérification du protocole OSPF : {e}")
         file_handle.write(f"Erreur lors de la verification du protocole OSPF : {e}")
-        # Non-critical
+        structured_output_data[key] = f"Erreur lors de la vérification du protocole OSPF : {e}"
 
-def collect_isis_info(connection, file_handle):
+def collect_isis_info(connection, file_handle, structured_output_data):
+    key = 'isis_info'
+    cmd = 'show isis adjacency'
     try:
-        print("\nProtocole IS-IS :")
+        logs.append("\nProtocole IS-IS :")
         file_handle.write("\nProtocole IS-IS :\n")
-        isis_adjacency = connection.send_command("show isis adjacency")
-        if "IS-IS instance is not running" in isis_adjacency: 
-            print("IS-IS n'est pas configuré sur ce routeur.")
+        output = fetch_and_store(connection, structured_output_data, key, cmd)
+        if "IS-IS instance is not running" in output:
+            logs.append("IS-IS n'est pas configuré sur ce routeur.")
             file_handle.write("IS-IS n'est pas configure sur ce routeur.\n")
         else: 
-            print("Interfaces isis actives :")
+            logs.append("Interfaces isis actives :")
             file_handle.write("Interfaces isis actives :\n")
-            print(isis_adjacency)
-            file_handle.write(isis_adjacency + "\n")
+            logs.append(output)
+            file_handle.write(output + "\n")
     except Exception as e:
-        print(f"Erreur lors de la vérification du protocole IS-IS : {e}")
+        logs.append(f"Erreur lors de la vérification du protocole IS-IS : {e}")
         file_handle.write(f"Erreur lors de la verification du protocole IS-IS : {e}")
-        # Non-critical
+        structured_output_data[key] = f"Erreur lors de la vérification du protocole IS-IS : {e}"
 
-def collect_mpls_info(connection, file_handle):
+def collect_mpls_info(connection, file_handle, structured_output_data):
+    key = 'mpls_info'
+    cmd = 'show mpls interface'
     try:
-        print("\nProtocole MPLS :")
+        logs.append("\nProtocole MPLS :")
         file_handle.write("\nProtocole MPLS :\n")
-        mpls_interface = connection.send_command("show mpls interface")
-        if "MPLS not configured" in mpls_interface: 
-            print("MPLS n'est pas configuré sur ce routeur.")
+        output = fetch_and_store(connection, structured_output_data, key, cmd)
+        if "MPLS not configured" in output:
+            logs.append("MPLS n'est pas configuré sur ce routeur.")
             file_handle.write("MPLS n'est pas configure sur ce routeur.\n")
         else: 
-            print("les interfaces  MPLS est activés. :")
+            logs.append("les interfaces  MPLS est activés. :")
             file_handle.write("les interfaces  MPLS  actives. :\n")
-            print(mpls_interface)
-            file_handle.write(mpls_interface + "\n")
+            logs.append(output)
+            file_handle.write(output + "\n")
     except Exception as e:
-        print(f"Erreur lors de la vérification du protocole MPLS : {e}")
-        file_handle.write(f"Erreur lors de la verification du protocole MPLS : {e}") 
-    # Non-critical
+        logs.append(f"Erreur lors de la vérification du protocole MPLS : {e}")
+        file_handle.write(f"Erreur lors de la verification du protocole MPLS : {e}")
+        structured_output_data[key] = f"Erreur lors de la vérification du protocole MPLS : {e}"
 
-def collect_ldp_info(connection, file_handle):
+def collect_ldp_info(connection, file_handle, structured_output_data):
+    key = 'ldp_info'
+    cmd = 'show ldp session'
     try:
-        print("\nProtcole LDP :")
+        logs.append("\nProtcole LDP :")
         file_handle.write("\nProtocole LDP :\n")
-        ldp_session = connection.send_command("show ldp session")
-        if "LDP instance is not running" in ldp_session: 
-            print("LDP n'est pas configuré sur ce routeur.")
+        output = fetch_and_store(connection, structured_output_data, key, cmd)
+        if "LDP instance is not running" in output:
+            logs.append("LDP n'est pas configuré sur ce routeur.")
             file_handle.write("LDP n'est pas configure sur ce routeur.\n")
         else :
-            lignes = ldp_session.split('\n')
+            lignes = output.split('\n')
             resultat_filtre = []
             for ligne in lignes:
                 colonnes = ligne.split()
@@ -272,198 +300,219 @@ def collect_ldp_info(connection, file_handle):
                 else:
                     resultat_filtre.append(ligne)
             output_final = "\n".join(resultat_filtre)
-            print("Sessions LDP actives  :")
+            logs.append("Sessions LDP actives  :")
             file_handle.write("Sessions LDP actives :\n")
-            print(output_final)
+            logs.append(output_final)
             file_handle.write(output_final + "\n")
     except Exception as e:
-        print(f"Erreur lors de la vérification du protocole LDP : {e}")
+        logs.append(f"Erreur lors de la vérification du protocole LDP : {e}")
         file_handle.write(f"Erreur lors de la verification du protocole LDP : {e}\n")
+        structured_output_data[key] = f"Erreur lors de la vérification du protocole LDP : {e}"
 
-def collect_rsvp_info(connection, file_handle):
+def collect_rsvp_info(connection, file_handle, structured_output_data):
+    key = 'rsvp_info'
+    cmd = 'show rsvp interface'
     try:
-        print("\nProtocole RSVP :")
+        logs.append("\nProtocole RSVP :")
         file_handle.write("\nProtocole RSVP :\n")
-        rsvp_interface = connection.send_command("show rsvp interface")
-        if "RSVP not configured" in rsvp_interface: 
-            print("RSVP n'est pas configuré sur ce routeur.")
+        output = fetch_and_store(connection, structured_output_data, key, cmd)
+        if "RSVP not configured" in output:
+            logs.append("RSVP n'est pas configuré sur ce routeur.")
             file_handle.write("RSVP n'est pas configure sur ce routeur.\n")
         else: 
             file_handle.write("Interfaces configurees avec RSVP :\n")
-            print(rsvp_interface)
-            file_handle.write(rsvp_interface + "\n")
+            logs.append(output)
+            file_handle.write(output + "\n")
     except Exception as e:
-        print(f"Erreur lors de la vérification du protocole RSVP : {e}")
+        logs.append(f"Erreur lors de la vérification du protocole RSVP : {e}")
         file_handle.write(f"Erreur lors de la verification du protocole RSVP : {e}")
+        structured_output_data[key] = f"Erreur lors de la vérification du protocole RSVP : {e}"
 
-def collect_lldp_info(connection, file_handle):
+def collect_lldp_info(connection, file_handle, structured_output_data):
+    key = 'lldp_info'
+    cmd = 'show lldp neighbor'
     try:
-        print("\nProtocole LLDP :")
+        logs.append("\nProtocole LLDP :")
         file_handle.write("\nProtocole LLDP :\n")
-        lldp_neigbors = connection.send_command("show lldp neighbor")
-        if not lldp_neigbors.strip():  # Si la sortie est vide
-            print("LLDP n'est pas configuré ou aucun voisin n'a été détecté.")
+        output = fetch_and_store(connection, structured_output_data, key, cmd)
+        if not output.strip():
+            logs.append("LLDP n'est pas configuré ou aucun voisin n'a été détecté.")
             file_handle.write("LLDP n'est pas configure ou aucun voisin n'a ete detecte.\n")
-        else:  # Si la sortie n'est pas vide
-            print("Voisins LLDP découverts :")
+        else:
+            logs.append("Voisins LLDP découverts :")
             file_handle.write("Voisins LLDP decouverts :\n")
-            print(lldp_neigbors)
-            file_handle.write(lldp_neigbors + "\n")
+            logs.append(output)
+            file_handle.write(output + "\n")
     except Exception as e:
-        print(f"Erreur lors de la vérification du protocole LLDP : {e}")
+        logs.append(f"Erreur lors de la vérification du protocole LLDP : {e}")
         file_handle.write(f"Erreur lors de la verification du protocole LLDP : {e}")
-    # Non-critical
+        structured_output_data[key] = f"Erreur lors de la vérification du protocole LLDP : {e}"
 
-def collect_lsp_info(connection, file_handle):
+def collect_lsp_info(connection, file_handle, structured_output_data):
+    key = 'lsp_info'
+    cmd = 'show mpls lsp'
     try:
-        print("\nProtocole LSP :")
+        logs.append("\nProtocole LSP :")
         file_handle.write("\nProtocole LSP :\n")
-        mpls_lsp = connection.send_command("show mpls lsp")
-        if "MPLS not configured" in mpls_lsp: 
-            print("Aucune session lsp trouvé.")
+        output = fetch_and_store(connection, structured_output_data, key, cmd)
+        if "MPLS not configured" in output:
+            logs.append("Aucune session lsp trouvé.")
             file_handle.write("Aucune session lsp trouve.\n")
-        else: 
-            print("statut des LSP :")
+        else:
+            logs.append("statut des LSP :")
             file_handle.write("statut des LSP :\n")
-            print(mpls_lsp)
-            file_handle.write(mpls_lsp + "\n")
+            logs.append(output)
+            file_handle.write(output + "\n")
     except Exception as e:
-        print(f"Erreur lors de la vérification du protocole LSP : {e}")
+        logs.append(f"Erreur lors de la vérification du protocole LSP : {e}")
         file_handle.write(f"Erreur lors de la verification du protocole LSP : {e}")
-    # Non-critical
+        structured_output_data[key] = f"Erreur lors de la vérification du protocole LSP : {e}"
 
-def collect_bgp_info(connection, file_handle):
+def collect_bgp_info(connection, file_handle, structured_output_data):
+    key = 'bgp_summary'
+    cmd = 'show bgp summary'
     try:
-        print("\nProtocole BGP :")
+        logs.append("\nProtocole BGP :")
         file_handle.write("\nProtocole BGP :\n")
-        bgp_summary= connection.send_command("show bgp summary ")
-        if "BGP is not running" in bgp_summary: 
-            print("BGP n'est pas configuré sur ce routeur.")
+        output = fetch_and_store(connection, structured_output_data, key, cmd)
+        if "BGP is not running" in output:
+            logs.append("BGP n'est pas configuré sur ce routeur.")
             file_handle.write("BGP n'est pas configure sur ce routeur.\n")
         else:  
-            print(bgp_summary)
-            file_handle.write(bgp_summary + "\n")
+            logs.append(output)
+            file_handle.write(output + "\n")
     except Exception as e:
-        print(f"Erreur lors de la vérification du protocole BGP : {e}")
-        file_handle.write(f"Erreur lors de la verification du protocole BGP : {e}") 
+        logs.append(f"Erreur lors de la vérification du protocole BGP : {e}")
+        file_handle.write(f"Erreur lors de la verification du protocole BGP : {e}")
+        structured_output_data[key] = f"Erreur lors de la vérification du protocole BGP : {e}"
     # Non-critical
 
-def collect_system_services(connection, file_handle):
+def collect_system_services(connection, file_handle, structured_output_data):
+    key = 'system_services'
+    cmd = 'show configuration system services'
     try:
-        print("\nServices configurés :")
+        logs.append("\nServices configurés :")
         file_handle.write("\nServices configures :\n")
-        output_services = connection.send_command("show configuration system services")
-        services = set()  # Utiliser un ensemble pour éviter les doublons
-        for line in output_services.splitlines():
-            if line.strip().endswith(";"):  # Les services se terminent par un point-virgule
+        output = fetch_and_store(connection, structured_output_data, key, cmd)
+        services = set()
+        for line in output.splitlines():
+            if line.strip().endswith(";"):
                 service_name = line.strip().rstrip(";")
-            services.add(service_name)
-        for service in sorted(services):  # Trier les services par ordre alphabétique
-            print(service)
+                services.add(service_name)
+        for service in sorted(services):
+            logs.append(service)
             file_handle.write(service + "\n")
     except Exception as e:
-        print(f"Erreur lors de la récupération des services configurés : {e}")
+        logs.append(f"Erreur lors de la récupération des services configurés : {e}")
         file_handle.write(f"Erreur lors de la recuperation des services configures : {e}")
-    
+        structured_output_data[key] = f"Erreur lors de la récupération des services configurés : {e}"
 
-def collect_configured_protocols(connection, file_handle):
+def collect_configured_protocols(connection, file_handle, structured_output_data):
+    key = 'configured_protocols'
+    cmd = 'show configuration protocols'
     try:
-        print("\nProtocoles configurés :")
+        logs.append("\nProtocoles configurés :")
         file_handle.write("\nProtocoles configures :\n")
-        output_protocols = connection.send_command("show configuration protocols")
-        protocols = set()  # Utiliser un ensemble pour éviter les doublons
-        for line in output_protocols.splitlines():
-            if "{" in line and not line.strip().startswith("}"):  # Les protocoles commencent par "{"
+        output = fetch_and_store(connection, structured_output_data, key, cmd)
+        protocols = set()
+        for line in output.splitlines():
+            if "{" in line and not line.strip().startswith("}"):
                 protocol_name = line.split("{")[0].strip()
                 protocols.add(protocol_name)
-        for protocol in sorted(protocols):  # Trier les protocoles par ordre alphabétique
-            print(protocol)
+        for protocol in sorted(protocols):
+            logs.append(protocol)
             file_handle.write(protocol + "\n")
     except Exception as e:
-        print(f"Erreur lors de la récupération des protocoles configurés : {e}")
-        file_handle.write(f"Erreur lors de la recuperation des protocoles configures : {e}") 
+        logs.append(f"Erreur lors de la récupération des protocoles configurés : {e}")
+        file_handle.write(f"Erreur lors de la recuperation des protocoles configures : {e}")
+        structured_output_data[key] = f"Erreur lors de la récupération des protocoles configurés : {e}"
 
-
-def collect_firewall_acls(connection, file_handle):
+def collect_firewall_acls(connection, file_handle, structured_output_data):
+    key = 'firewall_config'
+    cmd = 'show configuration firewall'
     try:
-        print("\nListes de Contrôle d'Accès (ACL) :")
+        logs.append("\nListes de Contrôle d'Accès (ACL) :")
         file_handle.write("\nListes de Controle d'Acces (ACL) :\n")
-        # Récupérer la configuration complète des filtres de pare-feu
-        acl_output = connection.send_command("show configuration firewall")
-        # Afficher et stocker la réponse brute de la commande
-        if acl_output.strip():  # Vérifier si la sortie n'est pas vide
-            print("Réponse de la commande 'show configuration firewall' :")
+        output = fetch_and_store(connection, structured_output_data, key, cmd)
+        if output.strip():
+            logs.append("Réponse de la commande 'show configuration firewall' :")
             file_handle.write("Reponse de la commande 'show configuration firewall' :\n")
-            print(acl_output)
-            file_handle.write(acl_output + "\n")
+            logs.append(output)
+            file_handle.write(output + "\n")
         else:
-            print("Aucune ACL configurée trouvée.")
+            logs.append("Aucune ACL configurée trouvée.")
             file_handle.write("Aucune ACL configuree trouvee.\n")
     except Exception as e:
-        print(f"Erreur lors de la vérification des ACL configurées : {e}")
+        logs.append(f"Erreur lors de la vérification des ACL configurées : {e}")
         file_handle.write(f"Erreur lors de la verification des ACL configurees : {e}")
+        structured_output_data[key] = f"Erreur lors de la vérification des ACL configurées : {e}"
 
-
-def collect_critical_logs(connection, file_handle):
+def collect_critical_logs(connection, file_handle, structured_output_data):
+    key_msg = 'critical_logs_messages'
+    cmd_msg = 'show log messages | match "error|warning|critical" | last 10'
+    key_chassisd = 'critical_logs_chassisd'
+    cmd_chassisd = 'show log chassisd | match "error|warning|critical" | last 10'
     try:
         if not verifier_connexion(connection):
             raise Exception("Connexion perdue avec le routeur")
-        print("\nLogs des erreurs critiques :")
+        logs.append("\nLogs des erreurs critiques :")
         file_handle.write("\nLogs des erreurs critiques :\n")
-        print("Logs des erreurs critiques dans 'messages' :")
+        logs.append("Logs des erreurs critiques dans 'messages' :")
         file_handle.write("Logs des erreurs critiques dans 'messages' :\n")
-        logs_messages = connection.send_command('show log messages | match "error|warning|critical" | last 10')
-        # Filtrer les lignes indésirables
-        filtered_logs = [line for line in logs_messages.splitlines() if not line.strip().startswith("---(more")]
+        output_msg = fetch_and_store(connection, structured_output_data, key_msg, cmd_msg)
+        filtered_logs = [line for line in output_msg.splitlines() if not line.strip().startswith("---(more")]
         filtered_logs_str = "\n".join(filtered_logs)
-        print(filtered_logs_str)
+        logs.append(filtered_logs_str)
         file_handle.write(filtered_logs_str + "\n")
     except Exception as e:
-        print(f"Erreur lors de la récupération des logs des erreurs critiques dans 'messages' : {e}")
+        logs.append(f"Erreur lors de la récupération des logs des erreurs critiques dans 'messages' : {e}")
         file_handle.write(f"Erreur lors de la recuperation des logs des erreurs critiques dans 'messages' : {e}")
+        structured_output_data[key_msg] = f"Erreur lors de la récupération des logs des erreurs critiques dans 'messages' : {e}"
         raise 
     try:
         if not verifier_connexion(connection):
             raise Exception("Connexion perdue avec le routeur")
-        print("Logs des erreurs critiques dans 'chassisd' :")
+        logs.append("Logs des erreurs critiques dans 'chassisd' :")
         file_handle.write("Logs des erreurs critiques dans 'chassisd' :\n")
-        logs_chassisd = connection.send_command('show log chassisd | match "error|warning|critical" | last 10')
-        # Filtrer les lignes indésirables
-        filtered_logs = [line for line in logs_chassisd.splitlines() if not line.strip().startswith("---(more")]
+        output_chassisd = fetch_and_store(connection, structured_output_data, key_chassisd, cmd_chassisd)
+        filtered_logs = [line for line in output_chassisd.splitlines() if not line.strip().startswith("---(more")]
         filtered_logs_str = "\n".join(filtered_logs)
-        print(filtered_logs_str)
+        logs.append(filtered_logs_str)
         file_handle.write(filtered_logs_str + "\n")
     except Exception as e:
-        print(f"Erreur lors de la récupération des logs des erreurs critiques dans 'chassisd' : {e}")
+        logs.append(f"Erreur lors de la récupération des logs des erreurs critiques dans 'chassisd' : {e}")
         file_handle.write(f"Erreur lors de la recuperation des logs des erreurs critiques dans 'chassisd' : {e}")
+        structured_output_data[key_chassisd] = f"Erreur lors de la récupération des logs des erreurs critiques dans 'chassisd' : {e}"
         raise
 
-def collect_full_configuration(connection, file_handle, username, router_hostname_for_filename):
-    config_filename = None # Initialize
+def collect_full_configuration(connection, file_handle, structured_output_data, username, router_hostname_for_filename):
+    key = 'full_config_set'
+    cmd = 'show configuration | display set'
+    config_filename = None
     try:
         if not verifier_connexion(connection):
             raise Exception("Connexion perdue avec le routeur")
-        print("\nLa configuration totale :")
+        logs.append("\nLa configuration totale :")
         file_handle.write("\nLa configuration totale :\n")
-        output = connection.send_command("show configuration | display set")
-        print(output)
+        output = fetch_and_store(connection, structured_output_data, key, cmd)
+        logs.append(output)
         file_handle.write(output + "\n")
-        
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        GENERATED_FILES_DIR = os.path.join(script_dir, "generated_files")
+        os.makedirs(GENERATED_FILES_DIR, exist_ok=True)
         base_config_filename = f"CONFIGURATION_{username}_{router_hostname_for_filename}.txt"
-        config_filename = base_config_filename
+        config_filename = os.path.join(GENERATED_FILES_DIR, base_config_filename)
         compteur_config = 1
         while os.path.exists(config_filename):
-            config_filename = f"CONFIGURATION_{username}_{router_hostname_for_filename}_{compteur_config}.txt"
+            config_filename = os.path.join(GENERATED_FILES_DIR, f"CONFIGURATION_{username}_{router_hostname_for_filename}_{compteur_config}.txt")
             compteur_config += 1
-        
         with open(config_filename, 'w', encoding='utf-8') as config_file_handle:
             config_file_handle.write(output)
-        print(f"Configuration complète sauvegardée dans : {config_filename}")
-        return config_filename # Return the name of the created config file
-        
+        logs.append(f"Configuration complète sauvegardée dans : {config_filename}")
+        return config_filename
     except Exception as e:
         msg = f"Erreur lors de la récupération de la configuration totale : {e}"
-        print(msg)
+        logs.append(msg)
         file_handle.write(msg + "\n")
-        # This is a critical collection, so re-raise
+        structured_output_data[key] = msg
         raise

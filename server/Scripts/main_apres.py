@@ -5,6 +5,7 @@ import glob
 from getpass import getpass
 from netmiko import ConnectHandler, NetmikoTimeoutException, NetmikoAuthenticationException
 import tempfile
+from pathlib import Path
 
 # Import from new modules
 from common_utils import (
@@ -39,7 +40,13 @@ try:
     else:
         # Fallback: Chercher le fichier identifiants_*.json le plus récent dans le répertoire du script
         script_dir = os.path.dirname(os.path.abspath(__file__))
-        list_of_files = glob.glob(os.path.join(script_dir, "identifiants_*.json"))
+        GENERATED_FILES_DIR = os.path.join(script_dir, "generated_files")
+        Path(GENERATED_FILES_DIR).mkdir(exist_ok=True, parents=True) 
+        if not os.access(GENERATED_FILES_DIR, os.W_OK):
+            raise PermissionError(f"APRES CRITIQUE: Pas d'accès en écriture à GENERATED_FILES_DIR ({GENERATED_FILES_DIR})!")
+
+        
+        list_of_files = glob.glob(os.path.join(GENERATED_FILES_DIR, "identifiants_*.json"))
         if not list_of_files:
             print("ERREUR: Aucun fichier d'identification (identifiants_*.json) trouvé. Exécutez main_avant.py d'abord.")
             sys.exit(1)
@@ -95,7 +102,7 @@ try:
             'username': username_apres,
             'password': password_apres,
             'timeout': 60,
-            'session_log': 'netmiko_session_apres.log', # Separate log for APRES
+            'session_log': os.path.join(GENERATED_FILES_DIR, 'netmiko_session_apres.log'),
             'session_log_file_mode': 'append'
         }
         try:
@@ -118,10 +125,14 @@ try:
                 sys.exit(1)
 
     # Création du fichier temporaire pour APRES
-    script_dir_apres = os.path.dirname(os.path.abspath(__file__))
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    GENERATED_FILES_DIR = os.path.join(script_dir, "generated_files")
+    Path(GENERATED_FILES_DIR).mkdir(exist_ok=True, parents=True)
+    if not os.access(GENERATED_FILES_DIR, os.W_OK):
+        raise PermissionError(f"APRES CRITIQUE: Pas d'accès en écriture à GENERATED_FILES_DIR ({GENERATED_FILES_DIR})!")
     with tempfile.NamedTemporaryFile(
         mode='w+',
-        dir=script_dir_apres,
+        dir=GENERATED_FILES_DIR,
         prefix='APRES_TEMP_',
         suffix='.txt',
         delete=False,
@@ -161,10 +172,10 @@ try:
 
     # Renommer le fichier temporaire APRES
     base_apres_filename = f"APRES_{username_apres}_{router_hostname_apres}.txt"
-    APRES_file_path = os.path.join(script_dir_apres, base_apres_filename)
+    APRES_file_path = os.path.join(GENERATED_FILES_DIR, base_apres_filename)
     compteur_apres = 1
     while os.path.exists(APRES_file_path):
-        APRES_file_path = os.path.join(script_dir_apres, f"APRES_{username_apres}_{router_hostname_apres}_{compteur_apres}.txt")
+        APRES_file_path = os.path.join(GENERATED_FILES_DIR, f"APRES_{username_apres}_{router_hostname_apres}_{compteur_apres}.txt")
         compteur_apres += 1
     
     try:
@@ -200,10 +211,10 @@ try:
         display_differences(differences_data)
 
         comparaison_filename_base = f"COMPARAISON_{username_apres}_{router_hostname_apres}.txt"
-        comparaison_filename = os.path.join(script_dir_apres, comparaison_filename_base)
+        comparaison_filename = os.path.join(GENERATED_FILES_DIR, comparaison_filename_base)
         compteur_comp = 1
         while os.path.exists(comparaison_filename):
-            comparaison_filename = os.path.join(script_dir_apres, f"COMPARAISON_{username_apres}_{router_hostname_apres}_{compteur_comp}.txt")
+            comparaison_filename = os.path.join(GENERATED_FILES_DIR, f"COMPARAISON_{username_apres}_{router_hostname_apres}_{compteur_comp}.txt")
             compteur_comp += 1
         
         write_differences_to_file(differences_data, comparaison_filename)

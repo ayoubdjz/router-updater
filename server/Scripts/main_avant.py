@@ -17,50 +17,62 @@ from common_utils import (
     valider_ip
 )
 import juniper_data_collector as jdc
-from juniper_update_proc import perform_junos_update
+from importlib import import_module
+
+# Dynamically import all public functions from juniper_data_collector
+from types import FunctionType
+jdc_module = import_module('juniper_data_collector')
+jdc_functions = [getattr(jdc_module, name) for name in dir(jdc_module)
+                 if isinstance(getattr(jdc_module, name), FunctionType) and not name.startswith('_')]
+
+# List of function names in the desired order
+JDC_FUNC_ORDER = [
+    'collect_routing_engine_info',
+    'collect_interface_info',
+    'collect_arp_info',
+    'collect_route_summary',
+    'collect_ospf_info',
+    'collect_isis_info',
+    'collect_mpls_info',
+    'collect_ldp_info',
+    'collect_rsvp_info',
+    'collect_lldp_info',
+    'collect_lsp_info',
+    'collect_bgp_info',
+    'collect_system_services',
+    'collect_configured_protocols',
+    'collect_firewall_acls',
+    'collect_critical_logs',
+]
+
+def run_all_jdc_collectors(connection, file_handle):
+    """Call all jdc data collection functions in the correct order."""
+    for func_name in JDC_FUNC_ORDER:
+        func = getattr(jdc, func_name, None)
+        if callable(func):
+            func(connection, file_handle)
 
 # Fonction pour lancer APRES.py (main_apres.py)
-def lancer_apres(fichier_identifiants_path, max_tentatives=3):
+def lancer_apres(fichier_identifiants, max_tentatives=3):
     tentatives = 0
     python_exec = sys.executable
-    # Construct path to main_apres.py relative to this script's location
-    script_apres_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "main_apres.py")
-
-    if not os.path.exists(script_apres_path):
-        print(f"ERREUR: Le script main_apres.py est introuvable à {script_apres_path}")
-        return False
-    if not os.path.exists(fichier_identifiants_path):
-        print(f"ERREUR: Le fichier d'identifiants {fichier_identifiants_path} est introuvable pour main_apres.py")
-        return False
-        
+    script_apres = os.path.join(os.path.dirname(__file__), "main_apres.py")
     while tentatives < max_tentatives:
         try:
-            print(f"\nLancement de main_apres.py avec {fichier_identifiants_path}")
-            # Ensure paths with spaces are quoted if necessary, though subprocess list arg handles it.
+            print(f"\nLancement de main_apres.py")
             result = subprocess.run(
-                [python_exec, script_apres_path, fichier_identifiants_path],
-                check=True, # Will raise CalledProcessError if script returns non-zero
-                capture_output=True, text=True # Capture output for better debugging
+                [python_exec, "main_apres.py", fichier_identifiants],
+                check=True,
             )
-            print("main_apres.py stdout:\n", result.stdout)
-            if result.stderr:
-                 print("main_apres.py stderr:\n", result.stderr)
-            print("main_apres.py terminé avec succès.")
-            return True
+            return True 
         except subprocess.CalledProcessError as e:
             tentatives += 1
-            print(f"Erreur lors de l'exécution de main_apres.py (Code {e.returncode}):")
-            print(f"  Stdout: {e.stdout.strip() if e.stdout else 'N/A'}")
-            print(f"  Stderr: {e.stderr.strip() if e.stderr else 'N/A'}")
+            print(f"Erreur lors de l'exécution (Code {e.returncode}): {e.stderr.strip()}")
             if tentatives < max_tentatives:
                 print("Nouvelle tentative...")
-                time.sleep(5)
             else:
-                print("Échec du lancement de main_apres.py après plusieurs tentatives.")
+                print("Échec après plusieurs tentatives.")
                 return False
-        except FileNotFoundError: # e.g. python_exec not found
-             print(f"ERREUR: Exécutable Python '{python_exec}' ou script '{script_apres_path}' non trouvé.")
-             return False
 
 
 # --- Main script logic ---
@@ -75,6 +87,13 @@ lancer_apres_flag = False # To control if APRES.py should be launched
 
 try:
     # Boucle pour la connexion SSH
+    structured_output_data = {
+        "basic_info": {}, "routing_engine": "", "interfaces_up": [], "interfaces_down": [],
+        "arp_table": "", "route_summary": "", "ospf_info": "", "isis_info": "", "mpls_info": "",
+        "ldp_info": "", "rsvp_info": "", "lldp_info": "", "lsp_info": "", "bgp_summary": "",
+        "system_services": [], "configured_protocols": [], "firewall_config": "",
+        "critical_logs_messages": "", "critical_logs_chassisd": "", "full_config_set": "",
+    }
     while True:
         ip = input("Veuillez entrer l'adresse IP du routeur : ").strip()
         if not valider_ip(ip):
@@ -92,14 +111,19 @@ try:
                 sys.exit(1)
             continue # Redemander les informations si verrou échoué et retry
 
-        device_config = { # Renamed from 'device'
-            'device_type': 'juniper_junos', # More specific type
+        # Define GENERATED_FILES_DIR before using it
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        GENERATED_FILES_DIR = os.path.join(script_dir, "generated_files")
+        Path(GENERATED_FILES_DIR).mkdir(exist_ok=True, parents=True)
+
+        device_config = {
+            'device_type': 'juniper_junos',
             'host': ip,
             'username': username,
             'password': password,
-            'timeout': 60,  # Increased global timeout
-            'session_log': 'netmiko_session_avant.log',
-            'session_log_file_mode': 'append' # or 'overwrite'
+            'timeout': 60,
+            'session_log': os.path.join(GENERATED_FILES_DIR, 'netmiko_session_avant.log'),
+            'session_log_file_mode': 'append'
         }
         try:
             connection = ConnectHandler(**device_config)
@@ -130,9 +154,13 @@ try:
     # Création du fichier temporaire pour AVANT
     # Ensure temp files are created in the script's directory or a defined output directory
     script_dir = os.path.dirname(os.path.abspath(__file__))
+    GENERATED_FILES_DIR = os.path.join(script_dir, "generated_files")
+    Path(GENERATED_FILES_DIR).mkdir(exist_ok=True, parents=True)
+    if not os.access(GENERATED_FILES_DIR, os.W_OK):
+        raise PermissionError(f"AVANT CRITIQUE: Pas d'accès en écriture à GENERATED_FILES_DIR ({GENERATED_FILES_DIR})!")
     with tempfile.NamedTemporaryFile(
         mode='w+',
-        dir=script_dir, # Create temp file in script directory
+        dir=GENERATED_FILES_DIR, # Create temp file in generated_files
         prefix='AVANT_TEMP_',
         suffix='.txt',
         delete=False,
@@ -144,32 +172,15 @@ try:
     router_hostname_main = "inconnu" # Initialize
     
     # Collect data
-    with open(fichier_temporaire_avant, 'w', encoding='utf-8') as file_handle_avant: # Changed to 'w'
+    with open(fichier_temporaire_avant, 'w', encoding='utf-8') as file_handle_avant:
         # Basic Info (includes hostname needed for filename)
         router_hostname_main, _, _ = jdc.collect_basic_info(connection, file_handle_avant)
         if router_hostname_main == "":
             # This is critical, handle it (jdc.collect_basic_info might raise it too)
             raise Exception("Impossible de récupérer le hostname du routeur. Arrêt.")
 
-        jdc.collect_routing_engine_info(connection, file_handle_avant)
-        jdc.collect_interface_info(connection, file_handle_avant)
-        jdc.collect_arp_info(connection, file_handle_avant)
-        jdc.collect_route_summary(connection, file_handle_avant)
-        jdc.collect_ospf_info(connection, file_handle_avant)
-        jdc.collect_isis_info(connection, file_handle_avant)
-        jdc.collect_mpls_info(connection, file_handle_avant)
-        jdc.collect_ldp_info(connection, file_handle_avant)
-        jdc.collect_rsvp_info(connection, file_handle_avant)
-        jdc.collect_lldp_info(connection, file_handle_avant)
-        jdc.collect_lsp_info(connection, file_handle_avant)
-        jdc.collect_bgp_info(connection, file_handle_avant)
-        jdc.collect_system_services(connection, file_handle_avant)
-        jdc.collect_configured_protocols(connection, file_handle_avant)
-        jdc.collect_firewall_acls(connection, file_handle_avant)
-        jdc.collect_critical_logs(connection, file_handle_avant)
-        
+        run_all_jdc_collectors(connection, file_handle_avant)
         # Full configuration (writes to AVANT file and creates separate CONFIG file)
-        # Pass router_hostname_main for consistent naming of CONFIG file
         config_file_main = jdc.collect_full_configuration(connection, file_handle_avant, username, router_hostname_main)
         if config_file_main and os.path.exists(config_file_main):
             fichiers_crees_main.append(config_file_main)
@@ -179,10 +190,10 @@ try:
 
     # Renommer le fichier temporaire AVANT
     base_avant_filename = f"AVANT_{username}_{router_hostname_main}.txt"
-    AVANT_file = os.path.join(script_dir, base_avant_filename) # Place in script_dir
+    AVANT_file = os.path.join(GENERATED_FILES_DIR, base_avant_filename) # Place in generated_files
     compteur = 1
     while os.path.exists(AVANT_file):
-        AVANT_file = os.path.join(script_dir, f"AVANT_{username}_{router_hostname_main}_{compteur}.txt")
+        AVANT_file = os.path.join(GENERATED_FILES_DIR, f"AVANT_{username}_{router_hostname_main}_{compteur}.txt")
         compteur += 1
     
     try:
@@ -197,11 +208,10 @@ try:
 
     # Sauvegarde des identifiants
     identifiants_base_name = f"identifiants_{username}_{router_hostname_main}.json"
-    identifiants_file_main = os.path.join(script_dir, identifiants_base_name)
-    # Ensure unique name for identifiants file if it already exists (though usually it's for one run)
+    identifiants_file_main = os.path.join(GENERATED_FILES_DIR, identifiants_base_name)
     compteur_id = 1
     while os.path.exists(identifiants_file_main):
-        identifiants_file_main = os.path.join(script_dir, f"identifiants_{username}_{router_hostname_main}_{compteur_id}.json")
+        identifiants_file_main = os.path.join(GENERATED_FILES_DIR, f"identifiants_{username}_{router_hostname_main}_{compteur_id}.json")
         compteur_id += 1
 
     try:
