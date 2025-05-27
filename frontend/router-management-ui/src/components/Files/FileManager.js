@@ -43,6 +43,7 @@ const FileManager = () => {
   const viewFileMutation = useMutation({
     mutationFn: getFileContent, // API function expects filename
     onSuccess: (response, filename) => { // response is Axios response
+      console.log(`Fetched content for ${filename}:`, response.data);
       setSelectedFileContent(response.data); // .data from axios if API returns text directly
       setSelectedFileNameForView(filename);
       setIsFileViewerOpen(true);

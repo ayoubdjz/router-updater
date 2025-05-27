@@ -400,8 +400,9 @@ const DashboardPage = () => {
 
       try {
         const response = await runAvantChecks(credentials);
-        setAvantLogs(response.data.logs || []);
+        setAvantLogs(response.data.log_messages || []);
         if (response.data.status === 'success') {
+          console.log(response.data);
           updateSession({
             ident_data: response.data.ident_data,
             lock_file_path: response.data.ident_data?.lock_file_path,
