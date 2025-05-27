@@ -21,24 +21,24 @@ root>
 root> 
 
 root> show system uptime 
-Current time: 2025-05-26 02:42:11 UTC
-System booted: 2025-05-26 01:18:20 UTC (01:23:51 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (01:23:07 ago)
-Last configured: 2025-05-26 01:27:26 UTC (01:14:45 ago) by root
- 2:42AM  up 1:24, 2 users, load averages: 0.07, 0.02, 0.00
+Current time: 2025-05-27 06:02:28 UTC
+System booted: 2025-05-27 01:17:12 UTC (04:45:16 ago)
+Protocols started: 2025-05-27 01:17:42 UTC (04:44:46 ago)
+Last configured: 2025-05-27 01:19:05 UTC (04:43:23 ago) by root
+ 6:02AM  up 4:45, 5 users, load averages: 0.36, 0.18, 0.07
 
 root> 
 
 root> show system uptime 
-Current time: 2025-05-26 02:42:11 UTC
-System booted: 2025-05-26 01:18:20 UTC (01:23:51 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (01:23:07 ago)
-Last configured: 2025-05-26 01:27:26 UTC (01:14:45 ago) by root
- 2:42AM  up 1:24, 2 users, load averages: 0.07, 0.02, 0.00
+Current time: 2025-05-27 06:02:28 UTC
+System booted: 2025-05-27 01:17:12 UTC (04:45:16 ago)
+Protocols started: 2025-05-27 01:17:42 UTC (04:44:46 ago)
+Last configured: 2025-05-27 01:19:05 UTC (04:43:23 ago) by root
+ 6:02AM  up 4:45, 5 users, load averages: 0.36, 0.18, 0.07
 
 root> 
 
-root> show version 
+root> show version | no-more 
 Model: vmx
 Junos: 14.1R4.8
 JUNOS Base OS Software Suite [14.1R4.8]
@@ -88,44 +88,53 @@ JUNOS Packet Forwarding Engine Trio Simulation Package [14.1R4.8]
 root> 
 
 root> show system uptime 
-Current time: 2025-05-26 02:42:11 UTC
-System booted: 2025-05-26 01:18:20 UTC (01:23:51 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (01:23:07 ago)
-Last configured: 2025-05-26 01:27:26 UTC (01:14:45 ago) by root
- 2:42AM  up 1:24, 2 users, load averages: 0.06, 0.02, 0.00
+Current time: 2025-05-27 06:02:29 UTC
+System booted: 2025-05-27 01:17:12 UTC (04:45:17 ago)
+Protocols started: 2025-05-27 01:17:42 UTC (04:44:47 ago)
+Last configured: 2025-05-27 01:19:05 UTC (04:43:24 ago) by root
+ 6:02AM  up 4:45, 5 users, load averages: 0.36, 0.18, 0.07
 
 root> 
 
-root> show chassis routing-engine 
+root> show system uptime 
+Current time: 2025-05-27 06:02:29 UTC
+System booted: 2025-05-27 01:17:12 UTC (04:45:17 ago)
+Protocols started: 2025-05-27 01:17:42 UTC (04:44:47 ago)
+Last configured: 2025-05-27 01:19:05 UTC (04:43:24 ago) by root
+ 6:02AM  up 4:45, 5 users, load averages: 0.36, 0.18, 0.07
+
+root> 
+
+root> show chassis routing-engine | no-more 
 Routing Engine status:
     DRAM                      2048 MB (2048 MB installed)
-    Memory utilization          40 percent
+    Memory utilization          43 percent
     CPU utilization:
-      User                       1 percent
+      User                       2 percent
       Background                 0 percent
       Kernel                     3 percent
       Interrupt                  6 percent
-      Idle                      90 percent
+      Idle                      89 percent
     Model                          RE-VMX
     Serial ID                      VM5543516AC4
-    Start time                     2025-05-26 01:18:20 UTC
-    Uptime                         1 hour, 23 minutes, 48 seconds
+    Start time                     2025-05-27 01:17:12 UTC
+    Uptime                         4 hours, 45 minutes, 11 seconds
     Last reboot reason             0x10:misc hardware reason 
     Load averages:                 1 minute   5 minute  15 minute
-                                       0.07       0.02       0.00
+                                       0.39       0.19       0.07
 
 root> 
 
 root> show system uptime 
-Current time: 2025-05-26 02:42:11 UTC
-System booted: 2025-05-26 01:18:20 UTC (01:23:51 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (01:23:07 ago)
-Last configured: 2025-05-26 01:27:26 UTC (01:14:45 ago) by root
- 2:42AM  up 1:24, 2 users, load averages: 0.06, 0.02, 0.00
+Current time: 2025-05-27 06:02:29 UTC
+System booted: 2025-05-27 01:17:12 UTC (04:45:17 ago)
+Protocols started: 2025-05-27 01:17:42 UTC (04:44:47 ago)
+Last configured: 2025-05-27 01:19:05 UTC (04:43:24 ago) by root
+ 6:02AM  up 4:45, 5 users, load averages: 0.33, 0.18, 0.07
 
 root> 
 
-root> show interfaces terse | no-more 
+root> show interfaces terse 
 Interface               Admin Link Proto    Local                 Remote
 ge-0/0/0                up    up
 ge-0/0/0.0              up    up   inet     192.168.110.2/24
@@ -177,7 +186,7 @@ vtep                    up    up
 
 root> 
 
-root> show interfaces detail | no-more 
+root> show interfaces detail 
 Physical interface: ge-0/0/0, Enabled, Physical link is Up
   Interface index: 137, SNMP ifIndex: 513, Generation: 140
   Link-level type: Ethernet, MTU: 1514, MRU: 1522, Speed: 1000mbps, BPDU Error: None, MAC-REWRITE Error: None, Loopback: Disabled, Source filtering: Disabled, Flow control: Enabled
@@ -187,18 +196,18 @@ Physical interface: ge-0/0/0, Enabled, Physical link is Up
   Link flags     : None
   CoS queues     : 8 supported, 8 maximum usable queues
   Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:be:00, Hardware address: 00:05:86:71:be:00
-  Last flapped   : 2025-05-26 01:19:42 UTC (01:22:29 ago)
+  Current address: 00:05:86:71:fc:00, Hardware address: 00:05:86:71:fc:00
+  Last flapped   : 2025-05-27 01:18:22 UTC (04:44:07 ago)
   Statistics last cleared: Never
   Traffic statistics:
-   Input  bytes  :               420584                    0 bps
-   Output bytes  :              2428081                    0 bps
-   Input  packets:                 8242                    0 pps
-   Output packets:                15844                    0 pps
+   Input  bytes  :              1997870                25952 bps
+   Output bytes  :              9790523               161088 bps
+   Input  packets:                35495                   69 pps
+   Output packets:                63695                  140 pps
    IPv6 transit statistics:
-    Input  bytes  :                 168
+    Input  bytes  :                 448
     Output bytes  :                   0
-    Input  packets:                   3
+    Input  packets:                   8
     Output packets:                   0
   Active alarms  : None
   Active defects : None
@@ -207,19 +216,19 @@ Physical interface: ge-0/0/0, Enabled, Physical link is Up
   Logical interface ge-0/0/0.0 (Index 329) (SNMP ifIndex 523) (Generation 138)
     Flags: Up SNMP-Traps 0x4004000 Encapsulation: ENET2
     Traffic statistics:
-     Input  bytes  :               466726
-     Output bytes  :              2333017
-     Input  packets:                 9314
-     Output packets:                15844
+     Input  bytes  :              2065774
+     Output bytes  :              9408353
+     Input  packets:                36874
+     Output packets:                63695
     Local statistics:
-     Input  bytes  :               409142
-     Output bytes  :              2333017
-     Input  packets:                 8129
-     Output packets:                15844
+     Input  bytes  :              1944712
+     Output bytes  :              9408353
+     Input  packets:                34835
+     Output packets:                63695
     Transit statistics:
-     Input  bytes  :                57584                    0 bps
+     Input  bytes  :               121062                    0 bps
      Output bytes  :                    0                    0 bps
-     Input  packets:                 1185                    0 pps
+     Input  packets:                 2039                    0 pps
      Output packets:                    0                    0 pps
     Protocol inet, MTU: 1500, Generation: 152, Route table: 0
       Flags: Sendbcast-pkt-to-re, Is-Primary
@@ -382,8 +391,8 @@ Physical interface: ge-0/0/1, Enabled, Physical link is Up
   Link flags     : None
   CoS queues     : 8 supported, 8 maximum usable queues
   Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:be:01, Hardware address: 00:05:86:71:be:01
-  Last flapped   : 2025-05-26 01:19:42 UTC (01:22:29 ago)
+  Current address: 00:05:86:71:fc:01, Hardware address: 00:05:86:71:fc:01
+  Last flapped   : 2025-05-27 01:18:22 UTC (04:44:07 ago)
   Statistics last cleared: Never
   Traffic statistics:
    Input  bytes  :                    0                    0 bps
@@ -408,8 +417,8 @@ Physical interface: ge-0/0/2, Enabled, Physical link is Up
   Link flags     : None
   CoS queues     : 8 supported, 8 maximum usable queues
   Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:be:02, Hardware address: 00:05:86:71:be:02
-  Last flapped   : 2025-05-26 01:19:42 UTC (01:22:29 ago)
+  Current address: 00:05:86:71:fc:02, Hardware address: 00:05:86:71:fc:02
+  Last flapped   : 2025-05-27 01:18:22 UTC (04:44:07 ago)
   Statistics last cleared: Never
   Traffic statistics:
    Input  bytes  :                    0                    0 bps
@@ -434,8 +443,8 @@ Physical interface: ge-0/0/3, Enabled, Physical link is Up
   Link flags     : None
   CoS queues     : 8 supported, 8 maximum usable queues
   Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:be:03, Hardware address: 00:05:86:71:be:03
-  Last flapped   : 2025-05-26 01:19:42 UTC (01:22:29 ago)
+  Current address: 00:05:86:71:fc:03, Hardware address: 00:05:86:71:fc:03
+  Last flapped   : 2025-05-27 01:18:22 UTC (04:44:07 ago)
   Statistics last cleared: Never
   Traffic statistics:
    Input  bytes  :                    0                    0 bps
@@ -460,8 +469,8 @@ Physical interface: ge-0/0/4, Enabled, Physical link is Up
   Link flags     : None
   CoS queues     : 8 supported, 8 maximum usable queues
   Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:be:04, Hardware address: 00:05:86:71:be:04
-  Last flapped   : 2025-05-26 01:19:42 UTC (01:22:29 ago)
+  Current address: 00:05:86:71:fc:04, Hardware address: 00:05:86:71:fc:04
+  Last flapped   : 2025-05-27 01:18:22 UTC (04:44:07 ago)
   Statistics last cleared: Never
   Traffic statistics:
    Input  bytes  :                    0                    0 bps
@@ -486,8 +495,8 @@ Physical interface: ge-0/0/5, Enabled, Physical link is Up
   Link flags     : None
   CoS queues     : 8 supported, 8 maximum usable queues
   Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:be:05, Hardware address: 00:05:86:71:be:05
-  Last flapped   : 2025-05-26 01:19:42 UTC (01:22:29 ago)
+  Current address: 00:05:86:71:fc:05, Hardware address: 00:05:86:71:fc:05
+  Last flapped   : 2025-05-27 01:18:22 UTC (04:44:07 ago)
   Statistics last cleared: Never
   Traffic statistics:
    Input  bytes  :                    0                    0 bps
@@ -512,8 +521,8 @@ Physical interface: ge-0/0/6, Enabled, Physical link is Up
   Link flags     : None
   CoS queues     : 8 supported, 8 maximum usable queues
   Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:be:06, Hardware address: 00:05:86:71:be:06
-  Last flapped   : 2025-05-26 01:19:42 UTC (01:22:29 ago)
+  Current address: 00:05:86:71:fc:06, Hardware address: 00:05:86:71:fc:06
+  Last flapped   : 2025-05-27 01:18:22 UTC (04:44:07 ago)
   Statistics last cleared: Never
   Traffic statistics:
    Input  bytes  :                    0                    0 bps
@@ -538,8 +547,8 @@ Physical interface: ge-0/0/7, Enabled, Physical link is Up
   Link flags     : None
   CoS queues     : 8 supported, 8 maximum usable queues
   Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:be:07, Hardware address: 00:05:86:71:be:07
-  Last flapped   : 2025-05-26 01:19:42 UTC (01:22:29 ago)
+  Current address: 00:05:86:71:fc:07, Hardware address: 00:05:86:71:fc:07
+  Last flapped   : 2025-05-27 01:18:22 UTC (04:44:07 ago)
   Statistics last cleared: Never
   Traffic statistics:
    Input  bytes  :                    0                    0 bps
@@ -564,8 +573,8 @@ Physical interface: ge-0/0/8, Enabled, Physical link is Up
   Link flags     : None
   CoS queues     : 8 supported, 8 maximum usable queues
   Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:be:08, Hardware address: 00:05:86:71:be:08
-  Last flapped   : 2025-05-26 01:19:42 UTC (01:22:29 ago)
+  Current address: 00:05:86:71:fc:08, Hardware address: 00:05:86:71:fc:08
+  Last flapped   : 2025-05-27 01:18:22 UTC (04:44:07 ago)
   Statistics last cleared: Never
   Traffic statistics:
    Input  bytes  :                    0                    0 bps
@@ -590,8 +599,8 @@ Physical interface: ge-0/0/9, Enabled, Physical link is Up
   Link flags     : None
   CoS queues     : 8 supported, 8 maximum usable queues
   Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:be:09, Hardware address: 00:05:86:71:be:09
-  Last flapped   : 2025-05-26 01:19:42 UTC (01:22:29 ago)
+  Current address: 00:05:86:71:fc:09, Hardware address: 00:05:86:71:fc:09
+  Last flapped   : 2025-05-27 01:18:22 UTC (04:44:07 ago)
   Statistics last cleared: Never
   Traffic statistics:
    Input  bytes  :                    0                    0 bps
@@ -680,23 +689,23 @@ Physical interface: .local., Enabled, Physical link is Up
   Logical interface .local..3 (Index 321) (SNMP ifIndex 0) (Generation 130)
     Flags: Down Point-To-Point Encapsulation: Unspecified
     Bandwidth: 0
-    Protocol inet, MTU: Unlimited, Generation: 138, Route table: 3
-      Flags: None
-    Protocol iso, MTU: Unlimited, Generation: 139, Route table: 3
-      Flags: None
-    Protocol inet6, MTU: Unlimited, Generation: 141, Route table: 3
+    Protocol vpls, MTU: Unlimited, Generation: 138, Route table: 3
       Flags: None
 
   Logical interface .local..4 (Index 322) (SNMP ifIndex 0) (Generation 131)
     Flags: Down Point-To-Point Encapsulation: Unspecified
     Bandwidth: 0
-    Protocol mpls, MTU: Unlimited, Maximum labels: 3, Generation: 140, Route table: 4
+    Protocol inet, MTU: Unlimited, Generation: 141, Route table: 4
+      Flags: None
+    Protocol iso, MTU: Unlimited, Generation: 142, Route table: 4
+      Flags: None
+    Protocol inet6, MTU: Unlimited, Generation: 144, Route table: 4
       Flags: None
 
   Logical interface .local..5 (Index 323) (SNMP ifIndex 0) (Generation 132)
     Flags: Down Point-To-Point Encapsulation: Unspecified
     Bandwidth: 0
-    Protocol vpls, MTU: Unlimited, Generation: 142, Route table: 5
+    Protocol mpls, MTU: Unlimited, Maximum labels: 3, Generation: 143, Route table: 5
       Flags: None
 
 Physical interface: cbp0, Enabled, Physical link is Up
@@ -708,7 +717,7 @@ Physical interface: cbp0, Enabled, Physical link is Up
   Link flags     : None
   Physical info  : Unspecified
   Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:be:11, Hardware address: 00:05:86:71:be:11
+  Current address: 00:05:86:71:fc:11, Hardware address: 00:05:86:71:fc:11
   Alternate link address: Unspecified
   Last flapped   : Never
   Statistics last cleared: Never
@@ -835,11 +844,11 @@ Physical interface: em1, Enabled, Physical link is Up
      Output bytes  :                  362
      Input  packets:                    0
      Output packets:                    5
-    Protocol inet, MTU: 1500, Generation: 143, Route table: 1
+    Protocol inet, MTU: 1500, Generation: 139, Route table: 1
       Flags: Is-Primary
       Addresses, Flags: Is-Preferred Is-Primary
         Destination: 172.16/16, Local: 172.16.0.1, Broadcast: 172.16.255.255, Generation: 1
-    Protocol inet6, MTU: 1500, Generation: 144, Route table: 1
+    Protocol inet6, MTU: 1500, Generation: 140, Route table: 1
       Flags: Is-Primary
       Addresses, Flags: Is-Preferred
         Destination: fe80::/64, Local: fe80::5200:ff:fe01:1
@@ -861,8 +870,8 @@ Physical interface: em2, Enabled, Physical link is Up
   Traffic statistics:
    Input  bytes  :                    0
    Output bytes  :                    0
-   Input  packets:                 8701
-   Output packets:                16510
+   Input  packets:                35537
+   Output packets:                63695
    IPv6 transit statistics:
     Input  bytes  :                   0
     Output bytes  :                   0
@@ -986,7 +995,7 @@ Physical interface: irb, Enabled, Physical link is Up
   Link flags     : None
   Physical info  : Unspecified
   Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:c1:f0, Hardware address: 00:05:86:71:c1:f0
+  Current address: 00:05:86:71:ff:f0, Hardware address: 00:05:86:71:ff:f0
   Alternate link address: Unspecified
   Last flapped   : Never
   Statistics last cleared: Never
@@ -1015,10 +1024,10 @@ Physical interface: lo0, Enabled, Physical link is Up
   Last flapped   : Never
   Statistics last cleared: Never
   Traffic statistics:
-   Input  bytes  :                 3637
-   Output bytes  :                 3637
-   Input  packets:                   53
-   Output packets:                   53
+   Input  bytes  :                 5177
+   Output bytes  :                 5177
+   Input  packets:                   87
+   Output packets:                   87
    IPv6 transit statistics:
     Input  bytes  :                   0
     Output bytes  :                   0
@@ -1028,15 +1037,15 @@ Physical interface: lo0, Enabled, Physical link is Up
   Logical interface lo0.16384 (Index 324) (SNMP ifIndex 21) (Generation 133)
     Flags: Down SNMP-Traps Encapsulation: Unspecified
     Traffic statistics:
-     Input  bytes  :                  232
-     Output bytes  :                  232
-     Input  packets:                    4
-     Output packets:                    4
+     Input  bytes  :                  600
+     Output bytes  :                  600
+     Input  packets:                   12
+     Output packets:                   12
     Local statistics:
-     Input  bytes  :                  232
-     Output bytes  :                  232
-     Input  packets:                    4
-     Output packets:                    4
+     Input  bytes  :                  600
+     Output bytes  :                  600
+     Input  packets:                   12
+     Output packets:                   12
     Transit statistics:
      Input  bytes  :                    0                    0 bps
      Output bytes  :                    0                    0 bps
@@ -1049,20 +1058,20 @@ Physical interface: lo0, Enabled, Physical link is Up
   Logical interface lo0.16385 (Index 325) (SNMP ifIndex 22) (Generation 134)
     Flags: Down SNMP-Traps Encapsulation: Unspecified
     Traffic statistics:
-     Input  bytes  :                 3405
-     Output bytes  :                 3405
-     Input  packets:                   49
-     Output packets:                   49
+     Input  bytes  :                 4577
+     Output bytes  :                 4577
+     Input  packets:                   75
+     Output packets:                   75
      IPv6 transit statistics:
       Input  bytes  :                   0
       Output bytes  :                   0
       Input  packets:                   0
       Output packets:                   0
     Local statistics:
-     Input  bytes  :                 3405
-     Output bytes  :                 3405
-     Input  packets:                   49
-     Output packets:                   49
+     Input  bytes  :                 4577
+     Output bytes  :                 4577
+     Input  packets:                   75
+     Output packets:                   75
     Transit statistics:
      Input  bytes  :                    0                    0 bps
      Output bytes  :                    0                    0 bps
@@ -1184,7 +1193,7 @@ Physical interface: pip0, Enabled, Physical link is Up
   Link flags     : None
   Physical info  : Unspecified
   Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:c1:b0, Hardware address: 00:05:86:71:c1:b0
+  Current address: 00:05:86:71:ff:b0, Hardware address: 00:05:86:71:ff:b0
   Alternate link address: Unspecified
   Last flapped   : Never
   Statistics last cleared: Never
@@ -1239,1449 +1248,11 @@ Physical interface: vtep, Enabled, Physical link is Up
   Interface index: 133, SNMP ifIndex: 506, Generation: 136
   Type: Software-Pseudo, Link-level type: VxLAN-Tunnel-Endpoint, MTU: 1600, Clocking: Unspecified, Speed: Unlimited
   Device flags   : Present Running
-  Link type      : Full-Duplex
-  Link flags     : None
-  Physical info  : Unspecified
-  Hold-times     : Up 0 ms, Down 0 ms
-  Current address: Unspecified, Hardware address: Unspecified
-  Alternate link address: Unspecified
-  Last flapped   : Never
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0
-   Output bytes  :                    0
-   Input  packets:                    0
-   Output packets:                    0
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-
-root> 
-
-root> show arp 
-MAC Address       Address         Name                      Interface           Flags
-00:50:56:c0:00:08 192.168.110.1   192.168.110.1             ge-0/0/0.0          none
-
-root> 
-
-root> show system uptime 
-Current time: 2025-05-26 02:42:12 UTC
-System booted: 2025-05-26 01:18:20 UTC (01:23:52 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (01:23:08 ago)
-Last configured: 2025-05-26 01:27:26 UTC (01:14:46 ago) by root
- 2:42AM  up 1:24, 2 users, load averages: 0.06, 0.02, 0.00
-
-root> 
-
-root> show route summary 
-Router ID: 192.168.110.2
-
-inet.0: 2 destinations, 2 routes (2 active, 0 holddown, 0 hidden)
-              Direct:      1 routes,      1 active
-               Local:      1 routes,      1 active
-
-root> 
-
-root> show ospf interface brief 
-OSPF instance is not running
-
-root> 
-
-root> show isis adjacency 
-IS-IS instance is not running
-
-root> 
-
-root> show mpls interface 
-MPLS not configured
-
-root> 
-
-root> show ldp session 
-LDP instance is not running
-
-root> 
-
-root> show rsvp interface 
-RSVP not configured
-
-root> 
-
-root> show lldp neighbor 
-
-root> 
-
-root> show mpls lsp 
-MPLS not configured
-
-root> 
-
-root> show bgp summary 
-BGP is not running
-
-root> 
-
-root> show configuration system services 
-ssh;
-
-root> 
-
-root> show configuration protocols 
-
-root> 
-
-root> show configuration firewall 
-
-root> 
-
-root> show system uptime 
-Current time: 2025-05-26 02:42:13 UTC
-System booted: 2025-05-26 01:18:20 UTC (01:23:53 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (01:23:09 ago)
-Last configured: 2025-05-26 01:27:26 UTC (01:14:47 ago) by root
- 2:42AM  up 1:24, 2 users, load averages: 0.06, 0.02, 0.00
-
-root> 
-
-root> show log messages | match "error|warning|critical" | last 10 
-May 26 01:19:09   /kernel: em0error setting host MAC filter table
-May 26 01:19:09   /kernel: em1error setting host MAC filter table
-May 26 01:19:09   /kernel: em2error setting host MAC filter table
-May 26 01:19:09   /kernel: em3error setting host MAC filter table
-May 26 01:19:09   /kernel: em4error setting host MAC filter table
-May 26 01:19:09   /kernel: em5error setting host MAC filter table
-May 26 01:27:25   chassisd[3003]: CHASSISD_FILE_OPEN: File open: /dev/acb, error: 2 -- No such file or directory
-May 26 01:27:25   chassisd[3003]: CHASSISD_FILE_OPEN: File open: /dev/acb, error: 2 -- No such file or directory
-May 26 01:27:27   /kernel: KERN_ARP_DUPLICATE_ADDR: duplicate IP address 192.168.110.2! sent from address: 00:50:56:e7:df:30 (error count = 1)
----(more 0%)---
-                                        
-root> 
-
-root> show system uptime 
-Current time: 2025-05-26 02:42:13 UTC
-System booted: 2025-05-26 01:18:20 UTC (01:23:53 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (01:23:09 ago)
-Last configured: 2025-05-26 01:27:26 UTC (01:14:47 ago) by root
- 2:42AM  up 1:24, 2 users, load averages: 0.06, 0.02, 0.00
-
-root> 
-
-root> show log chassisd | match "error|warning|critical" | last 10 
-May  1 15:40:28  fpc_down slot 0 reason Error cargs 0x0
-May  1 15:40:28  fpc_offline_now - slot 0, reason: Error, error Unresponsive transition state 1
-May  1 15:40:28  FPC#0 - power off [addr 0x11] reason: Error
-May  1 15:40:28  send: red alarm set, device FPC 0, reason FPC 0 Hard errors
-May  1 16:09:19  ch_power_off_frus_cleanup_exit: Chassisd exiting with error-code= 69
-May  1 16:14:47  rtsock_inform_fru_offline: inform peer type 17, index 0 offline, error 0
-May  1 16:14:47  rtsock_reset_self_ping_statistics: reset fpc_slot 0 self_ping stats, error 0
-May  1 16:14:47  fpc_offline_now - slot 0, reason: None, error Chassis connection dropped transition state 1
-May  1 16:14:55  ch_power_off_frus_cleanup_exit: Chassisd exiting with error-code= 69
----(more 44%)---
-                                        
-root> 
-
-root> show system uptime 
-Current time: 2025-05-26 02:42:13 UTC
-System booted: 2025-05-26 01:18:20 UTC (01:23:53 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (01:23:09 ago)
-Last configured: 2025-05-26 01:27:26 UTC (01:14:47 ago) by root
- 2:42AM  up 1:24, 2 users, load averages: 0.06, 0.02, 0.00
-
-root> 
-
-root> show configuration | display set 
-set version 14.1R4.8
-set system root-authentication encrypted-password "$1$nwYSITa9$X5Wq7fYCj1AKg.9A0zvij1"
-set system services ssh
-set system syslog user * any emergency
-set system syslog file messages any notice
-set system syslog file messages authorization info
-set system syslog file interactive-commands interactive-commands any
-set interfaces ge-0/0/0 unit 0 family inet address 192.168.110.2/24
-
-root> 
-
-root> show system uptime 
-Current time: 2025-05-26 02:42:14 UTC
-System booted: 2025-05-26 01:18:20 UTC (01:23:54 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (01:23:10 ago)
-Last configured: 2025-05-26 01:27:26 UTC (01:14:48 ago) by root
- 2:42AM  up 1:24, 2 users, load averages: 0.06, 0.02, 0.00
-
-root> 
-
-root> --- JUNOS 14.1R4.8 built 2015-01-28 03:38:12 UTC
-
-[3g[1000;9HH[1000;17HH[1000;25HH[1000;33HH[1000;41HH[1000;49HH[1000;57HH[1000;65HH[1000;73HH[1000;81HH[1000;89HH[1000;97HH[1000;105HH[1000;113HH[1000;121HH[1000;129HH[1000;137HH[1000;145HH[1000;153HH[1000;161HH[1000;169HH[1000;177HH[1000;185HH[1000;193HH[1000;201HH[1000;209HH[1000;217HH[1000;225HH[1000;233HH[1000;241HH[1000;249HH[1000;257HH[1000;265HH[1000;273HH[1000;281HH[1000;289HH[1000;297HH[1000;305HH[1000;313HH[1000;321HH[1000;329HH[1000;337HH[1000;345HH[1000;353HH[1000;361HH[1000;369HH[1000;377HH[1000;385HH[1000;393HH[1000;401HH[1000;409HH[1000;417HH[1000;425HH[1000;433HH[1000;441HH[1000;449HH[1000;457HH[1000;465HH[1000;473HH[1000;481HH[1000;489HH[1000;497HH[1000;505HH
-root@% 
-root@% 
-root@% 
-root@% cli
-root> set cli screen-width 511 
-Screen width set to 511
-
-root> set cli complete-on-space off 
-Disabling complete-on-space
-
-root> set cli screen-length 0 
-Screen length set to 0
-
-root> 
-
-root> 
-
-root> show system uptime 
-Current time: 2025-05-26 06:19:29 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:01:09 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:00:25 ago)
-Last configured: 2025-05-26 01:27:26 UTC (04:52:03 ago) by root
- 6:19AM  up 5:01, 2 users, load averages: 0.00, 0.00, 0.01
-
-root> 
-
-root> show system uptime 
-Current time: 2025-05-26 06:19:29 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:01:09 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:00:25 ago)
-Last configured: 2025-05-26 01:27:26 UTC (04:52:03 ago) by root
- 6:19AM  up 5:01, 2 users, load averages: 0.00, 0.00, 0.01
-
-root> 
-
-root> show version | no-more 
-Model: vmx
-Junos: 14.1R4.8
-JUNOS Base OS Software Suite [14.1R4.8]
-JUNOS Base OS boot [14.1R4.8]
-JUNOS Crypto Software Suite [14.1R4.8]
-JUNOS Online Documentation [14.1R4.8]
-JUNOS Kernel Software Suite [14.1R4.8]
-JUNOS Routing Software Suite [14.1R4.8]
-JUNOS Runtime Software Suite [14.1R4.8]
-JUNOS Services AACL PIC package [14.1R4.8]
-JUNOS Services Application Level Gateway [14.1R4.8]
-JUNOS Services Application Level Gateway (xlp64) [14.1R4.8]
-JUNOS Services Application Level Gateway (xlr64) [14.1R4.8]
-JUNOS AppId Services PIC Package [14.1R4.8]
-JUNOS Services AppId PIC package (xlr64) [14.1R4.8]
-JUNOS Border Gateway Function PIC package [14.1R4.8]
-JUNOS Services Captive Portal and Content Delivery PIC package [14.1R4.8]
-JUNOS Services HTTP Content Management PIC package [14.1R4.8]
-JUNOS Services HTTP Content Management PIC package (xlr64) [14.1R4.8]
-JUNOS IDP Services PIC Package [14.1R4.8]
-JUNOS Services JFLOW PIC package [14.1R4.8]
-JUNOS Services JFLOW PIC package (xlp64) [14.1R4.8]
-JUNOS Services LL-PDF PIC package [14.1R4.8]
-JUNOS MobileNext PIC package [14.1R4.8]
-JUNOS MobileNext PIC package (xlr64) [14.1R4.8]
-JUNOS Services Mobile Subscriber Service Container package [14.1R4.8]
-JUNOS Services Mobile Subscriber Service PIC package (xlr64) [14.1R4.8]
-JUNOS Services NAT PIC package [14.1R4.8]
-JUNOS Services NAT PIC package (xlp64) [14.1R4.8]
-JUNOS Services NAT PIC package (xlr64) [14.1R4.8]
-JUNOS Services PTSP PIC package [14.1R4.8]
-JUNOS Services RPM PIC package [14.1R4.8]
-JUNOS Services RPM PIC package (xlp64) [14.1R4.8]
-JUNOS Services Stateful Firewall PIC package [14.1R4.8]
-JUNOS Services Stateful Firewall PIC package (xlp64) [14.1R4.8]
-JUNOS Services Stateful Firewall PIC package (xlr64) [14.1R4.8]
-JUNOS BSG PIC package [14.1R4.8]
-JUNOS Services Crypto Base PIC package [14.1R4.8]
-JUNOS Services Crypto Base PIC package [14.1R4.8]
-JUNOS Services Crypto Base PIC package(xlr64) [14.1R4.8]
-JUNOS Services IPSec PIC package [14.1R4.8]
-JUNOS Services IPSec PIC package [14.1R4.8]
-JUNOS Services IPSec PIC(xlr64) package [14.1R4.8]
-JUNOS Services SSL PIC package [14.1R4.8]
-JUNOS Packet Forwarding Engine Trio Simulation Package [14.1R4.8]
-
-root> 
-
-root> show system uptime 
-Current time: 2025-05-26 06:19:29 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:01:09 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:00:25 ago)
-Last configured: 2025-05-26 01:27:26 UTC (04:52:03 ago) by root
- 6:19AM  up 5:01, 2 users, load averages: 0.00, 0.00, 0.01
-
-root> 
-
-root> show system uptime 
-Current time: 2025-05-26 06:19:29 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:01:09 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:00:25 ago)
-Last configured: 2025-05-26 01:27:26 UTC (04:52:03 ago) by root
- 6:19AM  up 5:01, 2 users, load averages: 0.00, 0.00, 0.01
-
-root> 
-
-root> show chassis routing-engine | no-more 
-Routing Engine status:
-    DRAM                      2048 MB (2048 MB installed)
-    Memory utilization          40 percent
-    CPU utilization:
-      User                       2 percent
-      Background                 0 percent
-      Kernel                     1 percent
-      Interrupt                  5 percent
-      Idle                      92 percent
-    Model                          RE-VMX
-    Serial ID                      VM5543516AC4
-    Start time                     2025-05-26 01:18:20 UTC
-    Uptime                         5 hours, 1 minute, 8 seconds
-    Last reboot reason             0x10:misc hardware reason 
-    Load averages:                 1 minute   5 minute  15 minute
-                                       0.00       0.00       0.01
-
-root> 
-
-root> show system uptime 
-Current time: 2025-05-26 06:19:29 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:01:09 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:00:25 ago)
-Last configured: 2025-05-26 01:27:26 UTC (04:52:03 ago) by root
- 6:19AM  up 5:01, 2 users, load averages: 0.00, 0.00, 0.01
-
-root> 
-
-root> show system uptime 
-Current time: 2025-05-26 06:19:29 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:01:09 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:00:25 ago)
-Last configured: 2025-05-26 01:27:26 UTC (04:52:03 ago) by root
- 6:19AM  up 5:01, 2 users, load averages: 0.00, 0.00, 0.01
-
-root> 
-
-root> show interfaces terse | no-more 
-Interface               Admin Link Proto    Local                 Remote
-ge-0/0/0                up    up
-ge-0/0/0.0              up    up   inet     192.168.110.2/24
-                                   multiservice
-lc-0/0/0                up    up
-lc-0/0/0.32769          up    up   vpls    
-pfe-0/0/0               up    up
-pfe-0/0/0.16383         up    up   inet    
-                                   inet6   
-pfh-0/0/0               up    up
-pfh-0/0/0.16383         up    up   inet    
-ge-0/0/1                up    up
-ge-0/0/2                up    up
-ge-0/0/3                up    up
-ge-0/0/4                up    up
-ge-0/0/5                up    up
-ge-0/0/6                up    up
-ge-0/0/7                up    up
-ge-0/0/8                up    up
-ge-0/0/9                up    up
-cbp0                    up    up
-demux0                  up    up
-dsc                     up    up
-em0                     up    up
-em1                     up    up
-em1.0                   up    up   inet     172.16.0.1/16   
-                                   inet6    fe80::5200:ff:fe01:1/64
-em2                     up    up
-em3                     up    up
-em4                     up    up
-em5                     up    up
-gre                     up    up
-ipip                    up    up
-irb                     up    up
-lo0                     up    up
-lo0.16384               up    up   inet     127.0.0.1           --> 0/0
-lo0.16385               up    up   inet     128.0.0.1           --> 0/0
-                                            128.0.0.4           --> 0/0
-                                   inet6    fe80::200:f:fc00:0
-lo0.32768               up    up  
-lsi                     up    up
-mtun                    up    up
-pimd                    up    up
-pime                    up    up
-pip0                    up    up
-pp0                     up    up
-tap                     up    up
-vtep                    up    up
-
-root> 
-
-root> show system uptime 
-Current time: 2025-05-26 06:19:30 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:01:10 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:00:26 ago)
-Last configured: 2025-05-26 01:27:26 UTC (04:52:04 ago) by root
- 6:19AM  up 5:01, 2 users, load averages: 0.00, 0.00, 0.01
-
-root> 
-
-root> show interfaces detail | no-more 
-Physical interface: ge-0/0/0, Enabled, Physical link is Up
-  Interface index: 137, SNMP ifIndex: 513, Generation: 140
-  Link-level type: Ethernet, MTU: 1514, MRU: 1522, Speed: 1000mbps, BPDU Error: None, MAC-REWRITE Error: None, Loopback: Disabled, Source filtering: Disabled, Flow control: Enabled
-  Pad to minimum frame size: Disabled
-  Device flags   : Present Running
-  Interface flags: SNMP-Traps Internal: 0x4000
-  Link flags     : None
-  CoS queues     : 8 supported, 8 maximum usable queues
-  Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:be:00, Hardware address: 00:05:86:71:be:00
-  Last flapped   : 2025-05-26 01:19:42 UTC (04:59:48 ago)
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :               678277                    0 bps
-   Output bytes  :              3156685                  144 bps
-   Input  packets:                11974                    0 pps
-   Output packets:                21389                    0 pps
-   IPv6 transit statistics:
-    Input  bytes  :                 336
-    Output bytes  :                   0
-    Input  packets:                   6
-    Output packets:                   0
-  Active alarms  : None
-  Active defects : None
-  Interface transmit statistics: Disabled
-
-  Logical interface ge-0/0/0.0 (Index 329) (SNMP ifIndex 523) (Generation 138)
-    Flags: Up SNMP-Traps 0x4004000 Encapsulation: ENET2
-    Traffic statistics:
-     Input  bytes  :               697508
-     Output bytes  :              3028363
-     Input  packets:                12819
-     Output packets:                21389
-    Local statistics:
-     Input  bytes  :               639924
-     Output bytes  :              3028259
-     Input  packets:                11634
-     Output packets:                21387
-    Transit statistics:
-     Input  bytes  :                57584                    0 bps
-     Output bytes  :                  104                    0 bps
-     Input  packets:                 1185                    0 pps
-     Output packets:                    2                    0 pps
-    Protocol inet, MTU: 1500, Generation: 152, Route table: 0
-      Flags: Sendbcast-pkt-to-re, Is-Primary
-      Addresses, Flags: Is-Default Is-Preferred Is-Primary
-        Destination: 192.168.110/24, Local: 192.168.110.2, Broadcast: 192.168.110.255, Generation: 140
-    Protocol multiservice, MTU: Unlimited, Generation: 153, Route table: 0
-      Flags: Is-Primary
-      Policer: Input: __default_arp_policer__
-
-Physical interface: lc-0/0/0, Enabled, Physical link is Up
-  Interface index: 134, SNMP ifIndex: 507, Generation: 137
-  Type: Unspecified, Link-level type: Unspecified, MTU: 0, Clocking: Unspecified, Speed: 800mbps
-  Device flags   : Present Running
-  Link type      : Unspecified
-  Link flags     : None
-  Physical info  : Unspecified
-  Hold-times     : Up 0 ms, Down 0 ms
-  Current address: Unspecified, Hardware address: Unspecified
-  Alternate link address: Unspecified
-  Last flapped   : Never
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0
-   Output bytes  :                    0
-   Input  packets:                    0
-   Output packets:                    0
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-
-  Logical interface lc-0/0/0.32769 (Index 326) (SNMP ifIndex 508) (Generation 135)
-    Flags: Up Encapsulation: ENET2
-    Bandwidth: 0
-    Traffic statistics:
-     Input  bytes  :                    0
-     Output bytes  :                    0
-     Input  packets:                    0
-     Output packets:                    0
-    Local statistics:
-     Input  bytes  :                    0
-     Output bytes  :                    0
-     Input  packets:                    0
-     Output packets:                    0
-    Transit statistics:
-     Input  bytes  :                    0                    0 bps
-     Output bytes  :                    0                    0 bps
-     Input  packets:                    0                    0 pps
-     Output packets:                    0                    0 pps
-    Protocol vpls, MTU: Unlimited, Generation: 148, Route table: 1
-      Flags: Is-Primary
-
-Physical interface: pfe-0/0/0, Enabled, Physical link is Up
-  Interface index: 136, SNMP ifIndex: 510, Generation: 139
-  Type: Unspecified, Link-level type: Unspecified, MTU: 0, Clocking: Unspecified, Speed: 800mbps
-  Device flags   : Present Running
-  Link type      : Unspecified
-  Link flags     : None
-  Physical info  : Unspecified
-  Hold-times     : Up 0 ms, Down 0 ms
-  Current address: Unspecified, Hardware address: Unspecified
-  Alternate link address: Unspecified
-  Last flapped   : Never
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0
-   Output bytes  :                    0
-   Input  packets:                    0
-   Output packets:                    0
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-
-  Logical interface pfe-0/0/0.16383 (Index 328) (SNMP ifIndex 512) (Generation 137)
-    Flags: Up SNMP-Traps Encapsulation: ENET2
-    Bandwidth: 0
-    Traffic statistics:
-     Input  bytes  :                    0
-     Output bytes  :                    0
-     Input  packets:                    0
-     Output packets:                    0
-     IPv6 transit statistics:
-      Input  bytes  :                   0
-      Output bytes  :                   0
-      Input  packets:                   0
-      Output packets:                   0
-    Local statistics:
-     Input  bytes  :                    0
-     Output bytes  :                    0
-     Input  packets:                    0
-     Output packets:                    0
-    Transit statistics:
-     Input  bytes  :                    0                    0 bps
-     Output bytes  :                    0                    0 bps
-     Input  packets:                    0                    0 pps
-     Output packets:                    0                    0 pps
-     IPv6 transit statistics:
-      Input  bytes  :                   0
-      Output bytes  :                   0
-      Input  packets:                   0
-      Output packets:                   0
-    Protocol inet, MTU: Unlimited, Generation: 150, Route table: 1
-      Flags: None
-    Protocol inet6, MTU: Unlimited, Generation: 151, Route table: 1
-      Flags: None
-
-Physical interface: pfh-0/0/0, Enabled, Physical link is Up
-  Interface index: 135, SNMP ifIndex: 509, Generation: 138
-  Type: Unspecified, Link-level type: Unspecified, MTU: 0, Clocking: Unspecified, Speed: 800mbps
-  Device flags   : Present Running
-  Link type      : Unspecified
-  Link flags     : None
-  Physical info  : Unspecified
-  Hold-times     : Up 0 ms, Down 0 ms
-  Current address: Unspecified, Hardware address: Unspecified
-  Alternate link address: Unspecified
-  Last flapped   : Never
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0
-   Output bytes  :                    0
-   Input  packets:                    0
-   Output packets:                    0
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-
-  Logical interface pfh-0/0/0.16383 (Index 327) (SNMP ifIndex 511) (Generation 136)
-    Flags: Up SNMP-Traps Encapsulation: ENET2
-    Bandwidth: 0
-    Traffic statistics:
-     Input  bytes  :                    0
-     Output bytes  :                    0
-     Input  packets:                    0
-     Output packets:                    0
-    Local statistics:
-     Input  bytes  :                    0
-     Output bytes  :                    0
-     Input  packets:                    0
-     Output packets:                    0
-    Transit statistics:
-     Input  bytes  :                    0                    0 bps
-     Output bytes  :                    0                    0 bps
-     Input  packets:                    0                    0 pps
-     Output packets:                    0                    0 pps
-    Protocol inet, MTU: Unlimited, Generation: 149, Route table: 1
-      Flags: None
-
-Physical interface: ge-0/0/1, Enabled, Physical link is Up
-  Interface index: 138, SNMP ifIndex: 514, Generation: 141
-  Link-level type: Ethernet, MTU: 1514, MRU: 1522, Speed: 1000mbps, BPDU Error: None, MAC-REWRITE Error: None, Loopback: Disabled, Source filtering: Disabled, Flow control: Enabled
-  Pad to minimum frame size: Disabled
-  Device flags   : Present Running
-  Interface flags: SNMP-Traps Internal: 0x4000
-  Link flags     : None
-  CoS queues     : 8 supported, 8 maximum usable queues
-  Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:be:01, Hardware address: 00:05:86:71:be:01
-  Last flapped   : 2025-05-26 01:19:42 UTC (04:59:48 ago)
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0                    0 bps
-   Output bytes  :                    0                    0 bps
-   Input  packets:                    0                    0 pps
-   Output packets:                    0                    0 pps
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-  Active alarms  : None
-  Active defects : None
-  Interface transmit statistics: Disabled
-
-Physical interface: ge-0/0/2, Enabled, Physical link is Up
-  Interface index: 139, SNMP ifIndex: 515, Generation: 142
-  Link-level type: Ethernet, MTU: 1514, MRU: 1522, Speed: 1000mbps, BPDU Error: None, MAC-REWRITE Error: None, Loopback: Disabled, Source filtering: Disabled, Flow control: Enabled
-  Pad to minimum frame size: Disabled
-  Device flags   : Present Running
-  Interface flags: SNMP-Traps Internal: 0x4000
-  Link flags     : None
-  CoS queues     : 8 supported, 8 maximum usable queues
-  Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:be:02, Hardware address: 00:05:86:71:be:02
-  Last flapped   : 2025-05-26 01:19:42 UTC (04:59:48 ago)
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0                    0 bps
-   Output bytes  :                    0                    0 bps
-   Input  packets:                    0                    0 pps
-   Output packets:                    0                    0 pps
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-  Active alarms  : None
-  Active defects : None
-  Interface transmit statistics: Disabled
-
-Physical interface: ge-0/0/3, Enabled, Physical link is Up
-  Interface index: 140, SNMP ifIndex: 516, Generation: 143
-  Link-level type: Ethernet, MTU: 1514, MRU: 1522, Speed: 1000mbps, BPDU Error: None, MAC-REWRITE Error: None, Loopback: Disabled, Source filtering: Disabled, Flow control: Enabled
-  Pad to minimum frame size: Disabled
-  Device flags   : Present Running
-  Interface flags: SNMP-Traps Internal: 0x4000
-  Link flags     : None
-  CoS queues     : 8 supported, 8 maximum usable queues
-  Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:be:03, Hardware address: 00:05:86:71:be:03
-  Last flapped   : 2025-05-26 01:19:42 UTC (04:59:48 ago)
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0                    0 bps
-   Output bytes  :                    0                    0 bps
-   Input  packets:                    0                    0 pps
-   Output packets:                    0                    0 pps
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-  Active alarms  : None
-  Active defects : None
-  Interface transmit statistics: Disabled
-
-Physical interface: ge-0/0/4, Enabled, Physical link is Up
-  Interface index: 141, SNMP ifIndex: 517, Generation: 144
-  Link-level type: Ethernet, MTU: 1514, MRU: 1522, Speed: 1000mbps, BPDU Error: None, MAC-REWRITE Error: None, Loopback: Disabled, Source filtering: Disabled, Flow control: Enabled
-  Pad to minimum frame size: Disabled
-  Device flags   : Present Running
-  Interface flags: SNMP-Traps Internal: 0x4000
-  Link flags     : None
-  CoS queues     : 8 supported, 8 maximum usable queues
-  Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:be:04, Hardware address: 00:05:86:71:be:04
-  Last flapped   : 2025-05-26 01:19:42 UTC (04:59:48 ago)
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0                    0 bps
-   Output bytes  :                    0                    0 bps
-   Input  packets:                    0                    0 pps
-   Output packets:                    0                    0 pps
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-  Active alarms  : None
-  Active defects : None
-  Interface transmit statistics: Disabled
-
-Physical interface: ge-0/0/5, Enabled, Physical link is Up
-  Interface index: 142, SNMP ifIndex: 518, Generation: 145
-  Link-level type: Ethernet, MTU: 1514, MRU: 1522, Speed: 1000mbps, BPDU Error: None, MAC-REWRITE Error: None, Loopback: Disabled, Source filtering: Disabled, Flow control: Enabled
-  Pad to minimum frame size: Disabled
-  Device flags   : Present Running
-  Interface flags: SNMP-Traps Internal: 0x4000
-  Link flags     : None
-  CoS queues     : 8 supported, 8 maximum usable queues
-  Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:be:05, Hardware address: 00:05:86:71:be:05
-  Last flapped   : 2025-05-26 01:19:42 UTC (04:59:48 ago)
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0                    0 bps
-   Output bytes  :                    0                    0 bps
-   Input  packets:                    0                    0 pps
-   Output packets:                    0                    0 pps
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-  Active alarms  : None
-  Active defects : None
-  Interface transmit statistics: Disabled
-
-Physical interface: ge-0/0/6, Enabled, Physical link is Up
-  Interface index: 143, SNMP ifIndex: 519, Generation: 146
-  Link-level type: Ethernet, MTU: 1514, MRU: 1522, Speed: 1000mbps, BPDU Error: None, MAC-REWRITE Error: None, Loopback: Disabled, Source filtering: Disabled, Flow control: Enabled
-  Pad to minimum frame size: Disabled
-  Device flags   : Present Running
-  Interface flags: SNMP-Traps Internal: 0x4000
-  Link flags     : None
-  CoS queues     : 8 supported, 8 maximum usable queues
-  Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:be:06, Hardware address: 00:05:86:71:be:06
-  Last flapped   : 2025-05-26 01:19:42 UTC (04:59:48 ago)
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0                    0 bps
-   Output bytes  :                    0                    0 bps
-   Input  packets:                    0                    0 pps
-   Output packets:                    0                    0 pps
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-  Active alarms  : None
-  Active defects : None
-  Interface transmit statistics: Disabled
-
-Physical interface: ge-0/0/7, Enabled, Physical link is Up
-  Interface index: 144, SNMP ifIndex: 520, Generation: 147
-  Link-level type: Ethernet, MTU: 1514, MRU: 1522, Speed: 1000mbps, BPDU Error: None, MAC-REWRITE Error: None, Loopback: Disabled, Source filtering: Disabled, Flow control: Enabled
-  Pad to minimum frame size: Disabled
-  Device flags   : Present Running
-  Interface flags: SNMP-Traps Internal: 0x4000
-  Link flags     : None
-  CoS queues     : 8 supported, 8 maximum usable queues
-  Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:be:07, Hardware address: 00:05:86:71:be:07
-  Last flapped   : 2025-05-26 01:19:42 UTC (04:59:48 ago)
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0                    0 bps
-   Output bytes  :                    0                    0 bps
-   Input  packets:                    0                    0 pps
-   Output packets:                    0                    0 pps
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-  Active alarms  : None
-  Active defects : None
-  Interface transmit statistics: Disabled
-
-Physical interface: ge-0/0/8, Enabled, Physical link is Up
-  Interface index: 145, SNMP ifIndex: 521, Generation: 148
-  Link-level type: Ethernet, MTU: 1514, MRU: 1522, Speed: 1000mbps, BPDU Error: None, MAC-REWRITE Error: None, Loopback: Disabled, Source filtering: Disabled, Flow control: Enabled
-  Pad to minimum frame size: Disabled
-  Device flags   : Present Running
-  Interface flags: SNMP-Traps Internal: 0x4000
-  Link flags     : None
-  CoS queues     : 8 supported, 8 maximum usable queues
-  Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:be:08, Hardware address: 00:05:86:71:be:08
-  Last flapped   : 2025-05-26 01:19:42 UTC (04:59:48 ago)
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0                    0 bps
-   Output bytes  :                    0                    0 bps
-   Input  packets:                    0                    0 pps
-   Output packets:                    0                    0 pps
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-  Active alarms  : None
-  Active defects : None
-  Interface transmit statistics: Disabled
-
-Physical interface: ge-0/0/9, Enabled, Physical link is Up
-  Interface index: 146, SNMP ifIndex: 522, Generation: 149
-  Link-level type: Ethernet, MTU: 1514, MRU: 1522, Speed: 1000mbps, BPDU Error: None, MAC-REWRITE Error: None, Loopback: Disabled, Source filtering: Disabled, Flow control: Enabled
-  Pad to minimum frame size: Disabled
-  Device flags   : Present Running
-  Interface flags: SNMP-Traps Internal: 0x4000
-  Link flags     : None
-  CoS queues     : 8 supported, 8 maximum usable queues
-  Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:be:09, Hardware address: 00:05:86:71:be:09
-  Last flapped   : 2025-05-26 01:19:42 UTC (04:59:48 ago)
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0                    0 bps
-   Output bytes  :                    0                    0 bps
-   Input  packets:                    0                    0 pps
-   Output packets:                    0                    0 pps
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-  Active alarms  : None
-  Active defects : None
-  Interface transmit statistics: Disabled
-
-Physical interface: .local., Enabled, Physical link is Up
-  Interface index: 0, SNMP ifIndex: 0, Generation: 1
-  Type: Loopback, Link-level type: Interface-Specific, MTU: Unlimited, Clocking: Unspecified, Speed: Unlimited
-  Device flags   : Present Running Loopback
-  Interface flags: Point-To-Point
-  Link type      : Unspecified
-  Link flags     : None
-  Physical info  : Unspecified
-  Hold-times     : Up 0 ms, Down 0 ms
-  Current address: Unspecified, Hardware address: Unspecified
-  Alternate link address: Unspecified
-  Last flapped   : Never
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0
-   Output bytes  :                    0
-   Input  packets:                    0
-   Output packets:                    0
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-
-  Logical interface .local..0 (Index 0) (SNMP ifIndex 0) (Generation 1)
-    Flags: Down Point-To-Point Encapsulation: Unspecified
-    Bandwidth: 0
-    Protocol inet, MTU: Unlimited, Generation: 133, Route table: 0
-      Flags: None
-      Addresses, Flags: Is-Primary
-        Destination: Unspecified, Local: 192.168.110.2, Broadcast: Unspecified, Generation: 139
-    Protocol iso, MTU: Unlimited, Generation: 136, Route table: 0
-      Flags: None
-    Protocol inet6, MTU: Unlimited, Generation: 130, Route table: 0
-      Flags: None
-    Protocol mpls, MTU: Unlimited, Maximum labels: 3, Generation: 132, Route table: 0
-      Flags: None
-    Protocol 61, MTU: Unlimited, Generation: 129, Route table: 0
-      Flags: None
-
-  Logical interface .local..1 (Index 1) (SNMP ifIndex 0) (Generation 2)
-    Flags: Down Point-To-Point Encapsulation: Unspecified
-    Bandwidth: 0
-    Protocol inet, MTU: Unlimited, Generation: 134, Route table: 1
-      Flags: None
-      Addresses, Flags: Is-Primary
-        Destination: Unspecified, Local: 128.0.0.1, Broadcast: Unspecified, Generation: 133
-      Addresses, Flags: None
-        Destination: Unspecified, Local: 128.0.0.4, Broadcast: Unspecified, Generation: 135
-      Addresses, Flags: None
-        Destination: Unspecified, Local: 172.16.0.1, Broadcast: Unspecified, Generation: 129
-    Protocol inet6, MTU: Unlimited, Generation: 131, Route table: 1
-      Flags: None
-      Addresses, Flags: None
-        Destination: Unspecified, Local: fe80::200:f:fc00:0
-    Generation: 137
-      Addresses, Flags: None
-        Destination: Unspecified, Local: fe80::5200:ff:fe01:1
-    Protocol vpls, MTU: Unlimited, Generation: 130
-    Generation: 137, Route table: 1
-      Flags: None
-
-  Logical interface .local..2 (Index 2) (SNMP ifIndex 0) (Generation 2)
-    Flags: Down Point-To-Point Encapsulation: Unspecified
-    Bandwidth: 0
-    Protocol inet, MTU: Unlimited, Generation: 135, Route table: 2
-      Flags: None
-      Addresses, Flags: Is-Default Is-Primary
-        Destination: Unspecified, Local: 127.0.0.1, Broadcast: Unspecified, Generation: 131
-
-  Logical interface .local..3 (Index 321) (SNMP ifIndex 0) (Generation 130)
-    Flags: Down Point-To-Point Encapsulation: Unspecified
-    Bandwidth: 0
-    Protocol inet, MTU: Unlimited, Generation: 138, Route table: 3
-      Flags: None
-    Protocol iso, MTU: Unlimited, Generation: 139, Route table: 3
-      Flags: None
-    Protocol inet6, MTU: Unlimited, Generation: 141, Route table: 3
-      Flags: None
-
-  Logical interface .local..4 (Index 322) (SNMP ifIndex 0) (Generation 131)
-    Flags: Down Point-To-Point Encapsulation: Unspecified
-    Bandwidth: 0
-    Protocol mpls, MTU: Unlimited, Maximum labels: 3, Generation: 140, Route table: 4
-      Flags: None
-
-  Logical interface .local..5 (Index 323) (SNMP ifIndex 0) (Generation 132)
-    Flags: Down Point-To-Point Encapsulation: Unspecified
-    Bandwidth: 0
-    Protocol vpls, MTU: Unlimited, Generation: 142, Route table: 5
-      Flags: None
-
-Physical interface: cbp0, Enabled, Physical link is Up
-  Interface index: 129, SNMP ifIndex: 501, Generation: 132
-  Type: Ethernet, Link-level type: Ethernet, MTU: 1514, Clocking: Unspecified, Speed: Unspecified
-  Device flags   : Present Running
   Interface flags: SNMP-Traps
   Link type      : Full-Duplex
   Link flags     : None
   Physical info  : Unspecified
   Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:be:11, Hardware address: 00:05:86:71:be:11
-  Alternate link address: Unspecified
-  Last flapped   : Never
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0
-   Output bytes  :                    0
-   Input  packets:                    0
-   Output packets:                    0
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-
-Physical interface: demux0, Enabled, Physical link is Up
-  Interface index: 128, SNMP ifIndex: 502, Generation: 131
-  Type: Software-Pseudo, Link-level type: Unspecified, MTU: 9192, Clocking: 1, Speed: Unspecified
-  Device flags   : Present Running
-  Interface flags: Point-To-Point SNMP-Traps
-  Link type      : Full-Duplex
-  Link flags     : None
-  Physical info  : Unspecified
-  Hold-times     : Up 0 ms, Down 0 ms
-  Current address: Unspecified, Hardware address: Unspecified
-  Alternate link address: Unspecified
-  Last flapped   : Never
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0
-   Output bytes  :                    0
-   Input  packets:                    0
-   Output packets:                    0
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-
-Physical interface: dsc, Enabled, Physical link is Up
-  Interface index: 5, SNMP ifIndex: 5, Generation: 6
-  Type: Software-Pseudo, Link-level type: Unspecified, MTU: Unlimited, Clocking: Unspecified, Speed: Unspecified
-  Device flags   : Present Running
-  Interface flags: Point-To-Point SNMP-Traps
-  Link type      : Unspecified
-  Link flags     : None
-  Physical info  : Unspecified
-  Hold-times     : Up 0 ms, Down 0 ms
-  Current address: Unspecified, Hardware address: Unspecified
-  Alternate link address: Unspecified
-  Last flapped   : Never
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0
-   Output bytes  :                    0
-   Input  packets:                    0
-   Output packets:                    0
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-
-Physical interface: em0, Enabled, Physical link is Up
-  Interface index: 8, SNMP ifIndex: 17, Generation: 1
-  Type: Ethernet, Link-level type: Ethernet, MTU: 1514, Clocking: Unspecified, Speed: 1000mbps
-  Device flags   : Present Running
-  Interface flags: SNMP-Traps
-  Link type      : Full-Duplex
-  Link flags     : None
-  Physical info  : Unspecified
-  Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 50:00:00:01:00:00, Hardware address: 50:00:00:01:00:00
-  Alternate link address: Unspecified
-  Last flapped   : Never
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0
-   Output bytes  :                    0
-   Input  packets:                    0
-   Output packets:                    0
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-
-Physical interface: em1, Enabled, Physical link is Up
-  Interface index: 9, SNMP ifIndex: 23, Generation: 2
-  Type: Ethernet, Link-level type: Ethernet, MTU: 1514, Clocking: Unspecified, Speed: 1000mbps
-  Device flags   : Present Running
-  Interface flags: SNMP-Traps
-  Link type      : Full-Duplex
-  Physical info  : Unspecified
-  Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 50:00:00:01:00:01, Hardware address: 50:00:00:01:00:01
-  Alternate link address: Unspecified
-  Last flapped   : Never
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0
-   Output bytes  :                    0
-   Input  packets:                    0
-   Output packets:                    5
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-
-  Logical interface em1.0 (Index 3) (SNMP ifIndex 24) (Generation 1)
-    Flags: Up SNMP-Traps 0x4000000 Encapsulation: ENET2
-    Traffic statistics:
-     Input  bytes  :                    0
-     Output bytes  :                  362
-     Input  packets:                    0
-     Output packets:                    5
-     IPv6 transit statistics:
-      Input  bytes  :                   0
-      Output bytes  :                   0
-      Input  packets:                   0
-      Output packets:                   0
-    Local statistics:
-     Input  bytes  :                    0
-     Output bytes  :                  362
-     Input  packets:                    0
-     Output packets:                    5
-    Protocol inet, MTU: 1500, Generation: 143, Route table: 1
-      Flags: Is-Primary
-      Addresses, Flags: Is-Preferred Is-Primary
-        Destination: 172.16/16, Local: 172.16.0.1, Broadcast: 172.16.255.255, Generation: 1
-    Protocol inet6, MTU: 1500, Generation: 144, Route table: 1
-      Flags: Is-Primary
-      Addresses, Flags: Is-Preferred
-        Destination: fe80::/64, Local: fe80::5200:ff:fe01:1
-    Generation: 2
-
-Physical interface: em2, Enabled, Physical link is Up
-  Interface index: 64, SNMP ifIndex: 116, Generation: 3
-  Type: Ethernet, Link-level type: Ethernet, MTU: 1514, Clocking: Unspecified, Speed: 1000mbps
-  Device flags   : Present Running
-  Interface flags: Promiscuous SNMP-Traps
-  Link type      : Full-Duplex
-  Link flags     : None
-  Physical info  : Unspecified
-  Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 50:00:00:01:00:02, Hardware address: 50:00:00:01:00:02
-  Alternate link address: Unspecified
-  Last flapped   : Never
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0
-   Output bytes  :                    0
-   Input  packets:                12420
-   Output packets:                21991
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-
-Physical interface: em3, Enabled, Physical link is Up
-  Interface index: 65, SNMP ifIndex: 151, Generation: 4
-  Type: Ethernet, Link-level type: Ethernet, MTU: 1514, Clocking: Unspecified, Speed: 1000mbps
-  Device flags   : Present Running
-  Interface flags: Promiscuous SNMP-Traps
-  Link type      : Full-Duplex
-  Link flags     : None
-  Physical info  : Unspecified
-  Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 50:00:00:01:00:03, Hardware address: 50:00:00:01:00:03
-  Alternate link address: Unspecified
-  Last flapped   : Never
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0
-   Output bytes  :                    0
-   Input  packets:                    0
-   Output packets:                    0
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-
-Physical interface: em4, Enabled, Physical link is Up
-  Interface index: 66, SNMP ifIndex: 153, Generation: 5
-  Type: Ethernet, Link-level type: Ethernet, MTU: 1514, Clocking: Unspecified, Speed: 1000mbps
-  Device flags   : Present Running
-  Interface flags: Promiscuous SNMP-Traps
-  Link type      : Full-Duplex
-  Link flags     : None
-  Physical info  : Unspecified
-  Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 50:00:00:01:00:04, Hardware address: 50:00:00:01:00:04
-  Alternate link address: Unspecified
-  Last flapped   : Never
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0
-   Output bytes  :                    0
-   Input  packets:                    0
-   Output packets:                    0
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-
-Physical interface: em5, Enabled, Physical link is Up
-  Interface index: 67, SNMP ifIndex: 155, Generation: 6
-  Type: Ethernet, Link-level type: Ethernet, MTU: 1514, Clocking: Unspecified, Speed: 1000mbps
-  Device flags   : Present Running
-  Interface flags: Promiscuous SNMP-Traps
-  Link type      : Full-Duplex
-  Link flags     : None
-  Physical info  : Unspecified
-  Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 50:00:00:01:00:05, Hardware address: 50:00:00:01:00:05
-  Alternate link address: Unspecified
-  Last flapped   : Never
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0
-   Output bytes  :                    0
-   Input  packets:                    0
-   Output packets:                    0
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-
-Physical interface: gre, Enabled, Physical link is Up
-  Interface index: 10, SNMP ifIndex: 8, Generation: 11
-  Type: GRE, Link-level type: GRE, MTU: Unlimited, Speed: Unlimited
-  Hold-times     : Up 0 ms, Down 0 ms
-  Device flags   : Present Running
-  Interface flags: Point-To-Point SNMP-Traps
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0
-   Output bytes  :                    0
-   Input  packets:                    0
-   Output packets:                    0
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-
-Physical interface: ipip, Enabled, Physical link is Up
-  Interface index: 11, SNMP ifIndex: 9, Generation: 12
-  Type: IPIP, Link-level type: IP-over-IP, MTU: Unlimited, Speed: Unlimited
-  Hold-times     : Up 0 ms, Down 0 ms
-  Device flags   : Present Running
-  Interface flags: SNMP-Traps
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0
-   Output bytes  :                    0
-   Input  packets:                    0
-   Output packets:                    0
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-
-Physical interface: irb, Enabled, Physical link is Up
-  Interface index: 132, SNMP ifIndex: 503, Generation: 135
-  Type: Ethernet, Link-level type: Ethernet, MTU: 1514, Clocking: Unspecified, Speed: Unspecified
-  Device flags   : Present Running
-  Interface flags: SNMP-Traps
-  Link type      : Full-Duplex
-  Link flags     : None
-  Physical info  : Unspecified
-  Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:c1:f0, Hardware address: 00:05:86:71:c1:f0
-  Alternate link address: Unspecified
-  Last flapped   : Never
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0
-   Output bytes  :                    0
-   Input  packets:                    0
-   Output packets:                    0
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-
-Physical interface: lo0, Enabled, Physical link is Up
-  Interface index: 6, SNMP ifIndex: 6, Generation: 7
-  Type: Loopback, Link-level type: Unspecified, MTU: Unlimited, Clocking: Unspecified, Speed: Unspecified
-  Device flags   : Present Running Loopback
-  Interface flags: SNMP-Traps
-  Link type      : Unspecified
-  Link flags     : None
-  Physical info  : Unspecified
-  Hold-times     : Up 0 ms, Down 0 ms
-  Current address: Unspecified, Hardware address: Unspecified
-  Alternate link address: Unspecified
-  Last flapped   : Never
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                 5385
-   Output bytes  :                 5385
-   Input  packets:                   91
-   Output packets:                   91
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-
-  Logical interface lo0.16384 (Index 324) (SNMP ifIndex 21) (Generation 133)
-    Flags: Down SNMP-Traps Encapsulation: Unspecified
-    Traffic statistics:
-     Input  bytes  :                  600
-     Output bytes  :                  600
-     Input  packets:                   12
-     Output packets:                   12
-    Local statistics:
-     Input  bytes  :                  600
-     Output bytes  :                  600
-     Input  packets:                   12
-     Output packets:                   12
-    Transit statistics:
-     Input  bytes  :                    0                    0 bps
-     Output bytes  :                    0                    0 bps
-     Input  packets:                    0                    0 pps
-     Output packets:                    0                    0 pps
-    Protocol inet, MTU: Unlimited, Generation: 145, Route table: 2
-      Addresses, Flags: None
-        Destination: Unspecified, Local: 127.0.0.1, Broadcast: Unspecified, Generation: 132
-
-  Logical interface lo0.16385 (Index 325) (SNMP ifIndex 22) (Generation 134)
-    Flags: Down SNMP-Traps Encapsulation: Unspecified
-    Traffic statistics:
-     Input  bytes  :                 4785
-     Output bytes  :                 4785
-     Input  packets:                   79
-     Output packets:                   79
-     IPv6 transit statistics:
-      Input  bytes  :                   0
-      Output bytes  :                   0
-      Input  packets:                   0
-      Output packets:                   0
-    Local statistics:
-     Input  bytes  :                 4785
-     Output bytes  :                 4785
-     Input  packets:                   79
-     Output packets:                   79
-    Transit statistics:
-     Input  bytes  :                    0                    0 bps
-     Output bytes  :                    0                    0 bps
-     Input  packets:                    0                    0 pps
-     Output packets:                    0                    0 pps
-     IPv6 transit statistics:
-      Input  bytes  :                   0
-      Output bytes  :                   0
-      Input  packets:                   0
-      Output packets:                   0
-    Protocol inet, MTU: Unlimited, Generation: 146, Route table: 1
-      Addresses, Flags: Is-Default Is-Primary
-        Destination: Unspecified, Local: 128.0.0.1, Broadcast: Unspecified, Generation: 134
-      Addresses, Flags: None
-        Destination: Unspecified, Local: 128.0.0.4, Broadcast: Unspecified, Generation: 136
-    Protocol inet6, MTU: Unlimited, Generation: 147, Route table: 1
-        Destination: Unspecified, Local: fe80::200:f:fc00:0
-    Generation: 138
-
-  Logical interface lo0.32768 (Index 320) (SNMP ifIndex 250) (Generation 129)
-    Flags: Down Encapsulation: Unspecified
-    Traffic statistics:
-     Input  bytes  :                    0
-     Output bytes  :                    0
-     Input  packets:                    0
-     Output packets:                    0
-    Local statistics:
-     Input  bytes  :                    0
-     Output bytes  :                    0
-     Input  packets:                    0
-     Output packets:                    0
-    Transit statistics:
-     Input  bytes  :                    0                    0 bps
-     Output bytes  :                    0                    0 bps
-     Input  packets:                    0                    0 pps
-     Output packets:                    0                    0 pps
-
-Physical interface: lsi, Enabled, Physical link is Up
-  Interface index: 4, SNMP ifIndex: 4, Generation: 5
-  Type: Software-Pseudo, Link-level type: LSI, MTU: Unlimited, Clocking: Unspecified, Speed: Unlimited
-  Device flags   : Present Running
-  Link type      : Unspecified
-  Link flags     : None
-  Physical info  : Unspecified
-  Hold-times     : Up 0 ms, Down 0 ms
-  Current address: Unspecified, Hardware address: Unspecified
-  Alternate link address: Unspecified
-  Last flapped   : Never
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0
-   Output bytes  :                    0
-   Input  packets:                    0
-   Output packets:                    0
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-
-Physical interface: mtun, Enabled, Physical link is Up
-  Interface index: 68, SNMP ifIndex: 12, Generation: 7
-  Type: Multicast-GRE, Link-level type: GRE, MTU: Unlimited, Speed: Unlimited
-  Hold-times     : Up 0 ms, Down 0 ms
-  Device flags   : Present Running
-  Interface flags: SNMP-Traps
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0
-   Output bytes  :                    0
-   Input  packets:                    0
-   Output packets:                    0
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-
-Physical interface: pimd, Enabled, Physical link is Up
-  Interface index: 26, SNMP ifIndex: 11, Generation: 130
-  Type: PIMD, Link-level type: PIM-Decapsulator, MTU: Unlimited, Speed: Unlimited
-  Hold-times     : Up 0 ms, Down 0 ms
-  Device flags   : Present Running
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0
-   Output bytes  :                    0
-   Input  packets:                    0
-   Output packets:                    0
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-
-Physical interface: pime, Enabled, Physical link is Up
-  Interface index: 25, SNMP ifIndex: 10, Generation: 129
-  Type: PIME, Link-level type: PIM-Encapsulator, MTU: Unlimited, Speed: Unlimited
-  Hold-times     : Up 0 ms, Down 0 ms
-  Device flags   : Present Running
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0
-   Output bytes  :                    0
-   Input  packets:                    0
-   Output packets:                    0
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-
-Physical interface: pip0, Enabled, Physical link is Up
-  Interface index: 130, SNMP ifIndex: 504, Generation: 133
-  Type: Ethernet, Link-level type: Ethernet, MTU: 1514, Clocking: Unspecified, Speed: Unspecified
-  Device flags   : Present Running
-  Interface flags: SNMP-Traps
-  Link type      : Full-Duplex
-  Link flags     : None
-  Physical info  : Unspecified
-  Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:c1:b0, Hardware address: 00:05:86:71:c1:b0
-  Alternate link address: Unspecified
-  Last flapped   : Never
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0
-   Output bytes  :                    0
-   Input  packets:                    0
-   Output packets:                    0
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-
-Physical interface: pp0, Enabled, Physical link is Up
-  Interface index: 131, SNMP ifIndex: 505, Generation: 134
-  Type: PPPoE, Link-level type: PPPoE, MTU: 1532, Speed: Unspecified
-  Device flags   : Present Running
-  Interface flags: Point-To-Point SNMP-Traps
-  Link type      : Full-Duplex
-  Link flags     : None
-  Physical info  : Unspecified
-  Hold-times     : Up 0 ms, Down 0 ms
-  Current address: Unspecified, Hardware address: Unspecified
-  Alternate link address: Unspecified
-
-Physical interface: tap, Enabled, Physical link is Up
-  Interface index: 12, SNMP ifIndex: 7, Generation: 13
-  Type: Software-Pseudo, Link-level type: Interface-Specific, MTU: Unlimited, Clocking: Unspecified, Speed: Unlimited
-  Device flags   : Present Running
-  Interface flags: SNMP-Traps
-  Link type      : Unspecified
-  Link flags     : None
-  Physical info  : Unspecified
-  Hold-times     : Up 0 ms, Down 0 ms
-  Current address: Unspecified, Hardware address: Unspecified
-  Alternate link address: Unspecified
-  Last flapped   : Never
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0
-   Output bytes  :                    0
-   Input  packets:                    0
-   Output packets:                    0
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-
-Physical interface: vtep, Enabled, Physical link is Up
-  Interface index: 133, SNMP ifIndex: 506, Generation: 136
-  Type: Software-Pseudo, Link-level type: VxLAN-Tunnel-Endpoint, MTU: 1600, Clocking: Unspecified, Speed: Unlimited
-  Device flags   : Present Running
-  Link type      : Full-Duplex
-  Link flags     : None
-  Physical info  : Unspecified
-  Hold-times     : Up 0 ms, Down 0 ms
   Current address: Unspecified, Hardware address: Unspecified
   Alternate link address: Unspecified
   Last flapped   : Never
@@ -2700,11 +1271,11 @@ Physical interface: vtep, Enabled, Physical link is Up
 root> 
 
 root> show system uptime 
-Current time: 2025-05-26 06:19:30 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:01:10 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:00:26 ago)
-Last configured: 2025-05-26 01:27:26 UTC (04:52:04 ago) by root
- 6:19AM  up 5:01, 2 users, load averages: 0.00, 0.00, 0.01
+Current time: 2025-05-27 06:02:30 UTC
+System booted: 2025-05-27 01:17:12 UTC (04:45:18 ago)
+Protocols started: 2025-05-27 01:17:42 UTC (04:44:48 ago)
+Last configured: 2025-05-27 01:19:05 UTC (04:43:25 ago) by root
+ 6:02AM  up 4:45, 5 users, load averages: 0.33, 0.18, 0.07
 
 root> 
 
@@ -2712,26 +1283,25 @@ root> show arp | no-more
 MAC Address       Address         Name                      Interface           Flags
 00:50:56:c0:00:08 192.168.110.1   192.168.110.1             ge-0/0/0.0          none
 00:0c:29:80:ff:c8 192.168.110.128 192.168.110.128           ge-0/0/0.0          none
-00:50:56:e2:37:23 192.168.110.254 192.168.110.254           ge-0/0/0.0          none
-Total entries: 3
+Total entries: 2
 
 root> 
 
 root> show system uptime 
-Current time: 2025-05-26 06:19:30 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:01:10 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:00:26 ago)
-Last configured: 2025-05-26 01:27:26 UTC (04:52:04 ago) by root
- 6:19AM  up 5:01, 2 users, load averages: 0.00, 0.00, 0.01
+Current time: 2025-05-27 06:02:30 UTC
+System booted: 2025-05-27 01:17:12 UTC (04:45:18 ago)
+Protocols started: 2025-05-27 01:17:42 UTC (04:44:48 ago)
+Last configured: 2025-05-27 01:19:05 UTC (04:43:25 ago) by root
+ 6:02AM  up 4:45, 5 users, load averages: 0.33, 0.18, 0.07
 
 root> 
 
 root> show system uptime 
-Current time: 2025-05-26 06:19:31 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:01:11 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:00:27 ago)
-Last configured: 2025-05-26 01:27:26 UTC (04:52:05 ago) by root
- 6:19AM  up 5:01, 2 users, load averages: 0.56, 0.12, 0.05
+Current time: 2025-05-27 06:02:30 UTC
+System booted: 2025-05-27 01:17:12 UTC (04:45:18 ago)
+Protocols started: 2025-05-27 01:17:42 UTC (04:44:48 ago)
+Last configured: 2025-05-27 01:19:05 UTC (04:43:25 ago) by root
+ 6:02AM  up 4:45, 5 users, load averages: 0.33, 0.18, 0.07
 
 root> 
 
@@ -2745,11 +1315,11 @@ inet.0: 2 destinations, 2 routes (2 active, 0 holddown, 0 hidden)
 root> 
 
 root> show system uptime 
-Current time: 2025-05-26 06:19:31 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:01:11 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:00:27 ago)
-Last configured: 2025-05-26 01:27:26 UTC (04:52:05 ago) by root
- 6:19AM  up 5:01, 2 users, load averages: 0.56, 0.12, 0.05
+Current time: 2025-05-27 06:02:30 UTC
+System booted: 2025-05-27 01:17:12 UTC (04:45:18 ago)
+Protocols started: 2025-05-27 01:17:42 UTC (04:44:48 ago)
+Last configured: 2025-05-27 01:19:05 UTC (04:43:25 ago) by root
+ 6:02AM  up 4:45, 5 users, load averages: 0.33, 0.18, 0.07
 
 root> 
 
@@ -2759,11 +1329,11 @@ OSPF instance is not running
 root> 
 
 root> show system uptime 
-Current time: 2025-05-26 06:19:31 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:01:11 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:00:27 ago)
-Last configured: 2025-05-26 01:27:26 UTC (04:52:05 ago) by root
- 6:19AM  up 5:01, 2 users, load averages: 0.56, 0.12, 0.05
+Current time: 2025-05-27 06:02:30 UTC
+System booted: 2025-05-27 01:17:12 UTC (04:45:18 ago)
+Protocols started: 2025-05-27 01:17:42 UTC (04:44:48 ago)
+Last configured: 2025-05-27 01:19:05 UTC (04:43:25 ago) by root
+ 6:02AM  up 4:45, 5 users, load averages: 0.33, 0.18, 0.07
 
 root> 
 
@@ -2773,11 +1343,11 @@ IS-IS instance is not running
 root> 
 
 root> show system uptime 
-Current time: 2025-05-26 06:19:31 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:01:11 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:00:27 ago)
-Last configured: 2025-05-26 01:27:26 UTC (04:52:05 ago) by root
- 6:19AM  up 5:01, 2 users, load averages: 0.56, 0.12, 0.05
+Current time: 2025-05-27 06:02:30 UTC
+System booted: 2025-05-27 01:17:12 UTC (04:45:18 ago)
+Protocols started: 2025-05-27 01:17:42 UTC (04:44:48 ago)
+Last configured: 2025-05-27 01:19:05 UTC (04:43:25 ago) by root
+ 6:02AM  up 4:45, 5 users, load averages: 0.33, 0.18, 0.07
 
 root> 
 
@@ -2787,11 +1357,11 @@ MPLS not configured
 root> 
 
 root> show system uptime 
-Current time: 2025-05-26 06:19:31 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:01:11 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:00:27 ago)
-Last configured: 2025-05-26 01:27:26 UTC (04:52:05 ago) by root
- 6:19AM  up 5:01, 2 users, load averages: 0.56, 0.12, 0.05
+Current time: 2025-05-27 06:02:30 UTC
+System booted: 2025-05-27 01:17:12 UTC (04:45:18 ago)
+Protocols started: 2025-05-27 01:17:42 UTC (04:44:48 ago)
+Last configured: 2025-05-27 01:19:05 UTC (04:43:25 ago) by root
+ 6:02AM  up 4:45, 5 users, load averages: 0.33, 0.18, 0.07
 
 root> 
 
@@ -2801,11 +1371,11 @@ LDP instance is not running
 root> 
 
 root> show system uptime 
-Current time: 2025-05-26 06:19:31 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:01:11 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:00:27 ago)
-Last configured: 2025-05-26 01:27:26 UTC (04:52:05 ago) by root
- 6:19AM  up 5:01, 2 users, load averages: 0.56, 0.12, 0.05
+Current time: 2025-05-27 06:02:31 UTC
+System booted: 2025-05-27 01:17:12 UTC (04:45:19 ago)
+Protocols started: 2025-05-27 01:17:42 UTC (04:44:49 ago)
+Last configured: 2025-05-27 01:19:05 UTC (04:43:26 ago) by root
+ 6:02AM  up 4:45, 5 users, load averages: 0.33, 0.18, 0.07
 
 root> 
 
@@ -2815,11 +1385,11 @@ RSVP not configured
 root> 
 
 root> show system uptime 
-Current time: 2025-05-26 06:19:32 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:01:12 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:00:28 ago)
-Last configured: 2025-05-26 01:27:26 UTC (04:52:06 ago) by root
- 6:19AM  up 5:01, 2 users, load averages: 0.56, 0.12, 0.05
+Current time: 2025-05-27 06:02:31 UTC
+System booted: 2025-05-27 01:17:12 UTC (04:45:19 ago)
+Protocols started: 2025-05-27 01:17:42 UTC (04:44:49 ago)
+Last configured: 2025-05-27 01:19:05 UTC (04:43:26 ago) by root
+ 6:02AM  up 4:45, 5 users, load averages: 0.33, 0.18, 0.07
 
 root> 
 
@@ -2828,11 +1398,11 @@ root> show lldp neighbor | no-more
 root> 
 
 root> show system uptime 
-Current time: 2025-05-26 06:19:32 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:01:12 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:00:28 ago)
-Last configured: 2025-05-26 01:27:26 UTC (04:52:06 ago) by root
- 6:19AM  up 5:01, 2 users, load averages: 0.56, 0.12, 0.05
+Current time: 2025-05-27 06:02:31 UTC
+System booted: 2025-05-27 01:17:12 UTC (04:45:19 ago)
+Protocols started: 2025-05-27 01:17:42 UTC (04:44:49 ago)
+Last configured: 2025-05-27 01:19:05 UTC (04:43:26 ago) by root
+ 6:02AM  up 4:45, 5 users, load averages: 0.33, 0.18, 0.07
 
 root> 
 
@@ -2842,11 +1412,11 @@ MPLS not configured
 root> 
 
 root> show system uptime 
-Current time: 2025-05-26 06:19:32 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:01:12 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:00:28 ago)
-Last configured: 2025-05-26 01:27:26 UTC (04:52:06 ago) by root
- 6:19AM  up 5:01, 2 users, load averages: 0.56, 0.12, 0.05
+Current time: 2025-05-27 06:02:31 UTC
+System booted: 2025-05-27 01:17:12 UTC (04:45:19 ago)
+Protocols started: 2025-05-27 01:17:42 UTC (04:44:49 ago)
+Last configured: 2025-05-27 01:19:05 UTC (04:43:26 ago) by root
+ 6:02AM  up 4:45, 5 users, load averages: 0.33, 0.18, 0.07
 
 root> 
 
@@ -2856,11 +1426,11 @@ BGP is not running
 root> 
 
 root> show system uptime 
-Current time: 2025-05-26 06:19:32 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:01:12 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:00:28 ago)
-Last configured: 2025-05-26 01:27:26 UTC (04:52:06 ago) by root
- 6:19AM  up 5:01, 2 users, load averages: 0.56, 0.12, 0.05
+Current time: 2025-05-27 06:02:31 UTC
+System booted: 2025-05-27 01:17:12 UTC (04:45:19 ago)
+Protocols started: 2025-05-27 01:17:42 UTC (04:44:49 ago)
+Last configured: 2025-05-27 01:19:05 UTC (04:43:26 ago) by root
+ 6:02AM  up 4:45, 5 users, load averages: 0.33, 0.18, 0.07
 
 root> 
 
@@ -2870,11 +1440,11 @@ ssh;
 root> 
 
 root> show system uptime 
-Current time: 2025-05-26 06:19:32 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:01:12 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:00:28 ago)
-Last configured: 2025-05-26 01:27:26 UTC (04:52:06 ago) by root
- 6:19AM  up 5:01, 2 users, load averages: 0.56, 0.12, 0.05
+Current time: 2025-05-27 06:02:32 UTC
+System booted: 2025-05-27 01:17:12 UTC (04:45:20 ago)
+Protocols started: 2025-05-27 01:17:42 UTC (04:44:50 ago)
+Last configured: 2025-05-27 01:19:05 UTC (04:43:27 ago) by root
+ 6:02AM  up 4:45, 5 users, load averages: 0.33, 0.18, 0.07
 
 root> 
 
@@ -2883,11 +1453,11 @@ root> show configuration protocols | no-more
 root> 
 
 root> show system uptime 
-Current time: 2025-05-26 06:19:32 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:01:12 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:00:28 ago)
-Last configured: 2025-05-26 01:27:26 UTC (04:52:06 ago) by root
- 6:19AM  up 5:01, 2 users, load averages: 0.56, 0.12, 0.05
+Current time: 2025-05-27 06:02:32 UTC
+System booted: 2025-05-27 01:17:12 UTC (04:45:20 ago)
+Protocols started: 2025-05-27 01:17:42 UTC (04:44:50 ago)
+Last configured: 2025-05-27 01:19:05 UTC (04:43:27 ago) by root
+ 6:02AM  up 4:45, 5 users, load averages: 0.33, 0.18, 0.07
 
 root> 
 
@@ -2896,52 +1466,52 @@ root> show configuration firewall | no-more
 root> 
 
 root> show system uptime 
-Current time: 2025-05-26 06:19:33 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:01:13 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:00:29 ago)
-Last configured: 2025-05-26 01:27:26 UTC (04:52:07 ago) by root
- 6:19AM  up 5:01, 2 users, load averages: 0.56, 0.12, 0.05
+Current time: 2025-05-27 06:02:32 UTC
+System booted: 2025-05-27 01:17:12 UTC (04:45:20 ago)
+Protocols started: 2025-05-27 01:17:42 UTC (04:44:50 ago)
+Last configured: 2025-05-27 01:19:05 UTC (04:43:27 ago) by root
+ 6:02AM  up 4:45, 5 users, load averages: 0.33, 0.18, 0.07
 
 root> 
 
 root> show system uptime 
-Current time: 2025-05-26 06:19:33 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:01:13 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:00:29 ago)
-Last configured: 2025-05-26 01:27:26 UTC (04:52:07 ago) by root
- 6:19AM  up 5:01, 2 users, load averages: 0.56, 0.12, 0.05
+Current time: 2025-05-27 06:02:32 UTC
+System booted: 2025-05-27 01:17:12 UTC (04:45:20 ago)
+Protocols started: 2025-05-27 01:17:42 UTC (04:44:50 ago)
+Last configured: 2025-05-27 01:19:05 UTC (04:43:27 ago) by root
+ 6:02AM  up 4:45, 5 users, load averages: 0.33, 0.18, 0.07
 
 root> 
 
 root> show log messages | match "error|warning|critical" | last 10 | no-more 
-May 26 01:19:09   /kernel: em1error setting host MAC filter table
-May 26 01:19:09   /kernel: em2error setting host MAC filter table
-May 26 01:19:09   /kernel: em3error setting host MAC filter table
-May 26 01:19:09   /kernel: em4error setting host MAC filter table
-May 26 01:19:09   /kernel: em5error setting host MAC filter table
-May 26 01:27:25   chassisd[3003]: CHASSISD_FILE_OPEN: File open: /dev/acb, error: 2 -- No such file or directory
-May 26 01:27:25   chassisd[3003]: CHASSISD_FILE_OPEN: File open: /dev/acb, error: 2 -- No such file or directory
-May 26 01:27:27   /kernel: KERN_ARP_DUPLICATE_ADDR: duplicate IP address 192.168.110.2! sent from address: 00:50:56:e7:df:30 (error count = 1)
-May 26 04:49:49   /kernel: KERN_ARP_DUPLICATE_ADDR: duplicate IP address 192.168.110.2! sent from address: 00:50:56:e7:df:30 (error count = 2)
----(more 70%)---
+May 27 01:17:45   /kernel: em1error setting host MAC filter table
+May 27 01:17:45   /kernel: em2error setting host MAC filter table
+May 27 01:17:45   /kernel: em3error setting host MAC filter table
+May 27 01:17:45   /kernel: em4error setting host MAC filter table
+May 27 01:17:45   /kernel: em5error setting host MAC filter table
+May 27 01:17:52   login[2358]: LOGIN_PAM_AUTHENTICATION_ERROR: Failed password for user roor
+May 27 01:19:04   chassisd[2954]: CHASSISD_FILE_OPEN: File open: /dev/acb, error: 2 -- No such file or directory
+May 27 01:19:04   chassisd[2954]: CHASSISD_FILE_OPEN: File open: /dev/acb, error: 2 -- No such file or directory
+May 27 01:19:06   /kernel: KERN_ARP_DUPLICATE_ADDR: duplicate IP address 192.168.110.2! sent from address: 00:50:56:e7:df:30 (error count = 1)
+---(more 95%)---
                                         
 root> 
 
 root> show system uptime 
-Current time: 2025-05-26 06:19:33 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:01:13 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:00:29 ago)
-Last configured: 2025-05-26 01:27:26 UTC (04:52:07 ago) by root
- 6:19AM  up 5:01, 2 users, load averages: 0.56, 0.12, 0.05
+Current time: 2025-05-27 06:02:32 UTC
+System booted: 2025-05-27 01:17:12 UTC (04:45:20 ago)
+Protocols started: 2025-05-27 01:17:42 UTC (04:44:50 ago)
+Last configured: 2025-05-27 01:19:05 UTC (04:43:27 ago) by root
+ 6:02AM  up 4:45, 5 users, load averages: 0.33, 0.18, 0.07
 
 root> 
 
 root> show system uptime 
-Current time: 2025-05-26 06:19:33 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:01:13 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:00:29 ago)
-Last configured: 2025-05-26 01:27:26 UTC (04:52:07 ago) by root
- 6:19AM  up 5:01, 2 users, load averages: 0.56, 0.12, 0.05
+Current time: 2025-05-27 06:02:32 UTC
+System booted: 2025-05-27 01:17:12 UTC (04:45:20 ago)
+Protocols started: 2025-05-27 01:17:42 UTC (04:44:50 ago)
+Last configured: 2025-05-27 01:19:05 UTC (04:43:27 ago) by root
+ 6:02AM  up 4:45, 5 users, load averages: 0.33, 0.18, 0.07
 
 root> 
 
@@ -2955,1576 +1525,31 @@ May  1 16:14:47  rtsock_inform_fru_offline: inform peer type 17, index 0 offline
 May  1 16:14:47  rtsock_reset_self_ping_statistics: reset fpc_slot 0 self_ping stats, error 0
 May  1 16:14:47  fpc_offline_now - slot 0, reason: None, error Chassis connection dropped transition state 1
 May  1 16:14:55  ch_power_off_frus_cleanup_exit: Chassisd exiting with error-code= 69
----(more 22%)---
-                                        
-root> --- JUNOS 14.1R4.8 built 2015-01-28 03:38:12 UTC
-
-[3g[1000;9HH[1000;17HH[1000;25HH[1000;33HH[1000;41HH[1000;49HH[1000;57HH[1000;65HH[1000;73HH[1000;81HH[1000;89HH[1000;97HH[1000;105HH[1000;113HH[1000;121HH[1000;129HH[1000;137HH[1000;145HH[1000;153HH[1000;161HH[1000;169HH[1000;177HH[1000;185HH[1000;193HH[1000;201HH[1000;209HH[1000;217HH[1000;225HH[1000;233HH[1000;241HH[1000;249HH[1000;257HH[1000;265HH[1000;273HH[1000;281HH[1000;289HH[1000;297HH[1000;305HH[1000;313HH[1000;321HH[1000;329HH[1000;337HH[1000;345HH[1000;353HH[1000;361HH[1000;369HH[1000;377HH[1000;385HH[1000;393HH[1000;401HH[1000;409HH[1000;417HH[1000;425HH[1000;433HH[1000;441HH[1000;449HH[1000;457HH[1000;465HH[1000;473HH[1000;481HH[1000;489HH[1000;497HH[1000;505HH
-root@% 
-root@% 
-root@% 
-root@% cli
-root> set cli screen-width 511 
-Screen width set to 511
-
-root> set cli complete-on-space off 
-Disabling complete-on-space
-
-root> set cli screen-length 0 
-Screen length set to 0
-
-root> 
-
-root> 
-
-root> show system uptime 
-Current time: 2025-05-26 06:21:38 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:03:18 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:02:34 ago)
-Last configured: 2025-05-26 01:27:26 UTC (04:54:12 ago) by root
- 6:21AM  up 5:03, 2 users, load averages: 0.07, 0.07, 0.04
-
-root> 
-
-root> show system uptime 
-Current time: 2025-05-26 06:21:38 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:03:18 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:02:34 ago)
-Last configured: 2025-05-26 01:27:26 UTC (04:54:12 ago) by root
- 6:21AM  up 5:03, 2 users, load averages: 0.07, 0.07, 0.04
-
-root> 
-
-root> show version | no-more 
-Model: vmx
-Junos: 14.1R4.8
-JUNOS Base OS Software Suite [14.1R4.8]
-JUNOS Base OS boot [14.1R4.8]
-JUNOS Crypto Software Suite [14.1R4.8]
-JUNOS Online Documentation [14.1R4.8]
-JUNOS Kernel Software Suite [14.1R4.8]
-JUNOS Routing Software Suite [14.1R4.8]
-JUNOS Runtime Software Suite [14.1R4.8]
-JUNOS Services AACL PIC package [14.1R4.8]
-JUNOS Services Application Level Gateway [14.1R4.8]
-JUNOS Services Application Level Gateway (xlp64) [14.1R4.8]
-JUNOS Services Application Level Gateway (xlr64) [14.1R4.8]
-JUNOS AppId Services PIC Package [14.1R4.8]
-JUNOS Services AppId PIC package (xlr64) [14.1R4.8]
-JUNOS Border Gateway Function PIC package [14.1R4.8]
-JUNOS Services Captive Portal and Content Delivery PIC package [14.1R4.8]
-JUNOS Services HTTP Content Management PIC package [14.1R4.8]
-JUNOS Services HTTP Content Management PIC package (xlr64) [14.1R4.8]
-JUNOS IDP Services PIC Package [14.1R4.8]
-JUNOS Services JFLOW PIC package [14.1R4.8]
-JUNOS Services JFLOW PIC package (xlp64) [14.1R4.8]
-JUNOS Services LL-PDF PIC package [14.1R4.8]
-JUNOS MobileNext PIC package [14.1R4.8]
-JUNOS MobileNext PIC package (xlr64) [14.1R4.8]
-JUNOS Services Mobile Subscriber Service Container package [14.1R4.8]
-JUNOS Services Mobile Subscriber Service PIC package (xlr64) [14.1R4.8]
-JUNOS Services NAT PIC package [14.1R4.8]
-JUNOS Services NAT PIC package (xlp64) [14.1R4.8]
-JUNOS Services NAT PIC package (xlr64) [14.1R4.8]
-JUNOS Services PTSP PIC package [14.1R4.8]
-JUNOS Services RPM PIC package [14.1R4.8]
-JUNOS Services RPM PIC package (xlp64) [14.1R4.8]
-JUNOS Services Stateful Firewall PIC package [14.1R4.8]
-JUNOS Services Stateful Firewall PIC package (xlp64) [14.1R4.8]
-JUNOS Services Stateful Firewall PIC package (xlr64) [14.1R4.8]
-JUNOS BSG PIC package [14.1R4.8]
-JUNOS Services Crypto Base PIC package [14.1R4.8]
-JUNOS Services Crypto Base PIC package [14.1R4.8]
-JUNOS Services Crypto Base PIC package(xlr64) [14.1R4.8]
-JUNOS Services IPSec PIC package [14.1R4.8]
-JUNOS Services IPSec PIC package [14.1R4.8]
-JUNOS Services IPSec PIC(xlr64) package [14.1R4.8]
-JUNOS Services SSL PIC package [14.1R4.8]
-JUNOS Packet Forwarding Engine Trio Simulation Package [14.1R4.8]
-
-root> 
-
-root> show system uptime 
-Current time: 2025-05-26 06:21:38 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:03:18 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:02:34 ago)
-Last configured: 2025-05-26 01:27:26 UTC (04:54:12 ago) by root
- 6:21AM  up 5:03, 2 users, load averages: 0.07, 0.07, 0.04
-
-root> 
-
-root> show system uptime 
-Current time: 2025-05-26 06:21:38 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:03:18 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:02:34 ago)
-Last configured: 2025-05-26 01:27:26 UTC (04:54:12 ago) by root
- 6:21AM  up 5:03, 2 users, load averages: 0.07, 0.07, 0.04
-
-root> 
-
-root> show chassis routing-engine | no-more 
-Routing Engine status:
-    DRAM                      2048 MB (2048 MB installed)
-    Memory utilization          40 percent
-    CPU utilization:
-      User                       0 percent
-      Background                 0 percent
-      Kernel                     0 percent
-      Interrupt                  6 percent
-      Idle                      93 percent
-    Model                          RE-VMX
-    Serial ID                      VM5543516AC4
-    Start time                     2025-05-26 01:18:20 UTC
-    Uptime                         5 hours, 3 minutes, 13 seconds
-    Last reboot reason             0x10:misc hardware reason 
-    Load averages:                 1 minute   5 minute  15 minute
-                                       0.07       0.07       0.04
-
-root> 
-
-root> show system uptime 
-Current time: 2025-05-26 06:21:38 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:03:18 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:02:34 ago)
-Last configured: 2025-05-26 01:27:26 UTC (04:54:12 ago) by root
- 6:21AM  up 5:03, 2 users, load averages: 0.07, 0.07, 0.04
-
-root> 
-
-root> show system uptime 
-Current time: 2025-05-26 06:21:38 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:03:18 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:02:34 ago)
-Last configured: 2025-05-26 01:27:26 UTC (04:54:12 ago) by root
- 6:21AM  up 5:03, 2 users, load averages: 0.07, 0.07, 0.04
-
-root> 
-
-root> show interfaces terse | no-more 
-Interface               Admin Link Proto    Local                 Remote
-ge-0/0/0                up    up
-ge-0/0/0.0              up    up   inet     192.168.110.2/24
-                                   multiservice
-lc-0/0/0                up    up
-lc-0/0/0.32769          up    up   vpls    
-pfe-0/0/0               up    up
-pfe-0/0/0.16383         up    up   inet    
-                                   inet6   
-pfh-0/0/0               up    up
-pfh-0/0/0.16383         up    up   inet    
-ge-0/0/1                up    up
-ge-0/0/2                up    up
-ge-0/0/3                up    up
-ge-0/0/4                up    up
-ge-0/0/5                up    up
-ge-0/0/6                up    up
-ge-0/0/7                up    up
-ge-0/0/8                up    up
-ge-0/0/9                up    up
-cbp0                    up    up
-demux0                  up    up
-dsc                     up    up
-em0                     up    up
-em1                     up    up
-em1.0                   up    up   inet     172.16.0.1/16   
-                                   inet6    fe80::5200:ff:fe01:1/64
-em2                     up    up
-em3                     up    up
-em4                     up    up
-em5                     up    up
-gre                     up    up
-ipip                    up    up
-irb                     up    up
-lo0                     up    up
-lo0.16384               up    up   inet     127.0.0.1           --> 0/0
-lo0.16385               up    up   inet     128.0.0.1           --> 0/0
-                                            128.0.0.4           --> 0/0
-                                   inet6    fe80::200:f:fc00:0
-lo0.32768               up    up  
-lsi                     up    up
-mtun                    up    up
-pimd                    up    up
-pime                    up    up
-pip0                    up    up
-pp0                     up    up
-tap                     up    up
-vtep                    up    up
-
-root> 
-
-root> show system uptime 
-Current time: 2025-05-26 06:21:39 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:03:19 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:02:35 ago)
-Last configured: 2025-05-26 01:27:26 UTC (04:54:13 ago) by root
- 6:21AM  up 5:03, 2 users, load averages: 0.07, 0.07, 0.04
-
-root> 
-
-root> show interfaces detail | no-more 
-Physical interface: ge-0/0/0, Enabled, Physical link is Up
-  Interface index: 137, SNMP ifIndex: 513, Generation: 140
-  Link-level type: Ethernet, MTU: 1514, MRU: 1522, Speed: 1000mbps, BPDU Error: None, MAC-REWRITE Error: None, Loopback: Disabled, Source filtering: Disabled, Flow control: Enabled
-  Pad to minimum frame size: Disabled
-  Device flags   : Present Running
-  Interface flags: SNMP-Traps Internal: 0x4000
-  Link flags     : None
-  CoS queues     : 8 supported, 8 maximum usable queues
-  Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:be:00, Hardware address: 00:05:86:71:be:00
-  Last flapped   : 2025-05-26 01:19:42 UTC (05:01:57 ago)
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :               729237                   24 bps
-   Output bytes  :              3459594                  104 bps
-   Input  packets:                12997                    0 pps
-   Output packets:                23390                    0 pps
-   IPv6 transit statistics:
-    Input  bytes  :                 336
-    Output bytes  :                   0
-    Input  packets:                   6
-    Output packets:                   0
-  Active alarms  : None
-  Active defects : None
-  Interface transmit statistics: Disabled
-
-  Logical interface ge-0/0/0.0 (Index 329) (SNMP ifIndex 523) (Generation 138)
-    Flags: Up SNMP-Traps 0x4004000 Encapsulation: ENET2
-    Traffic statistics:
-     Input  bytes  :               747808
-     Output bytes  :              3319266
-     Input  packets:                13838
-     Output packets:                23390
-    Local statistics:
-     Input  bytes  :               690224
-     Output bytes  :              3319162
-     Input  packets:                12653
-     Output packets:                23388
-    Transit statistics:
-     Input  bytes  :                57584                    0 bps
-     Output bytes  :                  104                    0 bps
-     Input  packets:                 1185                    0 pps
-     Output packets:                    2                    0 pps
-    Protocol inet, MTU: 1500, Generation: 152, Route table: 0
-      Flags: Sendbcast-pkt-to-re, Is-Primary
-      Addresses, Flags: Is-Default Is-Preferred Is-Primary
-        Destination: 192.168.110/24, Local: 192.168.110.2, Broadcast: 192.168.110.255, Generation: 140
-    Protocol multiservice, MTU: Unlimited, Generation: 153, Route table: 0
-      Flags: Is-Primary
-      Policer: Input: __default_arp_policer__
-
-Physical interface: lc-0/0/0, Enabled, Physical link is Up
-  Interface index: 134, SNMP ifIndex: 507, Generation: 137
-  Type: Unspecified, Link-level type: Unspecified, MTU: 0, Clocking: Unspecified, Speed: 800mbps
-  Device flags   : Present Running
-  Link type      : Unspecified
-  Link flags     : None
-  Physical info  : Unspecified
-  Hold-times     : Up 0 ms, Down 0 ms
-  Current address: Unspecified, Hardware address: Unspecified
-  Alternate link address: Unspecified
-  Last flapped   : Never
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0
-   Output bytes  :                    0
-   Input  packets:                    0
-   Output packets:                    0
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-
-  Logical interface lc-0/0/0.32769 (Index 326) (SNMP ifIndex 508) (Generation 135)
-    Flags: Up Encapsulation: ENET2
-    Bandwidth: 0
-    Traffic statistics:
-     Input  bytes  :                    0
-     Output bytes  :                    0
-     Input  packets:                    0
-     Output packets:                    0
-    Local statistics:
-     Input  bytes  :                    0
-     Output bytes  :                    0
-     Input  packets:                    0
-     Output packets:                    0
-    Transit statistics:
-     Input  bytes  :                    0                    0 bps
-     Output bytes  :                    0                    0 bps
-     Input  packets:                    0                    0 pps
-     Output packets:                    0                    0 pps
-    Protocol vpls, MTU: Unlimited, Generation: 148, Route table: 1
-      Flags: Is-Primary
-
-Physical interface: pfe-0/0/0, Enabled, Physical link is Up
-  Interface index: 136, SNMP ifIndex: 510, Generation: 139
-  Type: Unspecified, Link-level type: Unspecified, MTU: 0, Clocking: Unspecified, Speed: 800mbps
-  Device flags   : Present Running
-  Link type      : Unspecified
-  Link flags     : None
-  Physical info  : Unspecified
-  Hold-times     : Up 0 ms, Down 0 ms
-  Current address: Unspecified, Hardware address: Unspecified
-  Alternate link address: Unspecified
-  Last flapped   : Never
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0
-   Output bytes  :                    0
-   Input  packets:                    0
-   Output packets:                    0
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-
-  Logical interface pfe-0/0/0.16383 (Index 328) (SNMP ifIndex 512) (Generation 137)
-    Flags: Up SNMP-Traps Encapsulation: ENET2
-    Bandwidth: 0
-    Traffic statistics:
-     Input  bytes  :                    0
-     Output bytes  :                    0
-     Input  packets:                    0
-     Output packets:                    0
-     IPv6 transit statistics:
-      Input  bytes  :                   0
-      Output bytes  :                   0
-      Input  packets:                   0
-      Output packets:                   0
-    Local statistics:
-     Input  bytes  :                    0
-     Output bytes  :                    0
-     Input  packets:                    0
-     Output packets:                    0
-    Transit statistics:
-     Input  bytes  :                    0                    0 bps
-     Output bytes  :                    0                    0 bps
-     Input  packets:                    0                    0 pps
-     Output packets:                    0                    0 pps
-     IPv6 transit statistics:
-      Input  bytes  :                   0
-      Output bytes  :                   0
-      Input  packets:                   0
-      Output packets:                   0
-    Protocol inet, MTU: Unlimited, Generation: 150, Route table: 1
-      Flags: None
-    Protocol inet6, MTU: Unlimited, Generation: 151, Route table: 1
-      Flags: None
-
-Physical interface: pfh-0/0/0, Enabled, Physical link is Up
-  Interface index: 135, SNMP ifIndex: 509, Generation: 138
-  Type: Unspecified, Link-level type: Unspecified, MTU: 0, Clocking: Unspecified, Speed: 800mbps
-  Device flags   : Present Running
-  Link type      : Unspecified
-  Link flags     : None
-  Physical info  : Unspecified
-  Hold-times     : Up 0 ms, Down 0 ms
-  Current address: Unspecified, Hardware address: Unspecified
-  Alternate link address: Unspecified
-  Last flapped   : Never
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0
-   Output bytes  :                    0
-   Input  packets:                    0
-   Output packets:                    0
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-
-  Logical interface pfh-0/0/0.16383 (Index 327) (SNMP ifIndex 511) (Generation 136)
-    Flags: Up SNMP-Traps Encapsulation: ENET2
-    Bandwidth: 0
-    Traffic statistics:
-     Input  bytes  :                    0
-     Output bytes  :                    0
-     Input  packets:                    0
-     Output packets:                    0
-    Local statistics:
-     Input  bytes  :                    0
-     Output bytes  :                    0
-     Input  packets:                    0
-     Output packets:                    0
-    Transit statistics:
-     Input  bytes  :                    0                    0 bps
-     Output bytes  :                    0                    0 bps
-     Input  packets:                    0                    0 pps
-     Output packets:                    0                    0 pps
-    Protocol inet, MTU: Unlimited, Generation: 149, Route table: 1
-      Flags: None
-
-Physical interface: ge-0/0/1, Enabled, Physical link is Up
-  Interface index: 138, SNMP ifIndex: 514, Generation: 141
-  Link-level type: Ethernet, MTU: 1514, MRU: 1522, Speed: 1000mbps, BPDU Error: None, MAC-REWRITE Error: None, Loopback: Disabled, Source filtering: Disabled, Flow control: Enabled
-  Pad to minimum frame size: Disabled
-  Device flags   : Present Running
-  Interface flags: SNMP-Traps Internal: 0x4000
-  Link flags     : None
-  CoS queues     : 8 supported, 8 maximum usable queues
-  Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:be:01, Hardware address: 00:05:86:71:be:01
-  Last flapped   : 2025-05-26 01:19:42 UTC (05:01:57 ago)
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0                    0 bps
-   Output bytes  :                    0                    0 bps
-   Input  packets:                    0                    0 pps
-   Output packets:                    0                    0 pps
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-  Active alarms  : None
-  Active defects : None
-  Interface transmit statistics: Disabled
-
-Physical interface: ge-0/0/2, Enabled, Physical link is Up
-  Interface index: 139, SNMP ifIndex: 515, Generation: 142
-  Link-level type: Ethernet, MTU: 1514, MRU: 1522, Speed: 1000mbps, BPDU Error: None, MAC-REWRITE Error: None, Loopback: Disabled, Source filtering: Disabled, Flow control: Enabled
-  Pad to minimum frame size: Disabled
-  Device flags   : Present Running
-  Interface flags: SNMP-Traps Internal: 0x4000
-  Link flags     : None
-  CoS queues     : 8 supported, 8 maximum usable queues
-  Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:be:02, Hardware address: 00:05:86:71:be:02
-  Last flapped   : 2025-05-26 01:19:42 UTC (05:01:57 ago)
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0                    0 bps
-   Output bytes  :                    0                    0 bps
-   Input  packets:                    0                    0 pps
-   Output packets:                    0                    0 pps
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-  Active alarms  : None
-  Active defects : None
-  Interface transmit statistics: Disabled
-
-Physical interface: ge-0/0/3, Enabled, Physical link is Up
-  Interface index: 140, SNMP ifIndex: 516, Generation: 143
-  Link-level type: Ethernet, MTU: 1514, MRU: 1522, Speed: 1000mbps, BPDU Error: None, MAC-REWRITE Error: None, Loopback: Disabled, Source filtering: Disabled, Flow control: Enabled
-  Pad to minimum frame size: Disabled
-  Device flags   : Present Running
-  Interface flags: SNMP-Traps Internal: 0x4000
-  Link flags     : None
-  CoS queues     : 8 supported, 8 maximum usable queues
-  Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:be:03, Hardware address: 00:05:86:71:be:03
-  Last flapped   : 2025-05-26 01:19:42 UTC (05:01:57 ago)
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0                    0 bps
-   Output bytes  :                    0                    0 bps
-   Input  packets:                    0                    0 pps
-   Output packets:                    0                    0 pps
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-  Active alarms  : None
-  Active defects : None
-  Interface transmit statistics: Disabled
-
-Physical interface: ge-0/0/4, Enabled, Physical link is Up
-  Interface index: 141, SNMP ifIndex: 517, Generation: 144
-  Link-level type: Ethernet, MTU: 1514, MRU: 1522, Speed: 1000mbps, BPDU Error: None, MAC-REWRITE Error: None, Loopback: Disabled, Source filtering: Disabled, Flow control: Enabled
-  Pad to minimum frame size: Disabled
-  Device flags   : Present Running
-  Interface flags: SNMP-Traps Internal: 0x4000
-  Link flags     : None
-  CoS queues     : 8 supported, 8 maximum usable queues
-  Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:be:04, Hardware address: 00:05:86:71:be:04
-  Last flapped   : 2025-05-26 01:19:42 UTC (05:01:57 ago)
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0                    0 bps
-   Output bytes  :                    0                    0 bps
-   Input  packets:                    0                    0 pps
-   Output packets:                    0                    0 pps
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-  Active alarms  : None
-  Active defects : None
-  Interface transmit statistics: Disabled
-
-Physical interface: ge-0/0/5, Enabled, Physical link is Up
-  Interface index: 142, SNMP ifIndex: 518, Generation: 145
-  Link-level type: Ethernet, MTU: 1514, MRU: 1522, Speed: 1000mbps, BPDU Error: None, MAC-REWRITE Error: None, Loopback: Disabled, Source filtering: Disabled, Flow control: Enabled
-  Pad to minimum frame size: Disabled
-  Device flags   : Present Running
-  Interface flags: SNMP-Traps Internal: 0x4000
-  Link flags     : None
-  CoS queues     : 8 supported, 8 maximum usable queues
-  Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:be:05, Hardware address: 00:05:86:71:be:05
-  Last flapped   : 2025-05-26 01:19:42 UTC (05:01:57 ago)
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0                    0 bps
-   Output bytes  :                    0                    0 bps
-   Input  packets:                    0                    0 pps
-   Output packets:                    0                    0 pps
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-  Active alarms  : None
-  Active defects : None
-  Interface transmit statistics: Disabled
-
-Physical interface: ge-0/0/6, Enabled, Physical link is Up
-  Interface index: 143, SNMP ifIndex: 519, Generation: 146
-  Link-level type: Ethernet, MTU: 1514, MRU: 1522, Speed: 1000mbps, BPDU Error: None, MAC-REWRITE Error: None, Loopback: Disabled, Source filtering: Disabled, Flow control: Enabled
-  Pad to minimum frame size: Disabled
-  Device flags   : Present Running
-  Interface flags: SNMP-Traps Internal: 0x4000
-  Link flags     : None
-  CoS queues     : 8 supported, 8 maximum usable queues
-  Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:be:06, Hardware address: 00:05:86:71:be:06
-  Last flapped   : 2025-05-26 01:19:42 UTC (05:01:57 ago)
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0                    0 bps
-   Output bytes  :                    0                    0 bps
-   Input  packets:                    0                    0 pps
-   Output packets:                    0                    0 pps
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-  Active alarms  : None
-  Active defects : None
-  Interface transmit statistics: Disabled
-
-Physical interface: ge-0/0/7, Enabled, Physical link is Up
-  Interface index: 144, SNMP ifIndex: 520, Generation: 147
-  Link-level type: Ethernet, MTU: 1514, MRU: 1522, Speed: 1000mbps, BPDU Error: None, MAC-REWRITE Error: None, Loopback: Disabled, Source filtering: Disabled, Flow control: Enabled
-  Pad to minimum frame size: Disabled
-  Device flags   : Present Running
-  Interface flags: SNMP-Traps Internal: 0x4000
-  Link flags     : None
-  CoS queues     : 8 supported, 8 maximum usable queues
-  Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:be:07, Hardware address: 00:05:86:71:be:07
-  Last flapped   : 2025-05-26 01:19:42 UTC (05:01:57 ago)
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0                    0 bps
-   Output bytes  :                    0                    0 bps
-   Input  packets:                    0                    0 pps
-   Output packets:                    0                    0 pps
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-  Active alarms  : None
-  Active defects : None
-  Interface transmit statistics: Disabled
-
-Physical interface: ge-0/0/8, Enabled, Physical link is Up
-  Interface index: 145, SNMP ifIndex: 521, Generation: 148
-  Link-level type: Ethernet, MTU: 1514, MRU: 1522, Speed: 1000mbps, BPDU Error: None, MAC-REWRITE Error: None, Loopback: Disabled, Source filtering: Disabled, Flow control: Enabled
-  Pad to minimum frame size: Disabled
-  Device flags   : Present Running
-  Interface flags: SNMP-Traps Internal: 0x4000
-  Link flags     : None
-  CoS queues     : 8 supported, 8 maximum usable queues
-  Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:be:08, Hardware address: 00:05:86:71:be:08
-  Last flapped   : 2025-05-26 01:19:42 UTC (05:01:57 ago)
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0                    0 bps
-   Output bytes  :                    0                    0 bps
-   Input  packets:                    0                    0 pps
-   Output packets:                    0                    0 pps
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-  Active alarms  : None
-  Active defects : None
-  Interface transmit statistics: Disabled
-
-Physical interface: ge-0/0/9, Enabled, Physical link is Up
-  Interface index: 146, SNMP ifIndex: 522, Generation: 149
-  Link-level type: Ethernet, MTU: 1514, MRU: 1522, Speed: 1000mbps, BPDU Error: None, MAC-REWRITE Error: None, Loopback: Disabled, Source filtering: Disabled, Flow control: Enabled
-  Pad to minimum frame size: Disabled
-  Device flags   : Present Running
-  Interface flags: SNMP-Traps Internal: 0x4000
-  Link flags     : None
-  CoS queues     : 8 supported, 8 maximum usable queues
-  Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:be:09, Hardware address: 00:05:86:71:be:09
-  Last flapped   : 2025-05-26 01:19:42 UTC (05:01:57 ago)
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0                    0 bps
-   Output bytes  :                    0                    0 bps
-   Input  packets:                    0                    0 pps
-   Output packets:                    0                    0 pps
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-  Active alarms  : None
-  Active defects : None
-  Interface transmit statistics: Disabled
-
-Physical interface: .local., Enabled, Physical link is Up
-  Interface index: 0, SNMP ifIndex: 0, Generation: 1
-  Type: Loopback, Link-level type: Interface-Specific, MTU: Unlimited, Clocking: Unspecified, Speed: Unlimited
-  Device flags   : Present Running Loopback
-  Interface flags: Point-To-Point
-  Link type      : Unspecified
-  Link flags     : None
-  Physical info  : Unspecified
-  Hold-times     : Up 0 ms, Down 0 ms
-  Current address: Unspecified, Hardware address: Unspecified
-  Alternate link address: Unspecified
-  Last flapped   : Never
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0
-   Output bytes  :                    0
-   Input  packets:                    0
-   Output packets:                    0
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-
-  Logical interface .local..0 (Index 0) (SNMP ifIndex 0) (Generation 1)
-    Flags: Down Point-To-Point Encapsulation: Unspecified
-    Bandwidth: 0
-    Protocol inet, MTU: Unlimited, Generation: 133, Route table: 0
-      Flags: None
-      Addresses, Flags: Is-Primary
-        Destination: Unspecified, Local: 192.168.110.2, Broadcast: Unspecified, Generation: 139
-    Protocol iso, MTU: Unlimited, Generation: 136, Route table: 0
-      Flags: None
-    Protocol inet6, MTU: Unlimited, Generation: 130, Route table: 0
-      Flags: None
-    Protocol mpls, MTU: Unlimited, Maximum labels: 3, Generation: 132, Route table: 0
-      Flags: None
-    Protocol 61, MTU: Unlimited, Generation: 129, Route table: 0
-      Flags: None
-
-  Logical interface .local..1 (Index 1) (SNMP ifIndex 0) (Generation 2)
-    Flags: Down Point-To-Point Encapsulation: Unspecified
-    Bandwidth: 0
-    Protocol inet, MTU: Unlimited, Generation: 134, Route table: 1
-      Flags: None
-      Addresses, Flags: Is-Primary
-        Destination: Unspecified, Local: 128.0.0.1, Broadcast: Unspecified, Generation: 133
-      Addresses, Flags: None
-        Destination: Unspecified, Local: 128.0.0.4, Broadcast: Unspecified, Generation: 135
-      Addresses, Flags: None
-        Destination: Unspecified, Local: 172.16.0.1, Broadcast: Unspecified, Generation: 129
-    Protocol inet6, MTU: Unlimited, Generation: 131, Route table: 1
-      Flags: None
-      Addresses, Flags: None
-        Destination: Unspecified, Local: fe80::200:f:fc00:0
-    Generation: 137
-      Addresses, Flags: None
-        Destination: Unspecified, Local: fe80::5200:ff:fe01:1
-    Protocol vpls, MTU: Unlimited, Generation: 130
-    Generation: 137, Route table: 1
-      Flags: None
-
-  Logical interface .local..2 (Index 2) (SNMP ifIndex 0) (Generation 2)
-    Flags: Down Point-To-Point Encapsulation: Unspecified
-    Bandwidth: 0
-    Protocol inet, MTU: Unlimited, Generation: 135, Route table: 2
-      Flags: None
-      Addresses, Flags: Is-Default Is-Primary
-        Destination: Unspecified, Local: 127.0.0.1, Broadcast: Unspecified, Generation: 131
-
-  Logical interface .local..3 (Index 321) (SNMP ifIndex 0) (Generation 130)
-    Flags: Down Point-To-Point Encapsulation: Unspecified
-    Bandwidth: 0
-    Protocol inet, MTU: Unlimited, Generation: 138, Route table: 3
-      Flags: None
-    Protocol iso, MTU: Unlimited, Generation: 139, Route table: 3
-      Flags: None
-    Protocol inet6, MTU: Unlimited, Generation: 141, Route table: 3
-      Flags: None
-
-  Logical interface .local..4 (Index 322) (SNMP ifIndex 0) (Generation 131)
-    Flags: Down Point-To-Point Encapsulation: Unspecified
-    Bandwidth: 0
-    Protocol mpls, MTU: Unlimited, Maximum labels: 3, Generation: 140, Route table: 4
-      Flags: None
-
-  Logical interface .local..5 (Index 323) (SNMP ifIndex 0) (Generation 132)
-    Flags: Down Point-To-Point Encapsulation: Unspecified
-    Bandwidth: 0
-    Protocol vpls, MTU: Unlimited, Generation: 142, Route table: 5
-      Flags: None
-
-Physical interface: cbp0, Enabled, Physical link is Up
-  Interface index: 129, SNMP ifIndex: 501, Generation: 132
-  Type: Ethernet, Link-level type: Ethernet, MTU: 1514, Clocking: Unspecified, Speed: Unspecified
-  Device flags   : Present Running
-  Interface flags: SNMP-Traps
-  Link type      : Full-Duplex
-  Link flags     : None
-  Physical info  : Unspecified
-  Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:be:11, Hardware address: 00:05:86:71:be:11
-  Alternate link address: Unspecified
-  Last flapped   : Never
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0
-   Output bytes  :                    0
-   Input  packets:                    0
-   Output packets:                    0
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-
-Physical interface: demux0, Enabled, Physical link is Up
-  Interface index: 128, SNMP ifIndex: 502, Generation: 131
-  Type: Software-Pseudo, Link-level type: Unspecified, MTU: 9192, Clocking: 1, Speed: Unspecified
-  Device flags   : Present Running
-  Interface flags: Point-To-Point SNMP-Traps
-  Link type      : Full-Duplex
-  Link flags     : None
-  Physical info  : Unspecified
-  Hold-times     : Up 0 ms, Down 0 ms
-  Current address: Unspecified, Hardware address: Unspecified
-  Alternate link address: Unspecified
-  Last flapped   : Never
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0
-   Output bytes  :                    0
-   Input  packets:                    0
-   Output packets:                    0
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-
-Physical interface: dsc, Enabled, Physical link is Up
-  Interface index: 5, SNMP ifIndex: 5, Generation: 6
-  Type: Software-Pseudo, Link-level type: Unspecified, MTU: Unlimited, Clocking: Unspecified, Speed: Unspecified
-  Device flags   : Present Running
-  Interface flags: Point-To-Point SNMP-Traps
-  Link type      : Unspecified
-  Link flags     : None
-  Physical info  : Unspecified
-  Hold-times     : Up 0 ms, Down 0 ms
-  Current address: Unspecified, Hardware address: Unspecified
-  Alternate link address: Unspecified
-  Last flapped   : Never
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0
-   Output bytes  :                    0
-   Input  packets:                    0
-   Output packets:                    0
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-
-Physical interface: em0, Enabled, Physical link is Up
-  Interface index: 8, SNMP ifIndex: 17, Generation: 1
-  Type: Ethernet, Link-level type: Ethernet, MTU: 1514, Clocking: Unspecified, Speed: 1000mbps
-  Device flags   : Present Running
-  Interface flags: SNMP-Traps
-  Link type      : Full-Duplex
-  Link flags     : None
-  Physical info  : Unspecified
-  Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 50:00:00:01:00:00, Hardware address: 50:00:00:01:00:00
-  Alternate link address: Unspecified
-  Last flapped   : Never
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0
-   Output bytes  :                    0
-   Input  packets:                    0
-   Output packets:                    0
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-
-Physical interface: em1, Enabled, Physical link is Up
-  Interface index: 9, SNMP ifIndex: 23, Generation: 2
-  Type: Ethernet, Link-level type: Ethernet, MTU: 1514, Clocking: Unspecified, Speed: 1000mbps
-  Device flags   : Present Running
-  Interface flags: SNMP-Traps
-  Link type      : Full-Duplex
-  Physical info  : Unspecified
-  Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 50:00:00:01:00:01, Hardware address: 50:00:00:01:00:01
-  Alternate link address: Unspecified
-  Last flapped   : Never
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0
-   Output bytes  :                    0
-   Input  packets:                    0
-   Output packets:                    5
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-
-  Logical interface em1.0 (Index 3) (SNMP ifIndex 24) (Generation 1)
-    Flags: Up SNMP-Traps 0x4000000 Encapsulation: ENET2
-    Traffic statistics:
-     Input  bytes  :                    0
-     Output bytes  :                  362
-     Input  packets:                    0
-     Output packets:                    5
-     IPv6 transit statistics:
-      Input  bytes  :                   0
-      Output bytes  :                   0
-      Input  packets:                   0
-      Output packets:                   0
-    Local statistics:
-     Input  bytes  :                    0
-     Output bytes  :                  362
-     Input  packets:                    0
-     Output packets:                    5
-    Protocol inet, MTU: 1500, Generation: 143, Route table: 1
-      Flags: Is-Primary
-      Addresses, Flags: Is-Preferred Is-Primary
-        Destination: 172.16/16, Local: 172.16.0.1, Broadcast: 172.16.255.255, Generation: 1
-    Protocol inet6, MTU: 1500, Generation: 144, Route table: 1
-      Flags: Is-Primary
-      Addresses, Flags: Is-Preferred
-        Destination: fe80::/64, Local: fe80::5200:ff:fe01:1
-    Generation: 2
-
-Physical interface: em2, Enabled, Physical link is Up
-  Interface index: 64, SNMP ifIndex: 116, Generation: 3
-  Type: Ethernet, Link-level type: Ethernet, MTU: 1514, Clocking: Unspecified, Speed: 1000mbps
-  Device flags   : Present Running
-  Interface flags: Promiscuous SNMP-Traps
-  Link type      : Full-Duplex
-  Link flags     : None
-  Physical info  : Unspecified
-  Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 50:00:00:01:00:02, Hardware address: 50:00:00:01:00:02
-  Alternate link address: Unspecified
-  Last flapped   : Never
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0
-   Output bytes  :                    0
-   Input  packets:                13381
-   Output packets:                23867
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-
-Physical interface: em3, Enabled, Physical link is Up
-  Interface index: 65, SNMP ifIndex: 151, Generation: 4
-  Type: Ethernet, Link-level type: Ethernet, MTU: 1514, Clocking: Unspecified, Speed: 1000mbps
-  Device flags   : Present Running
-  Interface flags: Promiscuous SNMP-Traps
-  Link type      : Full-Duplex
-  Link flags     : None
-  Physical info  : Unspecified
-  Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 50:00:00:01:00:03, Hardware address: 50:00:00:01:00:03
-  Alternate link address: Unspecified
-  Last flapped   : Never
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0
-   Output bytes  :                    0
-   Input  packets:                    0
-   Output packets:                    0
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-
-Physical interface: em4, Enabled, Physical link is Up
-  Interface index: 66, SNMP ifIndex: 153, Generation: 5
-  Type: Ethernet, Link-level type: Ethernet, MTU: 1514, Clocking: Unspecified, Speed: 1000mbps
-  Device flags   : Present Running
-  Interface flags: Promiscuous SNMP-Traps
-  Link type      : Full-Duplex
-  Link flags     : None
-  Physical info  : Unspecified
-  Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 50:00:00:01:00:04, Hardware address: 50:00:00:01:00:04
-  Alternate link address: Unspecified
-  Last flapped   : Never
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0
-   Output bytes  :                    0
-   Input  packets:                    0
-   Output packets:                    0
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-
-Physical interface: em5, Enabled, Physical link is Up
-  Interface index: 67, SNMP ifIndex: 155, Generation: 6
-  Type: Ethernet, Link-level type: Ethernet, MTU: 1514, Clocking: Unspecified, Speed: 1000mbps
-  Device flags   : Present Running
-  Interface flags: Promiscuous SNMP-Traps
-  Link type      : Full-Duplex
-  Link flags     : None
-  Physical info  : Unspecified
-  Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 50:00:00:01:00:05, Hardware address: 50:00:00:01:00:05
-  Alternate link address: Unspecified
-  Last flapped   : Never
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0
-   Output bytes  :                    0
-   Input  packets:                    0
-   Output packets:                    0
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-
-Physical interface: gre, Enabled, Physical link is Up
-  Interface index: 10, SNMP ifIndex: 8, Generation: 11
-  Type: GRE, Link-level type: GRE, MTU: Unlimited, Speed: Unlimited
-  Hold-times     : Up 0 ms, Down 0 ms
-  Device flags   : Present Running
-  Interface flags: Point-To-Point SNMP-Traps
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0
-   Output bytes  :                    0
-   Input  packets:                    0
-   Output packets:                    0
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-
-Physical interface: ipip, Enabled, Physical link is Up
-  Interface index: 11, SNMP ifIndex: 9, Generation: 12
-  Type: IPIP, Link-level type: IP-over-IP, MTU: Unlimited, Speed: Unlimited
-  Hold-times     : Up 0 ms, Down 0 ms
-  Device flags   : Present Running
-  Interface flags: SNMP-Traps
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0
-   Output bytes  :                    0
-   Input  packets:                    0
-   Output packets:                    0
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-
-Physical interface: irb, Enabled, Physical link is Up
-  Interface index: 132, SNMP ifIndex: 503, Generation: 135
-  Type: Ethernet, Link-level type: Ethernet, MTU: 1514, Clocking: Unspecified, Speed: Unspecified
-  Device flags   : Present Running
-  Interface flags: SNMP-Traps
-  Link type      : Full-Duplex
-  Link flags     : None
-  Physical info  : Unspecified
-  Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:c1:f0, Hardware address: 00:05:86:71:c1:f0
-  Alternate link address: Unspecified
-  Last flapped   : Never
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0
-   Output bytes  :                    0
-   Input  packets:                    0
-   Output packets:                    0
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-
-Physical interface: lo0, Enabled, Physical link is Up
-  Interface index: 6, SNMP ifIndex: 6, Generation: 7
-  Type: Loopback, Link-level type: Unspecified, MTU: Unlimited, Clocking: Unspecified, Speed: Unspecified
-  Device flags   : Present Running Loopback
-  Interface flags: SNMP-Traps
-  Link type      : Unspecified
-  Link flags     : None
-  Physical info  : Unspecified
-  Hold-times     : Up 0 ms, Down 0 ms
-  Current address: Unspecified, Hardware address: Unspecified
-  Alternate link address: Unspecified
-  Last flapped   : Never
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                 5385
-   Output bytes  :                 5385
-   Input  packets:                   91
-   Output packets:                   91
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-
-  Logical interface lo0.16384 (Index 324) (SNMP ifIndex 21) (Generation 133)
-    Flags: Down SNMP-Traps Encapsulation: Unspecified
-    Traffic statistics:
-     Input  bytes  :                  600
-     Output bytes  :                  600
-     Input  packets:                   12
-     Output packets:                   12
-    Local statistics:
-     Input  bytes  :                  600
-     Output bytes  :                  600
-     Input  packets:                   12
-     Output packets:                   12
-    Transit statistics:
-     Input  bytes  :                    0                    0 bps
-     Output bytes  :                    0                    0 bps
-     Input  packets:                    0                    0 pps
-     Output packets:                    0                    0 pps
-    Protocol inet, MTU: Unlimited, Generation: 145, Route table: 2
-      Addresses, Flags: None
-        Destination: Unspecified, Local: 127.0.0.1, Broadcast: Unspecified, Generation: 132
-
-  Logical interface lo0.16385 (Index 325) (SNMP ifIndex 22) (Generation 134)
-    Flags: Down SNMP-Traps Encapsulation: Unspecified
-    Traffic statistics:
-     Input  bytes  :                 4785
-     Output bytes  :                 4785
-     Input  packets:                   79
-     Output packets:                   79
-     IPv6 transit statistics:
-      Input  bytes  :                   0
-      Output bytes  :                   0
-      Input  packets:                   0
-      Output packets:                   0
-    Local statistics:
-     Input  bytes  :                 4785
-     Output bytes  :                 4785
-     Input  packets:                   79
-     Output packets:                   79
-    Transit statistics:
-     Input  bytes  :                    0                    0 bps
-     Output bytes  :                    0                    0 bps
-     Input  packets:                    0                    0 pps
-     Output packets:                    0                    0 pps
-     IPv6 transit statistics:
-      Input  bytes  :                   0
-      Output bytes  :                   0
-      Input  packets:                   0
-      Output packets:                   0
-    Protocol inet, MTU: Unlimited, Generation: 146, Route table: 1
-      Addresses, Flags: Is-Default Is-Primary
-        Destination: Unspecified, Local: 128.0.0.1, Broadcast: Unspecified, Generation: 134
-      Addresses, Flags: None
-        Destination: Unspecified, Local: 128.0.0.4, Broadcast: Unspecified, Generation: 136
-    Protocol inet6, MTU: Unlimited, Generation: 147, Route table: 1
-        Destination: Unspecified, Local: fe80::200:f:fc00:0
-    Generation: 138
-
-  Logical interface lo0.32768 (Index 320) (SNMP ifIndex 250) (Generation 129)
-    Flags: Down Encapsulation: Unspecified
-    Traffic statistics:
-     Input  bytes  :                    0
-     Output bytes  :                    0
-     Input  packets:                    0
-     Output packets:                    0
-    Local statistics:
-     Input  bytes  :                    0
-     Output bytes  :                    0
-     Input  packets:                    0
-     Output packets:                    0
-    Transit statistics:
-     Input  bytes  :                    0                    0 bps
-     Output bytes  :                    0                    0 bps
-     Input  packets:                    0                    0 pps
-     Output packets:                    0                    0 pps
-
-Physical interface: lsi, Enabled, Physical link is Up
-  Interface index: 4, SNMP ifIndex: 4, Generation: 5
-  Type: Software-Pseudo, Link-level type: LSI, MTU: Unlimited, Clocking: Unspecified, Speed: Unlimited
-  Device flags   : Present Running
-  Link type      : Unspecified
-  Link flags     : None
-  Physical info  : Unspecified
-  Hold-times     : Up 0 ms, Down 0 ms
-  Current address: Unspecified, Hardware address: Unspecified
-  Alternate link address: Unspecified
-  Last flapped   : Never
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0
-   Output bytes  :                    0
-   Input  packets:                    0
-   Output packets:                    0
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-
-Physical interface: mtun, Enabled, Physical link is Up
-  Interface index: 68, SNMP ifIndex: 12, Generation: 7
-  Type: Multicast-GRE, Link-level type: GRE, MTU: Unlimited, Speed: Unlimited
-  Hold-times     : Up 0 ms, Down 0 ms
-  Device flags   : Present Running
-  Interface flags: SNMP-Traps
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0
-   Output bytes  :                    0
-   Input  packets:                    0
-   Output packets:                    0
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-
-Physical interface: pimd, Enabled, Physical link is Up
-  Interface index: 26, SNMP ifIndex: 11, Generation: 130
-  Type: PIMD, Link-level type: PIM-Decapsulator, MTU: Unlimited, Speed: Unlimited
-  Hold-times     : Up 0 ms, Down 0 ms
-  Device flags   : Present Running
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0
-   Output bytes  :                    0
-   Input  packets:                    0
-   Output packets:                    0
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-
-Physical interface: pime, Enabled, Physical link is Up
-  Interface index: 25, SNMP ifIndex: 10, Generation: 129
-  Type: PIME, Link-level type: PIM-Encapsulator, MTU: Unlimited, Speed: Unlimited
-  Hold-times     : Up 0 ms, Down 0 ms
-  Device flags   : Present Running
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0
-   Output bytes  :                    0
-   Input  packets:                    0
-   Output packets:                    0
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-
-Physical interface: pip0, Enabled, Physical link is Up
-  Interface index: 130, SNMP ifIndex: 504, Generation: 133
-  Type: Ethernet, Link-level type: Ethernet, MTU: 1514, Clocking: Unspecified, Speed: Unspecified
-  Device flags   : Present Running
-  Interface flags: SNMP-Traps
-  Link type      : Full-Duplex
-  Link flags     : None
-  Physical info  : Unspecified
-  Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:c1:b0, Hardware address: 00:05:86:71:c1:b0
-  Alternate link address: Unspecified
-  Last flapped   : Never
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0
-   Output bytes  :                    0
-   Input  packets:                    0
-   Output packets:                    0
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-
-Physical interface: pp0, Enabled, Physical link is Up
-  Interface index: 131, SNMP ifIndex: 505, Generation: 134
-  Type: PPPoE, Link-level type: PPPoE, MTU: 1532, Speed: Unspecified
-  Device flags   : Present Running
-  Interface flags: Point-To-Point SNMP-Traps
-  Link type      : Full-Duplex
-  Link flags     : None
-  Physical info  : Unspecified
-  Hold-times     : Up 0 ms, Down 0 ms
-  Current address: Unspecified, Hardware address: Unspecified
-  Alternate link address: Unspecified
-
-Physical interface: tap, Enabled, Physical link is Up
-  Interface index: 12, SNMP ifIndex: 7, Generation: 13
-  Type: Software-Pseudo, Link-level type: Interface-Specific, MTU: Unlimited, Clocking: Unspecified, Speed: Unlimited
-  Device flags   : Present Running
-  Interface flags: SNMP-Traps
-  Link type      : Unspecified
-  Link flags     : None
-  Physical info  : Unspecified
-  Hold-times     : Up 0 ms, Down 0 ms
-  Current address: Unspecified, Hardware address: Unspecified
-  Alternate link address: Unspecified
-  Last flapped   : Never
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0
-   Output bytes  :                    0
-   Input  packets:                    0
-   Output packets:                    0
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-
-Physical interface: vtep, Enabled, Physical link is Up
-  Interface index: 133, SNMP ifIndex: 506, Generation: 136
-  Type: Software-Pseudo, Link-level type: VxLAN-Tunnel-Endpoint, MTU: 1600, Clocking: Unspecified, Speed: Unlimited
-  Device flags   : Present Running
-  Link type      : Full-Duplex
-  Link flags     : None
-  Physical info  : Unspecified
-  Hold-times     : Up 0 ms, Down 0 ms
-  Current address: Unspecified, Hardware address: Unspecified
-  Alternate link address: Unspecified
-  Last flapped   : Never
-  Statistics last cleared: Never
-  Traffic statistics:
-   Input  bytes  :                    0
-   Output bytes  :                    0
-   Input  packets:                    0
-   Output packets:                    0
-   IPv6 transit statistics:
-    Input  bytes  :                   0
-    Output bytes  :                   0
-    Input  packets:                   0
-    Output packets:                   0
-
-root> 
-
-root> show system uptime 
-Current time: 2025-05-26 06:21:39 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:03:19 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:02:35 ago)
-Last configured: 2025-05-26 01:27:26 UTC (04:54:13 ago) by root
- 6:21AM  up 5:03, 2 users, load averages: 0.07, 0.07, 0.04
-
-root> 
-
-root> show arp | no-more 
-MAC Address       Address         Name                      Interface           Flags
-00:50:56:c0:00:08 192.168.110.1   192.168.110.1             ge-0/0/0.0          none
-00:0c:29:80:ff:c8 192.168.110.128 192.168.110.128           ge-0/0/0.0          none
-00:50:56:e2:37:23 192.168.110.254 192.168.110.254           ge-0/0/0.0          none
-Total entries: 3
-
-root> 
-
-root> show system uptime 
-Current time: 2025-05-26 06:21:39 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:03:19 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:02:35 ago)
-Last configured: 2025-05-26 01:27:26 UTC (04:54:13 ago) by root
- 6:21AM  up 5:03, 2 users, load averages: 0.07, 0.07, 0.04
-
-root> 
-
-root> show system uptime 
-Current time: 2025-05-26 06:21:39 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:03:19 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:02:35 ago)
-Last configured: 2025-05-26 01:27:26 UTC (04:54:13 ago) by root
- 6:21AM  up 5:03, 2 users, load averages: 0.07, 0.07, 0.04
-
-root> 
-
-root> show route summary | no-more 
-Router ID: 192.168.110.2
-
-inet.0: 2 destinations, 2 routes (2 active, 0 holddown, 0 hidden)
-              Direct:      1 routes,      1 active
-               Local:      1 routes,      1 active
-
-root> 
-
-root> show system uptime 
-Current time: 2025-05-26 06:21:40 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:03:20 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:02:36 ago)
-Last configured: 2025-05-26 01:27:26 UTC (04:54:14 ago) by root
- 6:21AM  up 5:03, 2 users, load averages: 0.07, 0.07, 0.04
-
-root> 
-
-root> show ospf interface brief | no-more 
-OSPF instance is not running
-
-root> 
-
-root> show system uptime 
-Current time: 2025-05-26 06:21:40 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:03:20 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:02:36 ago)
-Last configured: 2025-05-26 01:27:26 UTC (04:54:14 ago) by root
- 6:21AM  up 5:03, 2 users, load averages: 0.07, 0.07, 0.04
-
-root> 
-
-root> show isis adjacency | no-more 
-IS-IS instance is not running
-
-root> 
-
-root> show system uptime 
-Current time: 2025-05-26 06:21:40 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:03:20 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:02:36 ago)
-Last configured: 2025-05-26 01:27:26 UTC (04:54:14 ago) by root
- 6:21AM  up 5:03, 2 users, load averages: 0.07, 0.07, 0.04
-
-root> 
-
-root> show mpls interface | no-more 
-MPLS not configured
-
-root> 
-
-root> show system uptime 
-Current time: 2025-05-26 06:21:40 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:03:20 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:02:36 ago)
-Last configured: 2025-05-26 01:27:26 UTC (04:54:14 ago) by root
- 6:21AM  up 5:03, 2 users, load averages: 0.07, 0.07, 0.04
-
-root> 
-
-root> show ldp session | no-more 
-LDP instance is not running
-
-root> 
-
-root> show system uptime 
-Current time: 2025-05-26 06:21:40 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:03:20 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:02:36 ago)
-Last configured: 2025-05-26 01:27:26 UTC (04:54:14 ago) by root
- 6:21AM  up 5:03, 2 users, load averages: 0.07, 0.07, 0.04
-
-root> 
-
-root> show rsvp interface | no-more 
-RSVP not configured
-
-root> 
-
-root> show system uptime 
-Current time: 2025-05-26 06:21:40 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:03:20 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:02:36 ago)
-Last configured: 2025-05-26 01:27:26 UTC (04:54:14 ago) by root
- 6:21AM  up 5:03, 2 users, load averages: 0.07, 0.07, 0.04
-
-root> 
-
-root> show lldp neighbor | no-more 
-
-root> 
-
-root> show system uptime 
-Current time: 2025-05-26 06:21:41 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:03:21 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:02:37 ago)
-Last configured: 2025-05-26 01:27:26 UTC (04:54:15 ago) by root
- 6:21AM  up 5:03, 2 users, load averages: 0.07, 0.07, 0.04
-
-root> 
-
-root> show mpls lsp | no-more 
-MPLS not configured
-
-root> 
-
-root> show system uptime 
-Current time: 2025-05-26 06:21:41 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:03:21 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:02:37 ago)
-Last configured: 2025-05-26 01:27:26 UTC (04:54:15 ago) by root
- 6:21AM  up 5:03, 2 users, load averages: 0.07, 0.07, 0.04
-
-root> 
-
-root> show bgp summary | no-more 
-BGP is not running
-
-root> 
-
-root> show system uptime 
-Current time: 2025-05-26 06:21:41 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:03:21 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:02:37 ago)
-Last configured: 2025-05-26 01:27:26 UTC (04:54:15 ago) by root
- 6:21AM  up 5:03, 2 users, load averages: 0.07, 0.07, 0.04
-
-root> 
-
-root> show configuration system services | no-more 
-ssh;
-
-root> 
-
-root> show system uptime 
-Current time: 2025-05-26 06:21:41 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:03:21 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:02:37 ago)
-Last configured: 2025-05-26 01:27:26 UTC (04:54:15 ago) by root
- 6:21AM  up 5:03, 2 users, load averages: 0.07, 0.07, 0.04
-
-root> 
-
-root> show configuration protocols | no-more 
-
-root> 
-
-root> show system uptime 
-Current time: 2025-05-26 06:21:41 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:03:21 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:02:37 ago)
-Last configured: 2025-05-26 01:27:26 UTC (04:54:15 ago) by root
- 6:21AM  up 5:03, 2 users, load averages: 0.07, 0.07, 0.04
-
-root> 
-
-root> show configuration firewall | no-more 
-
-root> 
-
-root> show system uptime 
-Current time: 2025-05-26 06:21:41 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:03:21 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:02:37 ago)
-Last configured: 2025-05-26 01:27:26 UTC (04:54:15 ago) by root
- 6:21AM  up 5:03, 2 users, load averages: 0.07, 0.07, 0.04
-
-root> 
-
-root> show system uptime 
-Current time: 2025-05-26 06:21:42 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:03:22 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:02:38 ago)
-Last configured: 2025-05-26 01:27:26 UTC (04:54:16 ago) by root
- 6:21AM  up 5:03, 2 users, load averages: 0.07, 0.07, 0.04
-
-root> 
-
-root> show log messages | match "error|warning|critical" | last 10 | no-more 
-May 26 01:19:09   /kernel: em1error setting host MAC filter table
-May 26 01:19:09   /kernel: em2error setting host MAC filter table
-May 26 01:19:09   /kernel: em3error setting host MAC filter table
-May 26 01:19:09   /kernel: em4error setting host MAC filter table
-May 26 01:19:09   /kernel: em5error setting host MAC filter table
-May 26 01:27:25   chassisd[3003]: CHASSISD_FILE_OPEN: File open: /dev/acb, error: 2 -- No such file or directory
-May 26 01:27:25   chassisd[3003]: CHASSISD_FILE_OPEN: File open: /dev/acb, error: 2 -- No such file or directory
-May 26 01:27:27   /kernel: KERN_ARP_DUPLICATE_ADDR: duplicate IP address 192.168.110.2! sent from address: 00:50:56:e7:df:30 (error count = 1)
-May 26 04:49:49   /kernel: KERN_ARP_DUPLICATE_ADDR: duplicate IP address 192.168.110.2! sent from address: 00:50:56:e7:df:30 (error count = 2)
----(more 60%)---
+---(more 23%)---
                                         
 root> 
 
 root> show system uptime 
-Current time: 2025-05-26 06:21:42 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:03:22 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:02:38 ago)
-Last configured: 2025-05-26 01:27:26 UTC (04:54:16 ago) by root
- 6:21AM  up 5:03, 2 users, load averages: 0.07, 0.07, 0.04
+Current time: 2025-05-27 06:02:33 UTC
+System booted: 2025-05-27 01:17:12 UTC (04:45:21 ago)
+Protocols started: 2025-05-27 01:17:42 UTC (04:44:51 ago)
+Last configured: 2025-05-27 01:19:05 UTC (04:43:28 ago) by root
+ 6:02AM  up 4:45, 5 users, load averages: 0.33, 0.18, 0.07
 
 root> 
 
 root> show system uptime 
-Current time: 2025-05-26 06:21:42 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:03:22 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:02:38 ago)
-Last configured: 2025-05-26 01:27:26 UTC (04:54:16 ago) by root
- 6:21AM  up 5:03, 2 users, load averages: 0.07, 0.07, 0.04
-
-root> 
-
-root> show log chassisd | match "error|warning|critical" | last 10 | no-more 
-May  1 15:40:28  fpc_down slot 0 reason Error cargs 0x0
-May  1 15:40:28  fpc_offline_now - slot 0, reason: Error, error Unresponsive transition state 1
-May  1 15:40:28  FPC#0 - power off [addr 0x11] reason: Error
-May  1 15:40:28  send: red alarm set, device FPC 0, reason FPC 0 Hard errors
-May  1 16:09:19  ch_power_off_frus_cleanup_exit: Chassisd exiting with error-code= 69
-May  1 16:14:47  rtsock_inform_fru_offline: inform peer type 17, index 0 offline, error 0
-May  1 16:14:47  rtsock_reset_self_ping_statistics: reset fpc_slot 0 self_ping stats, error 0
-May  1 16:14:47  fpc_offline_now - slot 0, reason: None, error Chassis connection dropped transition state 1
-May  1 16:14:55  ch_power_off_frus_cleanup_exit: Chassisd exiting with error-code= 69
----(more 22%)---
-                                        
-root> 
-
-root> show system uptime 
-Current time: 2025-05-26 06:21:42 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:03:22 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:02:38 ago)
-Last configured: 2025-05-26 01:27:26 UTC (04:54:16 ago) by root
- 6:21AM  up 5:03, 2 users, load averages: 0.07, 0.07, 0.04
-
-root> 
-
-root> show system uptime 
-Current time: 2025-05-26 06:21:42 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:03:22 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:02:38 ago)
-Last configured: 2025-05-26 01:27:26 UTC (04:54:16 ago) by root
- 6:21AM  up 5:03, 2 users, load averages: 0.07, 0.07, 0.04
+Current time: 2025-05-27 06:02:33 UTC
+System booted: 2025-05-27 01:17:12 UTC (04:45:21 ago)
+Protocols started: 2025-05-27 01:17:42 UTC (04:44:51 ago)
+Last configured: 2025-05-27 01:19:05 UTC (04:43:28 ago) by root
+ 6:02AM  up 4:45, 5 users, load averages: 0.33, 0.18, 0.07
 
 root> 
 
 root> show configuration | display set | no-more 
 set version 14.1R4.8
-set system root-authentication encrypted-password "$1$nwYSITa9$X5Wq7fYCj1AKg.9A0zvij1"
+set system root-authentication encrypted-password "$1$j5izbSpn$RRY9HX3l374/VClK.eNka."
 set system services ssh
 set system syslog user * any emergency
 set system syslog file messages any notice
@@ -4555,20 +1580,20 @@ root>
 root> 
 
 root> show system uptime 
-Current time: 2025-05-26 07:16:27 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:58:07 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:57:23 ago)
-Last configured: 2025-05-26 01:27:26 UTC (05:49:01 ago) by root
- 7:16AM  up 5:58, 2 users, load averages: 0.07, 0.04, 0.00
+Current time: 2025-05-27 06:02:51 UTC
+System booted: 2025-05-27 01:17:12 UTC (04:45:39 ago)
+Protocols started: 2025-05-27 01:17:42 UTC (04:45:09 ago)
+Last configured: 2025-05-27 01:19:05 UTC (04:43:46 ago) by root
+ 6:02AM  up 4:46, 3 users, load averages: 0.32, 0.18, 0.07
 
 root> 
 
 root> show system uptime 
-Current time: 2025-05-26 07:16:27 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:58:07 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:57:23 ago)
-Last configured: 2025-05-26 01:27:26 UTC (05:49:01 ago) by root
- 7:16AM  up 5:58, 2 users, load averages: 0.07, 0.04, 0.00
+Current time: 2025-05-27 06:02:51 UTC
+System booted: 2025-05-27 01:17:12 UTC (04:45:39 ago)
+Protocols started: 2025-05-27 01:17:42 UTC (04:45:09 ago)
+Last configured: 2025-05-27 01:19:05 UTC (04:43:46 ago) by root
+ 6:02AM  up 4:46, 3 users, load averages: 0.32, 0.18, 0.07
 
 root> 
 
@@ -4622,62 +1647,53 @@ JUNOS Packet Forwarding Engine Trio Simulation Package [14.1R4.8]
 root> 
 
 root> show system uptime 
-Current time: 2025-05-26 07:16:27 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:58:07 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:57:23 ago)
-Last configured: 2025-05-26 01:27:26 UTC (05:49:01 ago) by root
- 7:16AM  up 5:58, 2 users, load averages: 0.07, 0.04, 0.00
+Current time: 2025-05-27 06:02:51 UTC
+System booted: 2025-05-27 01:17:12 UTC (04:45:39 ago)
+Protocols started: 2025-05-27 01:17:42 UTC (04:45:09 ago)
+Last configured: 2025-05-27 01:19:05 UTC (04:43:46 ago) by root
+ 6:02AM  up 4:46, 3 users, load averages: 0.32, 0.18, 0.07
 
 root> 
 
 root> show system uptime 
-Current time: 2025-05-26 07:16:27 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:58:07 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:57:23 ago)
-Last configured: 2025-05-26 01:27:26 UTC (05:49:01 ago) by root
- 7:16AM  up 5:58, 2 users, load averages: 0.07, 0.04, 0.00
+Current time: 2025-05-27 06:02:51 UTC
+System booted: 2025-05-27 01:17:12 UTC (04:45:39 ago)
+Protocols started: 2025-05-27 01:17:42 UTC (04:45:09 ago)
+Last configured: 2025-05-27 01:19:05 UTC (04:43:46 ago) by root
+ 6:02AM  up 4:46, 3 users, load averages: 0.32, 0.18, 0.07
 
 root> 
 
 root> show chassis routing-engine | no-more 
 Routing Engine status:
     DRAM                      2048 MB (2048 MB installed)
-    Memory utilization          40 percent
+    Memory utilization          41 percent
     CPU utilization:
       User                       2 percent
       Background                 0 percent
-      Kernel                     2 percent
+      Kernel                    11 percent
       Interrupt                  5 percent
-      Idle                      91 percent
+      Idle                      82 percent
     Model                          RE-VMX
     Serial ID                      VM5543516AC4
-    Start time                     2025-05-26 01:18:20 UTC
-    Uptime                         5 hours, 58 minutes, 3 seconds
+    Start time                     2025-05-27 01:17:12 UTC
+    Uptime                         4 hours, 45 minutes, 36 seconds
     Last reboot reason             0x10:misc hardware reason 
     Load averages:                 1 minute   5 minute  15 minute
-                                       0.07       0.04       0.00
+                                       0.32       0.18       0.07
 
 root> 
 
 root> show system uptime 
-Current time: 2025-05-26 07:16:27 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:58:07 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:57:23 ago)
-Last configured: 2025-05-26 01:27:26 UTC (05:49:01 ago) by root
- 7:16AM  up 5:58, 2 users, load averages: 0.07, 0.04, 0.00
+Current time: 2025-05-27 06:02:51 UTC
+System booted: 2025-05-27 01:17:12 UTC (04:45:39 ago)
+Protocols started: 2025-05-27 01:17:42 UTC (04:45:09 ago)
+Last configured: 2025-05-27 01:19:05 UTC (04:43:46 ago) by root
+ 6:02AM  up 4:46, 3 users, load averages: 0.32, 0.18, 0.07
 
 root> 
 
-root> show system uptime 
-Current time: 2025-05-26 07:16:27 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:58:07 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:57:23 ago)
-Last configured: 2025-05-26 01:27:26 UTC (05:49:01 ago) by root
- 7:16AM  up 5:58, 2 users, load averages: 0.07, 0.04, 0.00
-
-root> 
-
-root> show interfaces terse | no-more 
+root> show interfaces terse 
 Interface               Admin Link Proto    Local                 Remote
 ge-0/0/0                up    up
 ge-0/0/0.0              up    up   inet     192.168.110.2/24
@@ -4729,16 +1745,7 @@ vtep                    up    up
 
 root> 
 
-root> show system uptime 
-Current time: 2025-05-26 07:16:28 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:58:08 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:57:24 ago)
-Last configured: 2025-05-26 01:27:26 UTC (05:49:02 ago) by root
- 7:16AM  up 5:58, 2 users, load averages: 0.07, 0.04, 0.00
-
-root> 
-
-root> show interfaces detail | no-more 
+root> show interfaces detail 
 Physical interface: ge-0/0/0, Enabled, Physical link is Up
   Interface index: 137, SNMP ifIndex: 513, Generation: 140
   Link-level type: Ethernet, MTU: 1514, MRU: 1522, Speed: 1000mbps, BPDU Error: None, MAC-REWRITE Error: None, Loopback: Disabled, Source filtering: Disabled, Flow control: Enabled
@@ -4748,18 +1755,18 @@ Physical interface: ge-0/0/0, Enabled, Physical link is Up
   Link flags     : None
   CoS queues     : 8 supported, 8 maximum usable queues
   Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:be:00, Hardware address: 00:05:86:71:be:00
-  Last flapped   : 2025-05-26 01:19:42 UTC (05:56:46 ago)
+  Current address: 00:05:86:71:fc:00, Hardware address: 00:05:86:71:fc:00
+  Last flapped   : 2025-05-27 01:18:22 UTC (04:44:30 ago)
   Statistics last cleared: Never
   Traffic statistics:
-   Input  bytes  :               840452                    0 bps
-   Output bytes  :              3808115                    0 bps
-   Input  packets:                14773                    0 pps
-   Output packets:                26060                    0 pps
+   Input  bytes  :              2068466                27544 bps
+   Output bytes  :             10216845               165912 bps
+   Input  packets:                36969                   71 pps
+   Output packets:                66675                  144 pps
    IPv6 transit statistics:
-    Input  bytes  :                 392
+    Input  bytes  :                 448
     Output bytes  :                   0
-    Input  packets:                   7
+    Input  packets:                   8
     Output packets:                   0
   Active alarms  : None
   Active defects : None
@@ -4768,20 +1775,20 @@ Physical interface: ge-0/0/0, Enabled, Physical link is Up
   Logical interface ge-0/0/0.0 (Index 329) (SNMP ifIndex 523) (Generation 138)
     Flags: Up SNMP-Traps 0x4004000 Encapsulation: ENET2
     Traffic statistics:
-     Input  bytes  :               854950
-     Output bytes  :              3651767
-     Input  packets:                15580
-     Output packets:                26060
+     Input  bytes  :              2136410
+     Output bytes  :              9817127
+     Input  packets:                38349
+     Output packets:                66677
     Local statistics:
-     Input  bytes  :               797366
-     Output bytes  :              3651663
-     Input  packets:                14395
-     Output packets:                26058
+     Input  bytes  :              2015348
+     Output bytes  :              9817127
+     Input  packets:                36310
+     Output packets:                66677
     Transit statistics:
-     Input  bytes  :                57584                    0 bps
-     Output bytes  :                  104                    0 bps
-     Input  packets:                 1185                    0 pps
-     Output packets:                    2                    0 pps
+     Input  bytes  :               121062                    0 bps
+     Output bytes  :                    0                    0 bps
+     Input  packets:                 2039                    0 pps
+     Output packets:                    0                    0 pps
     Protocol inet, MTU: 1500, Generation: 152, Route table: 0
       Flags: Sendbcast-pkt-to-re, Is-Primary
       Addresses, Flags: Is-Default Is-Preferred Is-Primary
@@ -4943,8 +1950,8 @@ Physical interface: ge-0/0/1, Enabled, Physical link is Up
   Link flags     : None
   CoS queues     : 8 supported, 8 maximum usable queues
   Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:be:01, Hardware address: 00:05:86:71:be:01
-  Last flapped   : 2025-05-26 01:19:42 UTC (05:56:46 ago)
+  Current address: 00:05:86:71:fc:01, Hardware address: 00:05:86:71:fc:01
+  Last flapped   : 2025-05-27 01:18:22 UTC (04:44:30 ago)
   Statistics last cleared: Never
   Traffic statistics:
    Input  bytes  :                    0                    0 bps
@@ -4969,8 +1976,8 @@ Physical interface: ge-0/0/2, Enabled, Physical link is Up
   Link flags     : None
   CoS queues     : 8 supported, 8 maximum usable queues
   Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:be:02, Hardware address: 00:05:86:71:be:02
-  Last flapped   : 2025-05-26 01:19:42 UTC (05:56:46 ago)
+  Current address: 00:05:86:71:fc:02, Hardware address: 00:05:86:71:fc:02
+  Last flapped   : 2025-05-27 01:18:22 UTC (04:44:30 ago)
   Statistics last cleared: Never
   Traffic statistics:
    Input  bytes  :                    0                    0 bps
@@ -4995,8 +2002,8 @@ Physical interface: ge-0/0/3, Enabled, Physical link is Up
   Link flags     : None
   CoS queues     : 8 supported, 8 maximum usable queues
   Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:be:03, Hardware address: 00:05:86:71:be:03
-  Last flapped   : 2025-05-26 01:19:42 UTC (05:56:46 ago)
+  Current address: 00:05:86:71:fc:03, Hardware address: 00:05:86:71:fc:03
+  Last flapped   : 2025-05-27 01:18:22 UTC (04:44:30 ago)
   Statistics last cleared: Never
   Traffic statistics:
    Input  bytes  :                    0                    0 bps
@@ -5021,8 +2028,8 @@ Physical interface: ge-0/0/4, Enabled, Physical link is Up
   Link flags     : None
   CoS queues     : 8 supported, 8 maximum usable queues
   Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:be:04, Hardware address: 00:05:86:71:be:04
-  Last flapped   : 2025-05-26 01:19:42 UTC (05:56:46 ago)
+  Current address: 00:05:86:71:fc:04, Hardware address: 00:05:86:71:fc:04
+  Last flapped   : 2025-05-27 01:18:22 UTC (04:44:30 ago)
   Statistics last cleared: Never
   Traffic statistics:
    Input  bytes  :                    0                    0 bps
@@ -5047,8 +2054,8 @@ Physical interface: ge-0/0/5, Enabled, Physical link is Up
   Link flags     : None
   CoS queues     : 8 supported, 8 maximum usable queues
   Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:be:05, Hardware address: 00:05:86:71:be:05
-  Last flapped   : 2025-05-26 01:19:42 UTC (05:56:46 ago)
+  Current address: 00:05:86:71:fc:05, Hardware address: 00:05:86:71:fc:05
+  Last flapped   : 2025-05-27 01:18:22 UTC (04:44:30 ago)
   Statistics last cleared: Never
   Traffic statistics:
    Input  bytes  :                    0                    0 bps
@@ -5073,8 +2080,8 @@ Physical interface: ge-0/0/6, Enabled, Physical link is Up
   Link flags     : None
   CoS queues     : 8 supported, 8 maximum usable queues
   Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:be:06, Hardware address: 00:05:86:71:be:06
-  Last flapped   : 2025-05-26 01:19:42 UTC (05:56:46 ago)
+  Current address: 00:05:86:71:fc:06, Hardware address: 00:05:86:71:fc:06
+  Last flapped   : 2025-05-27 01:18:22 UTC (04:44:30 ago)
   Statistics last cleared: Never
   Traffic statistics:
    Input  bytes  :                    0                    0 bps
@@ -5099,8 +2106,8 @@ Physical interface: ge-0/0/7, Enabled, Physical link is Up
   Link flags     : None
   CoS queues     : 8 supported, 8 maximum usable queues
   Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:be:07, Hardware address: 00:05:86:71:be:07
-  Last flapped   : 2025-05-26 01:19:42 UTC (05:56:46 ago)
+  Current address: 00:05:86:71:fc:07, Hardware address: 00:05:86:71:fc:07
+  Last flapped   : 2025-05-27 01:18:22 UTC (04:44:30 ago)
   Statistics last cleared: Never
   Traffic statistics:
    Input  bytes  :                    0                    0 bps
@@ -5125,8 +2132,8 @@ Physical interface: ge-0/0/8, Enabled, Physical link is Up
   Link flags     : None
   CoS queues     : 8 supported, 8 maximum usable queues
   Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:be:08, Hardware address: 00:05:86:71:be:08
-  Last flapped   : 2025-05-26 01:19:42 UTC (05:56:46 ago)
+  Current address: 00:05:86:71:fc:08, Hardware address: 00:05:86:71:fc:08
+  Last flapped   : 2025-05-27 01:18:22 UTC (04:44:30 ago)
   Statistics last cleared: Never
   Traffic statistics:
    Input  bytes  :                    0                    0 bps
@@ -5151,8 +2158,8 @@ Physical interface: ge-0/0/9, Enabled, Physical link is Up
   Link flags     : None
   CoS queues     : 8 supported, 8 maximum usable queues
   Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:be:09, Hardware address: 00:05:86:71:be:09
-  Last flapped   : 2025-05-26 01:19:42 UTC (05:56:46 ago)
+  Current address: 00:05:86:71:fc:09, Hardware address: 00:05:86:71:fc:09
+  Last flapped   : 2025-05-27 01:18:22 UTC (04:44:30 ago)
   Statistics last cleared: Never
   Traffic statistics:
    Input  bytes  :                    0                    0 bps
@@ -5241,23 +2248,23 @@ Physical interface: .local., Enabled, Physical link is Up
   Logical interface .local..3 (Index 321) (SNMP ifIndex 0) (Generation 130)
     Flags: Down Point-To-Point Encapsulation: Unspecified
     Bandwidth: 0
-    Protocol inet, MTU: Unlimited, Generation: 138, Route table: 3
-      Flags: None
-    Protocol iso, MTU: Unlimited, Generation: 139, Route table: 3
-      Flags: None
-    Protocol inet6, MTU: Unlimited, Generation: 141, Route table: 3
+    Protocol vpls, MTU: Unlimited, Generation: 138, Route table: 3
       Flags: None
 
   Logical interface .local..4 (Index 322) (SNMP ifIndex 0) (Generation 131)
     Flags: Down Point-To-Point Encapsulation: Unspecified
     Bandwidth: 0
-    Protocol mpls, MTU: Unlimited, Maximum labels: 3, Generation: 140, Route table: 4
+    Protocol inet, MTU: Unlimited, Generation: 141, Route table: 4
+      Flags: None
+    Protocol iso, MTU: Unlimited, Generation: 142, Route table: 4
+      Flags: None
+    Protocol inet6, MTU: Unlimited, Generation: 144, Route table: 4
       Flags: None
 
   Logical interface .local..5 (Index 323) (SNMP ifIndex 0) (Generation 132)
     Flags: Down Point-To-Point Encapsulation: Unspecified
     Bandwidth: 0
-    Protocol vpls, MTU: Unlimited, Generation: 142, Route table: 5
+    Protocol mpls, MTU: Unlimited, Maximum labels: 3, Generation: 143, Route table: 5
       Flags: None
 
 Physical interface: cbp0, Enabled, Physical link is Up
@@ -5269,7 +2276,7 @@ Physical interface: cbp0, Enabled, Physical link is Up
   Link flags     : None
   Physical info  : Unspecified
   Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:be:11, Hardware address: 00:05:86:71:be:11
+  Current address: 00:05:86:71:fc:11, Hardware address: 00:05:86:71:fc:11
   Alternate link address: Unspecified
   Last flapped   : Never
   Statistics last cleared: Never
@@ -5396,11 +2403,11 @@ Physical interface: em1, Enabled, Physical link is Up
      Output bytes  :                  362
      Input  packets:                    0
      Output packets:                    5
-    Protocol inet, MTU: 1500, Generation: 143, Route table: 1
+    Protocol inet, MTU: 1500, Generation: 139, Route table: 1
       Flags: Is-Primary
       Addresses, Flags: Is-Preferred Is-Primary
         Destination: 172.16/16, Local: 172.16.0.1, Broadcast: 172.16.255.255, Generation: 1
-    Protocol inet6, MTU: 1500, Generation: 144, Route table: 1
+    Protocol inet6, MTU: 1500, Generation: 140, Route table: 1
       Flags: Is-Primary
       Addresses, Flags: Is-Preferred
         Destination: fe80::/64, Local: fe80::5200:ff:fe01:1
@@ -5422,8 +2429,8 @@ Physical interface: em2, Enabled, Physical link is Up
   Traffic statistics:
    Input  bytes  :                    0
    Output bytes  :                    0
-   Input  packets:                14925
-   Output packets:                26060
+   Input  packets:                37013
+   Output packets:                66678
    IPv6 transit statistics:
     Input  bytes  :                   0
     Output bytes  :                   0
@@ -5547,7 +2554,7 @@ Physical interface: irb, Enabled, Physical link is Up
   Link flags     : None
   Physical info  : Unspecified
   Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:c1:f0, Hardware address: 00:05:86:71:c1:f0
+  Current address: 00:05:86:71:ff:f0, Hardware address: 00:05:86:71:ff:f0
   Alternate link address: Unspecified
   Last flapped   : Never
   Statistics last cleared: Never
@@ -5576,10 +2583,10 @@ Physical interface: lo0, Enabled, Physical link is Up
   Last flapped   : Never
   Statistics last cleared: Never
   Traffic statistics:
-   Input  bytes  :                 5385
-   Output bytes  :                 5385
-   Input  packets:                   91
-   Output packets:                   91
+   Input  bytes  :                 5177
+   Output bytes  :                 5177
+   Input  packets:                   87
+   Output packets:                   87
    IPv6 transit statistics:
     Input  bytes  :                   0
     Output bytes  :                   0
@@ -5610,20 +2617,20 @@ Physical interface: lo0, Enabled, Physical link is Up
   Logical interface lo0.16385 (Index 325) (SNMP ifIndex 22) (Generation 134)
     Flags: Down SNMP-Traps Encapsulation: Unspecified
     Traffic statistics:
-     Input  bytes  :                 4785
-     Output bytes  :                 4785
-     Input  packets:                   79
-     Output packets:                   79
+     Input  bytes  :                 4577
+     Output bytes  :                 4577
+     Input  packets:                   75
+     Output packets:                   75
      IPv6 transit statistics:
       Input  bytes  :                   0
       Output bytes  :                   0
       Input  packets:                   0
       Output packets:                   0
     Local statistics:
-     Input  bytes  :                 4785
-     Output bytes  :                 4785
-     Input  packets:                   79
-     Output packets:                   79
+     Input  bytes  :                 4577
+     Output bytes  :                 4577
+     Input  packets:                   75
+     Output packets:                   75
     Transit statistics:
      Input  bytes  :                    0                    0 bps
      Output bytes  :                    0                    0 bps
@@ -5745,7 +2752,7 @@ Physical interface: pip0, Enabled, Physical link is Up
   Link flags     : None
   Physical info  : Unspecified
   Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:c1:b0, Hardware address: 00:05:86:71:c1:b0
+  Current address: 00:05:86:71:ff:b0, Hardware address: 00:05:86:71:ff:b0
   Alternate link address: Unspecified
   Last flapped   : Never
   Statistics last cleared: Never
@@ -5800,6 +2807,7 @@ Physical interface: vtep, Enabled, Physical link is Up
   Interface index: 133, SNMP ifIndex: 506, Generation: 136
   Type: Software-Pseudo, Link-level type: VxLAN-Tunnel-Endpoint, MTU: 1600, Clocking: Unspecified, Speed: Unlimited
   Device flags   : Present Running
+  Interface flags: SNMP-Traps
   Link type      : Full-Duplex
   Link flags     : None
   Physical info  : Unspecified
@@ -5822,11 +2830,11 @@ Physical interface: vtep, Enabled, Physical link is Up
 root> 
 
 root> show system uptime 
-Current time: 2025-05-26 07:16:28 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:58:08 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:57:24 ago)
-Last configured: 2025-05-26 01:27:26 UTC (05:49:02 ago) by root
- 7:16AM  up 5:58, 2 users, load averages: 0.07, 0.04, 0.00
+Current time: 2025-05-27 06:02:52 UTC
+System booted: 2025-05-27 01:17:12 UTC (04:45:40 ago)
+Protocols started: 2025-05-27 01:17:42 UTC (04:45:10 ago)
+Last configured: 2025-05-27 01:19:05 UTC (04:43:47 ago) by root
+ 6:02AM  up 4:46, 3 users, load averages: 0.32, 0.18, 0.07
 
 root> 
 
@@ -5834,26 +2842,25 @@ root> show arp | no-more
 MAC Address       Address         Name                      Interface           Flags
 00:50:56:c0:00:08 192.168.110.1   192.168.110.1             ge-0/0/0.0          none
 00:0c:29:80:ff:c8 192.168.110.128 192.168.110.128           ge-0/0/0.0          none
-00:50:56:e2:37:23 192.168.110.254 192.168.110.254           ge-0/0/0.0          none
-Total entries: 3
+Total entries: 2
 
 root> 
 
 root> show system uptime 
-Current time: 2025-05-26 07:16:28 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:58:08 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:57:24 ago)
-Last configured: 2025-05-26 01:27:26 UTC (05:49:02 ago) by root
- 7:16AM  up 5:58, 2 users, load averages: 0.07, 0.04, 0.00
+Current time: 2025-05-27 06:02:52 UTC
+System booted: 2025-05-27 01:17:12 UTC (04:45:40 ago)
+Protocols started: 2025-05-27 01:17:42 UTC (04:45:10 ago)
+Last configured: 2025-05-27 01:19:05 UTC (04:43:47 ago) by root
+ 6:02AM  up 4:46, 3 users, load averages: 0.32, 0.18, 0.07
 
 root> 
 
 root> show system uptime 
-Current time: 2025-05-26 07:16:28 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:58:08 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:57:24 ago)
-Last configured: 2025-05-26 01:27:26 UTC (05:49:02 ago) by root
- 7:16AM  up 5:58, 2 users, load averages: 0.07, 0.04, 0.00
+Current time: 2025-05-27 06:02:52 UTC
+System booted: 2025-05-27 01:17:12 UTC (04:45:40 ago)
+Protocols started: 2025-05-27 01:17:42 UTC (04:45:10 ago)
+Last configured: 2025-05-27 01:19:05 UTC (04:43:47 ago) by root
+ 6:02AM  up 4:46, 3 users, load averages: 0.32, 0.18, 0.07
 
 root> 
 
@@ -5867,11 +2874,11 @@ inet.0: 2 destinations, 2 routes (2 active, 0 holddown, 0 hidden)
 root> 
 
 root> show system uptime 
-Current time: 2025-05-26 07:16:29 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:58:09 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:57:25 ago)
-Last configured: 2025-05-26 01:27:26 UTC (05:49:03 ago) by root
- 7:16AM  up 5:58, 2 users, load averages: 0.07, 0.04, 0.00
+Current time: 2025-05-27 06:02:53 UTC
+System booted: 2025-05-27 01:17:12 UTC (04:45:41 ago)
+Protocols started: 2025-05-27 01:17:42 UTC (04:45:11 ago)
+Last configured: 2025-05-27 01:19:05 UTC (04:43:48 ago) by root
+ 6:02AM  up 4:46, 3 users, load averages: 0.32, 0.18, 0.07
 
 root> 
 
@@ -5881,11 +2888,11 @@ OSPF instance is not running
 root> 
 
 root> show system uptime 
-Current time: 2025-05-26 07:16:29 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:58:09 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:57:25 ago)
-Last configured: 2025-05-26 01:27:26 UTC (05:49:03 ago) by root
- 7:16AM  up 5:58, 2 users, load averages: 0.07, 0.04, 0.00
+Current time: 2025-05-27 06:02:53 UTC
+System booted: 2025-05-27 01:17:12 UTC (04:45:41 ago)
+Protocols started: 2025-05-27 01:17:42 UTC (04:45:11 ago)
+Last configured: 2025-05-27 01:19:05 UTC (04:43:48 ago) by root
+ 6:02AM  up 4:46, 3 users, load averages: 0.32, 0.18, 0.07
 
 root> 
 
@@ -5895,11 +2902,11 @@ IS-IS instance is not running
 root> 
 
 root> show system uptime 
-Current time: 2025-05-26 07:16:29 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:58:09 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:57:25 ago)
-Last configured: 2025-05-26 01:27:26 UTC (05:49:03 ago) by root
- 7:16AM  up 5:58, 2 users, load averages: 0.07, 0.04, 0.00
+Current time: 2025-05-27 06:02:53 UTC
+System booted: 2025-05-27 01:17:12 UTC (04:45:41 ago)
+Protocols started: 2025-05-27 01:17:42 UTC (04:45:11 ago)
+Last configured: 2025-05-27 01:19:05 UTC (04:43:48 ago) by root
+ 6:02AM  up 4:46, 3 users, load averages: 0.32, 0.18, 0.07
 
 root> 
 
@@ -5909,11 +2916,11 @@ MPLS not configured
 root> 
 
 root> show system uptime 
-Current time: 2025-05-26 07:16:29 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:58:09 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:57:25 ago)
-Last configured: 2025-05-26 01:27:26 UTC (05:49:03 ago) by root
- 7:16AM  up 5:58, 2 users, load averages: 0.06, 0.04, 0.00
+Current time: 2025-05-27 06:02:53 UTC
+System booted: 2025-05-27 01:17:12 UTC (04:45:41 ago)
+Protocols started: 2025-05-27 01:17:42 UTC (04:45:11 ago)
+Last configured: 2025-05-27 01:19:05 UTC (04:43:48 ago) by root
+ 6:02AM  up 4:46, 3 users, load averages: 0.32, 0.18, 0.07
 
 root> 
 
@@ -5923,11 +2930,11 @@ LDP instance is not running
 root> 
 
 root> show system uptime 
-Current time: 2025-05-26 07:16:29 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:58:09 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:57:25 ago)
-Last configured: 2025-05-26 01:27:26 UTC (05:49:03 ago) by root
- 7:16AM  up 5:58, 2 users, load averages: 0.06, 0.04, 0.00
+Current time: 2025-05-27 06:02:53 UTC
+System booted: 2025-05-27 01:17:12 UTC (04:45:41 ago)
+Protocols started: 2025-05-27 01:17:42 UTC (04:45:11 ago)
+Last configured: 2025-05-27 01:19:05 UTC (04:43:48 ago) by root
+ 6:02AM  up 4:46, 3 users, load averages: 0.32, 0.18, 0.07
 
 root> 
 
@@ -5937,11 +2944,11 @@ RSVP not configured
 root> 
 
 root> show system uptime 
-Current time: 2025-05-26 07:16:29 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:58:09 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:57:25 ago)
-Last configured: 2025-05-26 01:27:26 UTC (05:49:03 ago) by root
- 7:16AM  up 5:58, 2 users, load averages: 0.06, 0.04, 0.00
+Current time: 2025-05-27 06:02:53 UTC
+System booted: 2025-05-27 01:17:12 UTC (04:45:41 ago)
+Protocols started: 2025-05-27 01:17:42 UTC (04:45:11 ago)
+Last configured: 2025-05-27 01:19:05 UTC (04:43:48 ago) by root
+ 6:02AM  up 4:46, 3 users, load averages: 0.32, 0.18, 0.07
 
 root> 
 
@@ -5950,11 +2957,11 @@ root> show lldp neighbor | no-more
 root> 
 
 root> show system uptime 
-Current time: 2025-05-26 07:16:30 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:58:10 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:57:26 ago)
-Last configured: 2025-05-26 01:27:26 UTC (05:49:04 ago) by root
- 7:16AM  up 5:58, 2 users, load averages: 0.06, 0.04, 0.00
+Current time: 2025-05-27 06:02:54 UTC
+System booted: 2025-05-27 01:17:12 UTC (04:45:42 ago)
+Protocols started: 2025-05-27 01:17:42 UTC (04:45:12 ago)
+Last configured: 2025-05-27 01:19:05 UTC (04:43:49 ago) by root
+ 6:02AM  up 4:46, 3 users, load averages: 0.32, 0.18, 0.07
 
 root> 
 
@@ -5964,11 +2971,11 @@ MPLS not configured
 root> 
 
 root> show system uptime 
-Current time: 2025-05-26 07:16:30 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:58:10 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:57:26 ago)
-Last configured: 2025-05-26 01:27:26 UTC (05:49:04 ago) by root
- 7:16AM  up 5:58, 2 users, load averages: 0.06, 0.04, 0.00
+Current time: 2025-05-27 06:02:54 UTC
+System booted: 2025-05-27 01:17:12 UTC (04:45:42 ago)
+Protocols started: 2025-05-27 01:17:42 UTC (04:45:12 ago)
+Last configured: 2025-05-27 01:19:05 UTC (04:43:49 ago) by root
+ 6:02AM  up 4:46, 3 users, load averages: 0.32, 0.18, 0.07
 
 root> 
 
@@ -5978,11 +2985,11 @@ BGP is not running
 root> 
 
 root> show system uptime 
-Current time: 2025-05-26 07:16:30 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:58:10 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:57:26 ago)
-Last configured: 2025-05-26 01:27:26 UTC (05:49:04 ago) by root
- 7:16AM  up 5:58, 2 users, load averages: 0.06, 0.04, 0.00
+Current time: 2025-05-27 06:02:54 UTC
+System booted: 2025-05-27 01:17:12 UTC (04:45:42 ago)
+Protocols started: 2025-05-27 01:17:42 UTC (04:45:12 ago)
+Last configured: 2025-05-27 01:19:05 UTC (04:43:49 ago) by root
+ 6:02AM  up 4:46, 3 users, load averages: 0.29, 0.18, 0.07
 
 root> 
 
@@ -5992,11 +2999,11 @@ ssh;
 root> 
 
 root> show system uptime 
-Current time: 2025-05-26 07:16:30 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:58:10 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:57:26 ago)
-Last configured: 2025-05-26 01:27:26 UTC (05:49:04 ago) by root
- 7:16AM  up 5:58, 2 users, load averages: 0.06, 0.04, 0.00
+Current time: 2025-05-27 06:02:54 UTC
+System booted: 2025-05-27 01:17:12 UTC (04:45:42 ago)
+Protocols started: 2025-05-27 01:17:42 UTC (04:45:12 ago)
+Last configured: 2025-05-27 01:19:05 UTC (04:43:49 ago) by root
+ 6:02AM  up 4:46, 3 users, load averages: 0.29, 0.18, 0.07
 
 root> 
 
@@ -6005,11 +3012,11 @@ root> show configuration protocols | no-more
 root> 
 
 root> show system uptime 
-Current time: 2025-05-26 07:16:30 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:58:10 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:57:26 ago)
-Last configured: 2025-05-26 01:27:26 UTC (05:49:04 ago) by root
- 7:16AM  up 5:58, 2 users, load averages: 0.06, 0.04, 0.00
+Current time: 2025-05-27 06:02:54 UTC
+System booted: 2025-05-27 01:17:12 UTC (04:45:42 ago)
+Protocols started: 2025-05-27 01:17:42 UTC (04:45:12 ago)
+Last configured: 2025-05-27 01:19:05 UTC (04:43:49 ago) by root
+ 6:02AM  up 4:46, 3 users, load averages: 0.29, 0.18, 0.07
 
 root> 
 
@@ -6018,52 +3025,52 @@ root> show configuration firewall | no-more
 root> 
 
 root> show system uptime 
-Current time: 2025-05-26 07:16:30 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:58:10 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:57:26 ago)
-Last configured: 2025-05-26 01:27:26 UTC (05:49:04 ago) by root
- 7:16AM  up 5:58, 2 users, load averages: 0.06, 0.04, 0.00
+Current time: 2025-05-27 06:02:54 UTC
+System booted: 2025-05-27 01:17:12 UTC (04:45:42 ago)
+Protocols started: 2025-05-27 01:17:42 UTC (04:45:12 ago)
+Last configured: 2025-05-27 01:19:05 UTC (04:43:49 ago) by root
+ 6:02AM  up 4:46, 3 users, load averages: 0.29, 0.18, 0.07
 
 root> 
 
 root> show system uptime 
-Current time: 2025-05-26 07:16:30 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:58:10 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:57:26 ago)
-Last configured: 2025-05-26 01:27:26 UTC (05:49:04 ago) by root
- 7:16AM  up 5:58, 2 users, load averages: 0.06, 0.04, 0.00
+Current time: 2025-05-27 06:02:55 UTC
+System booted: 2025-05-27 01:17:12 UTC (04:45:43 ago)
+Protocols started: 2025-05-27 01:17:42 UTC (04:45:13 ago)
+Last configured: 2025-05-27 01:19:05 UTC (04:43:50 ago) by root
+ 6:02AM  up 4:46, 3 users, load averages: 0.29, 0.18, 0.07
 
 root> 
 
 root> show log messages | match "error|warning|critical" | last 10 | no-more 
-May 26 01:19:09   /kernel: em1error setting host MAC filter table
-May 26 01:19:09   /kernel: em2error setting host MAC filter table
-May 26 01:19:09   /kernel: em3error setting host MAC filter table
-May 26 01:19:09   /kernel: em4error setting host MAC filter table
-May 26 01:19:09   /kernel: em5error setting host MAC filter table
-May 26 01:27:25   chassisd[3003]: CHASSISD_FILE_OPEN: File open: /dev/acb, error: 2 -- No such file or directory
-May 26 01:27:25   chassisd[3003]: CHASSISD_FILE_OPEN: File open: /dev/acb, error: 2 -- No such file or directory
-May 26 01:27:27   /kernel: KERN_ARP_DUPLICATE_ADDR: duplicate IP address 192.168.110.2! sent from address: 00:50:56:e7:df:30 (error count = 1)
-May 26 04:49:49   /kernel: KERN_ARP_DUPLICATE_ADDR: duplicate IP address 192.168.110.2! sent from address: 00:50:56:e7:df:30 (error count = 2)
----(more 50%)---
+May 27 01:17:45   /kernel: em1error setting host MAC filter table
+May 27 01:17:45   /kernel: em2error setting host MAC filter table
+May 27 01:17:45   /kernel: em3error setting host MAC filter table
+May 27 01:17:45   /kernel: em4error setting host MAC filter table
+May 27 01:17:45   /kernel: em5error setting host MAC filter table
+May 27 01:17:52   login[2358]: LOGIN_PAM_AUTHENTICATION_ERROR: Failed password for user roor
+May 27 01:19:04   chassisd[2954]: CHASSISD_FILE_OPEN: File open: /dev/acb, error: 2 -- No such file or directory
+May 27 01:19:04   chassisd[2954]: CHASSISD_FILE_OPEN: File open: /dev/acb, error: 2 -- No such file or directory
+May 27 01:19:06   /kernel: KERN_ARP_DUPLICATE_ADDR: duplicate IP address 192.168.110.2! sent from address: 00:50:56:e7:df:30 (error count = 1)
+---(more 95%)---
                                         
 root> 
 
 root> show system uptime 
-Current time: 2025-05-26 07:16:31 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:58:11 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:57:27 ago)
-Last configured: 2025-05-26 01:27:26 UTC (05:49:05 ago) by root
- 7:16AM  up 5:58, 2 users, load averages: 0.06, 0.04, 0.00
+Current time: 2025-05-27 06:02:55 UTC
+System booted: 2025-05-27 01:17:12 UTC (04:45:43 ago)
+Protocols started: 2025-05-27 01:17:42 UTC (04:45:13 ago)
+Last configured: 2025-05-27 01:19:05 UTC (04:43:50 ago) by root
+ 6:02AM  up 4:46, 3 users, load averages: 0.29, 0.18, 0.07
 
 root> 
 
 root> show system uptime 
-Current time: 2025-05-26 07:16:31 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:58:11 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:57:27 ago)
-Last configured: 2025-05-26 01:27:26 UTC (05:49:05 ago) by root
- 7:16AM  up 5:58, 2 users, load averages: 0.06, 0.04, 0.00
+Current time: 2025-05-27 06:02:55 UTC
+System booted: 2025-05-27 01:17:12 UTC (04:45:43 ago)
+Protocols started: 2025-05-27 01:17:42 UTC (04:45:13 ago)
+Last configured: 2025-05-27 01:19:05 UTC (04:43:50 ago) by root
+ 6:02AM  up 4:46, 3 users, load averages: 0.29, 0.18, 0.07
 
 root> 
 
@@ -6077,31 +3084,31 @@ May  1 16:14:47  rtsock_inform_fru_offline: inform peer type 17, index 0 offline
 May  1 16:14:47  rtsock_reset_self_ping_statistics: reset fpc_slot 0 self_ping stats, error 0
 May  1 16:14:47  fpc_offline_now - slot 0, reason: None, error Chassis connection dropped transition state 1
 May  1 16:14:55  ch_power_off_frus_cleanup_exit: Chassisd exiting with error-code= 69
----(more 20%)---
+---(more 23%)---
                                         
 root> 
 
 root> show system uptime 
-Current time: 2025-05-26 07:16:31 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:58:11 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:57:27 ago)
-Last configured: 2025-05-26 01:27:26 UTC (05:49:05 ago) by root
- 7:16AM  up 5:58, 2 users, load averages: 0.06, 0.04, 0.00
+Current time: 2025-05-27 06:02:55 UTC
+System booted: 2025-05-27 01:17:12 UTC (04:45:43 ago)
+Protocols started: 2025-05-27 01:17:42 UTC (04:45:13 ago)
+Last configured: 2025-05-27 01:19:05 UTC (04:43:50 ago) by root
+ 6:02AM  up 4:46, 3 users, load averages: 0.29, 0.18, 0.07
 
 root> 
 
 root> show system uptime 
-Current time: 2025-05-26 07:16:31 UTC
-System booted: 2025-05-26 01:18:20 UTC (05:58:11 ago)
-Protocols started: 2025-05-26 01:19:04 UTC (05:57:27 ago)
-Last configured: 2025-05-26 01:27:26 UTC (05:49:05 ago) by root
- 7:16AM  up 5:58, 2 users, load averages: 0.06, 0.04, 0.00
+Current time: 2025-05-27 06:02:55 UTC
+System booted: 2025-05-27 01:17:12 UTC (04:45:43 ago)
+Protocols started: 2025-05-27 01:17:42 UTC (04:45:13 ago)
+Last configured: 2025-05-27 01:19:05 UTC (04:43:50 ago) by root
+ 6:02AM  up 4:46, 3 users, load averages: 0.29, 0.18, 0.07
 
 root> 
 
 root> show configuration | display set | no-more 
 set version 14.1R4.8
-set system root-authentication encrypted-password "$1$nwYSITa9$X5Wq7fYCj1AKg.9A0zvij1"
+set system root-authentication encrypted-password "$1$j5izbSpn$RRY9HX3l374/VClK.eNka."
 set system services ssh
 set system syslog user * any emergency
 set system syslog file messages any notice

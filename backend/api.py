@@ -38,7 +38,7 @@ def sanitize_for_json(data_dict):
     return sanitized_dict
 
 # ... (test_router_connection - no changes needed here for this error) ...
-@app.route('/api/test_connection', methods=['POST'])
+@app.route('/api/login', methods=['POST'])
 def test_router_connection():
     data = request.json
     ip = data.get('ip')

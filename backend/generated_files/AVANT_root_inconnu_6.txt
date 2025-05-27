@@ -1,0 +1,26 @@
+Informations de base du routeur :
+Le hostname du routeur est : inconnu
+Le modele du routeur est : vmx
+La version du systeme Junos est : 14.1R4.8
+
+Informations du moteur de routage:
+Routing Engine status:
+    DRAM                      2048 MB (2048 MB installed)
+    Memory utilization          42 percent
+    CPU utilization:
+      User                       2 percent
+      Background                 0 percent
+      Kernel                     3 percent
+      Interrupt                  6 percent
+      Idle                      89 percent
+    Model                          RE-VMX
+    Serial ID                      VM5543516AC4
+    Start time                     2025-05-27 01:17:12 UTC
+    Uptime                         2 hours, 44 minutes, 50 seconds
+    Last reboot reason             0x10:misc hardware reason 
+    Load averages:                 1 minute   5 minute  15 minute
+                                       0.00       0.00       0.00
+
+Informations sur les interfaces :
+Les Interfaces up:
+Erreur lors de la récupération des informations des interfaces : string indices must be integers, not 'str'

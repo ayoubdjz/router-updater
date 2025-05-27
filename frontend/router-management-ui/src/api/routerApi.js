@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export const API_BASE_URL = 'http://localhost:5001/api'; // Your Flask API URL
+export const API_BASE_URL = 'http://localhost:5000/api'; // Your Flask API URL
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
@@ -11,7 +11,7 @@ const apiClient = axios.create({
 
 // --- Auth & Connection ---
 export const testConnection = (credentials) => {
-  return apiClient.post('/test_connection', credentials);
+  return apiClient.post('/login', credentials);
 };
 
 // --- AVANT ---

@@ -5,74 +5,73 @@ La version du systeme Junos est : 14.1R4.8
 Informations du moteur de routage :
 Routing Engine status:
     DRAM                      2048 MB (2048 MB installed)
-    Memory utilization          40 percent
+    Memory utilization          43 percent
     CPU utilization:
-      User                       0 percent
+      User                       2 percent
       Background                 0 percent
-      Kernel                     0 percent
+      Kernel                     3 percent
       Interrupt                  6 percent
-      Idle                      93 percent
+      Idle                      89 percent
     Model                          RE-VMX
     Serial ID                      VM5543516AC4
-    Start time                     2025-05-26 01:18:20 UTC
-    Uptime                         5 hours, 3 minutes, 13 seconds
+    Start time                     2025-05-27 01:17:12 UTC
+    Uptime                         4 hours, 45 minutes, 11 seconds
     Last reboot reason             0x10:misc hardware reason 
     Load averages:                 1 minute   5 minute  15 minute
-                                       0.07       0.07       0.04
+                                       0.39       0.19       0.07
 
 Informations sur les interfaces :
 Les Interfaces up :
-ge-0/0/0 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 00:05:86:71:be:00,
-ge-0/0/0.0 - Vitesse: 1000mbps - IP: 192.168.110.2
-lc-0/0/0 - Vitesse: 800mbps - IP: Aucune IP - MAC: Unspecified,
-lc-0/0/0.32769 - Vitesse: 800mbps - IP: Aucune IP
-pfe-0/0/0 - Vitesse: 800mbps - IP: Aucune IP - MAC: Unspecified,
-pfe-0/0/0.16383 - Vitesse: 800mbps - IP: Aucune IP
-pfh-0/0/0 - Vitesse: 800mbps - IP: Aucune IP - MAC: Unspecified,
-pfh-0/0/0.16383 - Vitesse: 800mbps - IP: Aucune IP
-ge-0/0/1 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 00:05:86:71:be:01,
-ge-0/0/2 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 00:05:86:71:be:02,
-ge-0/0/3 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 00:05:86:71:be:03,
-ge-0/0/4 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 00:05:86:71:be:04,
-ge-0/0/5 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 00:05:86:71:be:05,
-ge-0/0/6 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 00:05:86:71:be:06,
-ge-0/0/7 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 00:05:86:71:be:07,
-ge-0/0/8 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 00:05:86:71:be:08,
-ge-0/0/9 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 00:05:86:71:be:09,
-cbp0 - Vitesse: Unspecified - IP: Aucune IP - MAC: 00:05:86:71:be:11,
-demux0 - Vitesse: Unspecified - IP: Aucune IP - MAC: Unspecified,
-dsc - Vitesse: Unspecified - IP: Aucune IP - MAC: Unspecified,
-em0 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 50:00:00:01:00:00,
-em1 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 50:00:00:01:00:01,
-em1.0 - Vitesse: 1000mbps - IP: fe80::5200:ff:fe01:1
-em2 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 50:00:00:01:00:02,
-em3 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 50:00:00:01:00:03,
-em4 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 50:00:00:01:00:04,
-em5 - Vitesse: 1000mbps - IP: Aucune IP - MAC: 50:00:00:01:00:05,
-gre - Vitesse: Unlimited - IP: Aucune IP
-ipip - Vitesse: Unlimited - IP: Aucune IP
-irb - Vitesse: Unspecified - IP: Aucune IP - MAC: 00:05:86:71:c1:f0,
-lo0 - Vitesse: Unspecified - IP: Aucune IP - MAC: Unspecified,
-lo0.16384 - Vitesse: Unspecified - IP: 127.0.0.1
-lo0.16385 - Vitesse: Unspecified - IP: fe80::200:f:fc00:0
-lo0.32768 - Vitesse: Unspecified - IP: Aucune IP
-lsi - Vitesse: Unlimited - IP: Aucune IP - MAC: Unspecified,
-mtun - Vitesse: Unlimited - IP: Aucune IP
-pimd - Vitesse: Unlimited - IP: Aucune IP
-pime - Vitesse: Unlimited - IP: Aucune IP
-pip0 - Vitesse: Unspecified - IP: Aucune IP - MAC: 00:05:86:71:c1:b0,
-pp0 - Vitesse: Unspecified - IP: Aucune IP - MAC: Unspecified,
-tap - Vitesse: Unlimited - IP: Aucune IP - MAC: Unspecified,
-vtep - Vitesse: Unlimited - IP: Aucune IP - MAC: Unspecified,
+name: ge-0/0/0, ip_address: Aucune IP, mac_address: 00:05:86:71:fc:00,, speed: 1000mbps
+name: ge-0/0/0.0, ip_address: 192.168.110.2, mac_address: 00:05:86:71:fc:00,, speed: 1000mbps
+name: lc-0/0/0, ip_address: Aucune IP, mac_address: Unspecified,, speed: 800mbps
+name: lc-0/0/0.32769, ip_address: Aucune IP, mac_address: Unspecified,, speed: 800mbps
+name: pfe-0/0/0, ip_address: Aucune IP, mac_address: Unspecified,, speed: 800mbps
+name: pfe-0/0/0.16383, ip_address: Aucune IP, mac_address: Unspecified,, speed: 800mbps
+name: pfh-0/0/0, ip_address: Aucune IP, mac_address: Unspecified,, speed: 800mbps
+name: pfh-0/0/0.16383, ip_address: Aucune IP, mac_address: Unspecified,, speed: 800mbps
+name: ge-0/0/1, ip_address: Aucune IP, mac_address: 00:05:86:71:fc:01,, speed: 1000mbps
+name: ge-0/0/2, ip_address: Aucune IP, mac_address: 00:05:86:71:fc:02,, speed: 1000mbps
+name: ge-0/0/3, ip_address: Aucune IP, mac_address: 00:05:86:71:fc:03,, speed: 1000mbps
+name: ge-0/0/4, ip_address: Aucune IP, mac_address: 00:05:86:71:fc:04,, speed: 1000mbps
+name: ge-0/0/5, ip_address: Aucune IP, mac_address: 00:05:86:71:fc:05,, speed: 1000mbps
+name: ge-0/0/6, ip_address: Aucune IP, mac_address: 00:05:86:71:fc:06,, speed: 1000mbps
+name: ge-0/0/7, ip_address: Aucune IP, mac_address: 00:05:86:71:fc:07,, speed: 1000mbps
+name: ge-0/0/8, ip_address: Aucune IP, mac_address: 00:05:86:71:fc:08,, speed: 1000mbps
+name: ge-0/0/9, ip_address: Aucune IP, mac_address: 00:05:86:71:fc:09,, speed: 1000mbps
+name: cbp0, ip_address: Aucune IP, mac_address: 00:05:86:71:fc:11,, speed: Unspecified
+name: demux0, ip_address: Aucune IP, mac_address: Unspecified,, speed: Unspecified
+name: dsc, ip_address: Aucune IP, mac_address: Unspecified,, speed: Unspecified
+name: em0, ip_address: Aucune IP, mac_address: 50:00:00:01:00:00,, speed: 1000mbps
+name: em1, ip_address: Aucune IP, mac_address: 50:00:00:01:00:01,, speed: 1000mbps
+name: em1.0, ip_address: fe80::5200:ff:fe01:1, mac_address: 50:00:00:01:00:01,, speed: 1000mbps
+name: em2, ip_address: Aucune IP, mac_address: 50:00:00:01:00:02,, speed: 1000mbps
+name: em3, ip_address: Aucune IP, mac_address: 50:00:00:01:00:03,, speed: 1000mbps
+name: em4, ip_address: Aucune IP, mac_address: 50:00:00:01:00:04,, speed: 1000mbps
+name: em5, ip_address: Aucune IP, mac_address: 50:00:00:01:00:05,, speed: 1000mbps
+name: gre, ip_address: Aucune IP, speed: Unlimited
+name: ipip, ip_address: Aucune IP, speed: Unlimited
+name: irb, ip_address: Aucune IP, mac_address: 00:05:86:71:ff:f0,, speed: Unspecified
+name: lo0, ip_address: Aucune IP, mac_address: Unspecified,, speed: Unspecified
+name: lo0.16384, ip_address: 127.0.0.1, mac_address: Unspecified,, speed: Unspecified
+name: lo0.16385, ip_address: fe80::200:f:fc00:0, mac_address: Unspecified,, speed: Unspecified
+name: lo0.32768, ip_address: Aucune IP, mac_address: Unspecified,, speed: Unspecified
+name: lsi, ip_address: Aucune IP, mac_address: Unspecified,, speed: Unlimited
+name: mtun, ip_address: Aucune IP, speed: Unlimited
+name: pimd, ip_address: Aucune IP, speed: Unlimited
+name: pime, ip_address: Aucune IP, speed: Unlimited
+name: pip0, ip_address: Aucune IP, mac_address: 00:05:86:71:ff:b0,, speed: Unspecified
+name: pp0, ip_address: Aucune IP, mac_address: Unspecified,, speed: Unspecified
+name: tap, ip_address: Aucune IP, mac_address: Unspecified,, speed: Unlimited
+name: vtep, ip_address: Aucune IP, mac_address: Unspecified,, speed: Unlimited
 Les Interfaces down :
-Aucune interface inactive trouvee.
+message: Aucune interface inactive trouvée.
 
 Informations ARP :
 MAC Address       Address         Name                      Interface           Flags
 00:50:56:c0:00:08 192.168.110.1   192.168.110.1             ge-0/0/0.0          none
 00:0c:29:80:ff:c8 192.168.110.128 192.168.110.128           ge-0/0/0.0          none
-00:50:56:e2:37:23 192.168.110.254 192.168.110.254           ge-0/0/0.0          none
-Total entries: 3
+Total entries: 2
 
 Informations sur les routes :
 Resume des routes :
@@ -107,24 +106,28 @@ Protocole BGP :
 BGP n'est pas configure sur ce routeur.
 
 Services configures :
-ssh
+s
+s
+h
+;
 
 Protocoles configures :
+
 
 Listes de Controle d'Acces (ACL) :
 Aucune ACL configuree trouvee.
 
 Logs des erreurs critiques :
 Logs des erreurs critiques dans 'messages' :
-May 26 01:19:09   /kernel: em1error setting host MAC filter table
-May 26 01:19:09   /kernel: em2error setting host MAC filter table
-May 26 01:19:09   /kernel: em3error setting host MAC filter table
-May 26 01:19:09   /kernel: em4error setting host MAC filter table
-May 26 01:19:09   /kernel: em5error setting host MAC filter table
-May 26 01:27:25   chassisd[3003]: CHASSISD_FILE_OPEN: File open: /dev/acb, error: 2 -- No such file or directory
-May 26 01:27:25   chassisd[3003]: CHASSISD_FILE_OPEN: File open: /dev/acb, error: 2 -- No such file or directory
-May 26 01:27:27   /kernel: KERN_ARP_DUPLICATE_ADDR: duplicate IP address 192.168.110.2! sent from address: 00:50:56:e7:df:30 (error count = 1)
-May 26 04:49:49   /kernel: KERN_ARP_DUPLICATE_ADDR: duplicate IP address 192.168.110.2! sent from address: 00:50:56:e7:df:30 (error count = 2)
+May 27 01:17:45   /kernel: em1error setting host MAC filter table
+May 27 01:17:45   /kernel: em2error setting host MAC filter table
+May 27 01:17:45   /kernel: em3error setting host MAC filter table
+May 27 01:17:45   /kernel: em4error setting host MAC filter table
+May 27 01:17:45   /kernel: em5error setting host MAC filter table
+May 27 01:17:52   login[2358]: LOGIN_PAM_AUTHENTICATION_ERROR: Failed password for user roor
+May 27 01:19:04   chassisd[2954]: CHASSISD_FILE_OPEN: File open: /dev/acb, error: 2 -- No such file or directory
+May 27 01:19:04   chassisd[2954]: CHASSISD_FILE_OPEN: File open: /dev/acb, error: 2 -- No such file or directory
+May 27 01:19:06   /kernel: KERN_ARP_DUPLICATE_ADDR: duplicate IP address 192.168.110.2! sent from address: 00:50:56:e7:df:30 (error count = 1)
                                         
 Logs des erreurs critiques dans 'chassisd' :
 May  1 15:40:28  fpc_down slot 0 reason Error cargs 0x0
@@ -140,7 +143,7 @@ May  1 16:14:55  ch_power_off_frus_cleanup_exit: Chassisd exiting with error-cod
 
 La configuration totale :
 set version 14.1R4.8
-set system root-authentication encrypted-password "$1$nwYSITa9$X5Wq7fYCj1AKg.9A0zvij1"
+set system root-authentication encrypted-password "$1$j5izbSpn$RRY9HX3l374/VClK.eNka."
 set system services ssh
 set system syslog user * any emergency
 set system syslog file messages any notice

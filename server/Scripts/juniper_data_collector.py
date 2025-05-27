@@ -1,4 +1,5 @@
 from common_utils import verifier_connexion, fetch_and_store
+import parsers
 import os
 
 logs = []  # Global log list to collect logs from all functions
@@ -25,34 +26,23 @@ def collect_basic_info(connection, file_handle, structured_output_data, logs):
         
         logs.append("\nInformations de base du routeur :")
         file_handle.write("Informations de base du routeur :\n")
-        output = fetch_and_store(connection, structured_output_data, key, cmd)
-
+        output = fetch_and_store(connection, structured_output_data, key, cmd, parser_func=parsers.parse_basic_info)
         for line in output.splitlines():
             if line.startswith("Hostname:"):
-                router_hostname = line.split("Hostname:", 1)[1].strip()
+                router_hostname = line.split("Hostname:")[1].strip()
                 logs.append(f"Le hostname du routeur est : {router_hostname}")
                 file_handle.write(f"Le hostname du routeur est : {router_hostname}\n")
             elif line.startswith("Model:"):
-                router_model = line.split("Model:", 1)[1].strip()
+                router_model = line.split("Model:")[1].strip()
                 logs.append(f"Le modèle du routeur est : {router_model}")
                 file_handle.write(f"Le modele du routeur est : {router_model}\n")
-            elif "Junos:" in line and not line.strip().startswith("JUNOS "): # Avoid "JUNOS Base OS boot"
-                # More robustly find Junos version line
-                parts = line.split()
-                for i, part in enumerate(parts):
-                    if part == "Junos:":
-                        if i + 1 < len(parts):
-                            junos_version = parts[i+1].strip().split('[')[0] # Get version before brackets
-                            break
-                if junos_version != "inconnu":
-                    logs.append(f"La version du système Junos est : {junos_version}")
-                    file_handle.write(f"La version du systeme Junos est : {junos_version}\n")
-        
+            elif line.startswith("Junos:"):
+                junos_version = line.split("Junos:")[1].strip()
+                logs.append(f"La version du système Junos est : {junos_version}")
+                file_handle.write(f"La version du systeme Junos est : {junos_version}\n")
         if router_hostname == "inconnu" and router_model == "inconnu" and junos_version == "inconnu":
-             file_handle.write("Impossible de parser les informations de base du routeur à partir de la sortie.\n")
-             logs.append("Avertissement: Impossible de parser les informations de base du routeur.")
-
-
+            file_handle.write("Impossible de parser les informations de base du routeur à partir de la sortie.\n")
+            logs.append("Avertissement: Impossible de parser les informations de base du routeur.")
     except Exception as e:
         error_msg = f"Erreur lors de la récupération des informations de base du routeur : {str(e)}"
         logs.append(error_msg)
@@ -87,94 +77,49 @@ def collect_routing_engine_info(connection, file_handle, structured_output_data,
 
 def collect_interface_info(connection, file_handle, structured_output_data, logs):
     key_terse = 'interfaces_terse'
-    cmd_terse = 'show interfaces terse | no-more'
+    cmd_terse = 'show interfaces terse'
     key_detail = 'interfaces_detail'
-    cmd_detail = 'show interfaces detail | no-more'
+    cmd_detail = 'show interfaces detail'
     try:
         if not verifier_connexion(connection):
                 raise Exception("Connexion perdue avec le routeur")
         logs.append("\nInformations sur les interfaces :")
         file_handle.write("\nInformations sur les interfaces :\n")
-        output_terse = fetch_and_store(connection, structured_output_data, key_terse, cmd_terse)
-        output_detail = fetch_and_store(connection, structured_output_data, key_detail, cmd_detail)
-        interfaces_up = []
-        interfaces_down = []
-        interfaces_info = {}
-        interfaces_ip = {}
-        interfaces_mac = {}  
-        # Traitement des interfaces physiques et logiques
-        for line in output_terse.splitlines():
-            columns = line.split()
-            if len(columns) >= 2:
-                interface_name = columns[0]
-                status = columns[1]
-                if "up" in status.lower():
-                    interfaces_up.append(interface_name)
-                elif "down" in status.lower():
-                    interfaces_down.append(interface_name)
-                if "inet" in columns:
-                    ip_index = columns.index("inet") + 1
-                    if ip_index < len(columns):
-                        interfaces_ip[interface_name] = columns[ip_index]
-        # Extraction des informations détaillées (BP et adresse MAC)
-        interfaces = output_detail.split("Physical interface:")[1:]
-        for interface in interfaces:
-            lines = interface.split("\n")
-            interface_name = lines[0].strip().split(",")[0]
-            speed = "Indisponible"
-            mac_address = None  # Par défaut, pas d'adresse MAC
-            for line in lines:
-                if "Speed:" in line:
-                    speed = line.split("Speed:")[1].split(",")[0].strip()
-                if "Current address:" in line:
-                    mac_address = line.split("Current address:")[1].strip().split()[0]  # Ne garde que l'adresse MAC
-            interfaces_info[interface_name] = speed
-            interfaces_mac[interface_name] = mac_address  # Stocker l'adresse MAC
-            # Traitement des interfaces logiques
-            logical_interfaces = interface.split("Logical interface")[1:]
-            for logical_interface in logical_interfaces:
-                logical_lines = logical_interface.split("\n")
-                logical_name = logical_lines[0].strip().split()[0]
-                # Stocker les informations de l'interface logique
-                interfaces_info[logical_name] = speed
-                # Récupérer l'adresse IP de l'interface logique
-                for line in logical_lines:
-                    if "Local:" in line and "Destination:" in line:
-                        logical_ip = line.split("Local:")[1].split(",")[0].strip()
-                        interfaces_ip[logical_name] = logical_ip
-        # Affichage des interfaces up
+       # output_terse = fetch_and_store(connection, structured_output_data, key_terse, cmd_terse)
+       # output_detail = fetch_and_store(connection, structured_output_data, key_detail, cmd_detail)
+        output_terse = connection.send_command(cmd_terse, read_timeout=90)
+        output_detail = connection.send_command(cmd_detail, read_timeout=90)
+        interfaces_up, interfaces_down = parsers.parse_interfaces(output_terse, output_detail)
+        structured_output_data['interfaces_up'] = interfaces_up
+        structured_output_data['interfaces_down'] = interfaces_down
+        # Log up interfaces
         logs.append("Les Interfaces up :")
         file_handle.write("Les Interfaces up :\n")
         if interfaces_up:
             for intf in interfaces_up:
-                speed = interfaces_info.get(intf, "Indisponible")
-                ip_address = interfaces_ip.get(intf, "Aucune IP")
-                mac_address = interfaces_mac.get(intf)
-                output = f"{intf} - Vitesse: {speed} - IP: {ip_address}"
-                if mac_address: 
-                    output += f" - MAC: {mac_address}"
+                if isinstance(intf, dict):
+                    output = ", ".join(f"{k}: {v}" for k, v in intf.items())
+                else:
+                    output = str(intf)
                 logs.append(output)
                 file_handle.write(output + "\n")
         else:
             logs.append("Aucune interface active trouvée.")
             file_handle.write("Aucune interface active trouvee.\n")
-        # Affichage des interfaces down
+        # Log down interfaces
         logs.append("Les Interfaces down :")
         file_handle.write("Les Interfaces down :\n")
         if interfaces_down:
             for intf in interfaces_down:
-                speed = interfaces_info.get(intf, "Indisponible")
-                ip_address = interfaces_ip.get(intf, "Aucune IP")
-                mac_address = interfaces_mac.get(intf)
-                output = f"{intf} - Vitesse: {speed} - IP: {ip_address}"
-                if mac_address:  
-                    output += f" - MAC: {mac_address}"
+                if isinstance(intf, dict):
+                    output = ", ".join(f"{k}: {v}" for k, v in intf.items())
+                else:
+                    output = str(intf)
                 logs.append(output)
                 file_handle.write(output + "\n")
         else:
             logs.append("Aucune interface inactive trouvée.")
             file_handle.write("Aucune interface inactive trouvee.\n")
-            
     except Exception as e:
         msg = f"Erreur lors de la récupération des informations des interfaces : {e}"
         logs.append(msg)
@@ -206,7 +151,7 @@ def collect_route_summary(connection, file_handle, structured_output_data, logs)
         file_handle.write("\nInformations sur les routes :\n")
         logs.append("Résumé des routes :")
         file_handle.write("Resume des routes :\n")
-        output = fetch_and_store(connection, structured_output_data, key, cmd)
+        output = fetch_and_store(connection, structured_output_data, key, cmd, parser_func=parsers.parse_route_summary)
         if output.strip():
             logs.append(output)
             file_handle.write(output + "\n")
@@ -225,7 +170,7 @@ def collect_ospf_info(connection, file_handle, structured_output_data, logs):
     try:
         logs.append("\nProtocole OSPF :")
         file_handle.write("\nProtocole OSPF :\n")
-        output = fetch_and_store(connection, structured_output_data, key, cmd)
+        output = fetch_and_store(connection, structured_output_data, key, cmd, parser_func=parsers.parse_ospf_info)
         if "OSPF instance is not running" in output:
             logs.append("OSPF n'est pas configuré sur ce routeur.")
             file_handle.write("OSPF n'est pas configure sur ce routeur.\n")
@@ -245,7 +190,7 @@ def collect_isis_info(connection, file_handle, structured_output_data, logs):
     try:
         logs.append("\nProtocole IS-IS :")
         file_handle.write("\nProtocole IS-IS :\n")
-        output = fetch_and_store(connection, structured_output_data, key, cmd)
+        output = fetch_and_store(connection, structured_output_data, key, cmd, parser_func=parsers.parse_isis_info)
         if "IS-IS instance is not running" in output:
             logs.append("IS-IS n'est pas configuré sur ce routeur.")
             file_handle.write("IS-IS n'est pas configure sur ce routeur.\n")
@@ -265,7 +210,7 @@ def collect_mpls_info(connection, file_handle, structured_output_data, logs):
     try:
         logs.append("\nProtocole MPLS :")
         file_handle.write("\nProtocole MPLS :\n")
-        output = fetch_and_store(connection, structured_output_data, key, cmd)
+        output = fetch_and_store(connection, structured_output_data, key, cmd, parser_func=parsers.parse_mpls_info)
         if "MPLS not configured" in output:
             logs.append("MPLS n'est pas configuré sur ce routeur.")
             file_handle.write("MPLS n'est pas configure sur ce routeur.\n")
@@ -285,7 +230,7 @@ def collect_ldp_info(connection, file_handle, structured_output_data, logs):
     try:
         logs.append("\nProtcole LDP :")
         file_handle.write("\nProtocole LDP :\n")
-        output = fetch_and_store(connection, structured_output_data, key, cmd)
+        output = fetch_and_store(connection, structured_output_data, key, cmd, parser_func=parsers.parse_ldp_info)
         if "LDP instance is not running" in output:
             logs.append("LDP n'est pas configuré sur ce routeur.")
             file_handle.write("LDP n'est pas configure sur ce routeur.\n")
@@ -315,7 +260,7 @@ def collect_rsvp_info(connection, file_handle, structured_output_data, logs):
     try:
         logs.append("\nProtocole RSVP :")
         file_handle.write("\nProtocole RSVP :\n")
-        output = fetch_and_store(connection, structured_output_data, key, cmd)
+        output = fetch_and_store(connection, structured_output_data, key, cmd, parser_func=parsers.parse_rsvp_info)
         if "RSVP not configured" in output:
             logs.append("RSVP n'est pas configuré sur ce routeur.")
             file_handle.write("RSVP n'est pas configure sur ce routeur.\n")
@@ -334,7 +279,7 @@ def collect_lldp_info(connection, file_handle, structured_output_data, logs):
     try:
         logs.append("\nProtocole LLDP :")
         file_handle.write("\nProtocole LLDP :\n")
-        output = fetch_and_store(connection, structured_output_data, key, cmd)
+        output = fetch_and_store(connection, structured_output_data, key, cmd, parser_func=parsers.parse_lldp_info)
         if not output.strip():
             logs.append("LLDP n'est pas configuré ou aucun voisin n'a été détecté.")
             file_handle.write("LLDP n'est pas configure ou aucun voisin n'a ete detecte.\n")
@@ -354,7 +299,7 @@ def collect_lsp_info(connection, file_handle, structured_output_data, logs):
     try:
         logs.append("\nProtocole LSP :")
         file_handle.write("\nProtocole LSP :\n")
-        output = fetch_and_store(connection, structured_output_data, key, cmd)
+        output = fetch_and_store(connection, structured_output_data, key, cmd, parser_func=parsers.parse_lsp_info)
         if "MPLS not configured" in output:
             logs.append("Aucune session lsp trouvé.")
             file_handle.write("Aucune session lsp trouve.\n")
@@ -374,7 +319,7 @@ def collect_bgp_info(connection, file_handle, structured_output_data, logs):
     try:
         logs.append("\nProtocole BGP :")
         file_handle.write("\nProtocole BGP :\n")
-        output = fetch_and_store(connection, structured_output_data, key, cmd)
+        output = fetch_and_store(connection, structured_output_data, key, cmd, parser_func=parsers.parse_bgp_info)
         if "BGP is not running" in output:
             logs.append("BGP n'est pas configuré sur ce routeur.")
             file_handle.write("BGP n'est pas configure sur ce routeur.\n")
@@ -393,13 +338,9 @@ def collect_system_services(connection, file_handle, structured_output_data, log
     try:
         logs.append("\nServices configurés :")
         file_handle.write("\nServices configures :\n")
-        output = fetch_and_store(connection, structured_output_data, key, cmd)
-        services = set()
-        for line in output.splitlines():
-            if line.strip().endswith(";"):
-                service_name = line.strip().rstrip(";")
-                services.add(service_name)
-        for service in sorted(services):
+        output = fetch_and_store(connection, structured_output_data, key, cmd, parser_func=parsers.parse_system_services)
+        # output is a list
+        for service in output:
             logs.append(service)
             file_handle.write(service + "\n")
     except Exception as e:
@@ -413,15 +354,14 @@ def collect_configured_protocols(connection, file_handle, structured_output_data
     try:
         logs.append("\nProtocoles configurés :")
         file_handle.write("\nProtocoles configures :\n")
-        output = fetch_and_store(connection, structured_output_data, key, cmd)
-        protocols = set()
-        for line in output.splitlines():
-            if "{" in line and not line.strip().startswith("}"):
-                protocol_name = line.split("{")[0].strip()
-                protocols.add(protocol_name)
-        for protocol in sorted(protocols):
-            logs.append(protocol)
-            file_handle.write(protocol + "\n")
+        output = fetch_and_store(connection, structured_output_data, key, cmd, parser_func=parsers.parse_configured_protocols)
+        if isinstance(output, str):
+            logs.append(output)
+            file_handle.write(output + "\n")
+        else:
+            for protocol in output:
+                logs.append(protocol)
+                file_handle.write(protocol + "\n")
     except Exception as e:
         logs.append(f"Erreur lors de la récupération des protocoles configurés : {e}")
         file_handle.write(f"Erreur lors de la recuperation des protocoles configures : {e}")
@@ -433,7 +373,7 @@ def collect_firewall_acls(connection, file_handle, structured_output_data, logs)
     try:
         logs.append("\nListes de Contrôle d'Accès (ACL) :")
         file_handle.write("\nListes de Controle d'Acces (ACL) :\n")
-        output = fetch_and_store(connection, structured_output_data, key, cmd)
+        output = fetch_and_store(connection, structured_output_data, key, cmd, parser_func=parsers.parse_firewall_acls)
         if output.strip():
             logs.append("Réponse de la commande 'show configuration firewall' :")
             file_handle.write("Reponse de la commande 'show configuration firewall' :\n")
@@ -459,7 +399,7 @@ def collect_critical_logs(connection, file_handle, structured_output_data, logs)
         file_handle.write("\nLogs des erreurs critiques :\n")
         logs.append("Logs des erreurs critiques dans 'messages' :")
         file_handle.write("Logs des erreurs critiques dans 'messages' :\n")
-        output_msg = fetch_and_store(connection, structured_output_data, key_msg, cmd_msg)
+        output_msg = fetch_and_store(connection, structured_output_data, key_msg, cmd_msg, parser_func=parsers.parse_critical_logs)
         filtered_logs = [line for line in output_msg.splitlines() if not line.strip().startswith("---(more")]
         filtered_logs_str = "\n".join(filtered_logs)
         logs.append(filtered_logs_str)
@@ -474,7 +414,7 @@ def collect_critical_logs(connection, file_handle, structured_output_data, logs)
             raise Exception("Connexion perdue avec le routeur")
         logs.append("Logs des erreurs critiques dans 'chassisd' :")
         file_handle.write("Logs des erreurs critiques dans 'chassisd' :\n")
-        output_chassisd = fetch_and_store(connection, structured_output_data, key_chassisd, cmd_chassisd)
+        output_chassisd = fetch_and_store(connection, structured_output_data, key_chassisd, cmd_chassisd, parser_func=parsers.parse_critical_logs)
         filtered_logs = [line for line in output_chassisd.splitlines() if not line.strip().startswith("---(more")]
         filtered_logs_str = "\n".join(filtered_logs)
         logs.append(filtered_logs_str)
