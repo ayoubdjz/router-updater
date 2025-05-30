@@ -4,6 +4,7 @@ import ipaddress
 import chardet
 import unicodedata
 from collections import OrderedDict
+from netmiko import ConnectHandler, BaseConnection
 
 # Fonction pour vérifier la connexion
 def verifier_connexion(connection):
@@ -348,3 +349,19 @@ def fetch_and_store(
     except Exception as e:
         # Do not update structured_output_data here; let collector handle it
         raise
+
+
+def sanitize_for_json(data_dict):
+    if not isinstance(data_dict, dict):
+        return data_dict # Should not happen if our functions return dicts
+
+    # Explicitly remove known non-serializable keys and check for Netmiko connection objects
+    # Create a new dictionary to avoid modifying the original during iteration if it's complex
+    sanitized_dict = {}
+    for k, v in data_dict.items():
+        if k in ['connection_obj', 'lock_obj']: # Known keys for objects
+            continue
+        if isinstance(v, BaseConnection): # Check if value is a Netmiko connection object
+            continue
+        sanitized_dict[k] = v
+    return sanitized_dict

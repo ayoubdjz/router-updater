@@ -609,7 +609,8 @@ def run_avant_checks(ip, username, password, log_messages):
             "connection_obj": connection, 
             "structured_data": structured_output_data, 
             "log_messages": log_messages,
-            "device_details_for_update": device_details_for_update 
+            "device_details_for_update": device_details_for_update, 
+            "lock_acquired": lock_acquired
         }
 
     except Exception as e_generic:

@@ -1,0 +1,19 @@
+{
+  "ip": "192.168.110.2",
+  "username": "root",
+  "router_hostname": "inconnu",
+  "lock_file_path": "C:\\Users\\LEGION\\Desktop\\Ayoub\\router_updater\\web_app\\backend\\router_locks\\192_168_110_2.lock",
+  "avant_file_path": "C:\\Users\\LEGION\\Desktop\\Ayoub\\router_updater\\web_app\\backend\\generated_files\\AVANT_root_inconnu_1.txt",
+  "config_file_path": "C:\\Users\\LEGION\\Desktop\\Ayoub\\router_updater\\web_app\\backend\\generated_files\\CONFIGURATION_root_inconnu_1.txt",
+  "ident_file_path": "C:\\Users\\LEGION\\Desktop\\Ayoub\\router_updater\\web_app\\backend\\generated_files\\identifiants_root_inconnu_1.json",
+  "device_details_for_update": {
+    "device_type": "juniper",
+    "host": "192.168.110.2",
+    "username": "root",
+    "password": "Admin0",
+    "timeout": 60,
+    "auth_timeout": 90,
+    "banner_timeout": 90,
+    "global_delay_factor": 2
+  }
+}
