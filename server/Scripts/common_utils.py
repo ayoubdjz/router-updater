@@ -6,6 +6,10 @@ import unicodedata
 from collections import OrderedDict
 from netmiko import ConnectHandler, BaseConnection
 
+def stream_log(logs, msg):
+    logs.append(msg)
+    # streaming removed
+
 # Fonction pour vérifier la connexion
 def verifier_connexion(connection):
     try:
@@ -86,14 +90,16 @@ def valider_ip(ip):
     except ValueError:
         return False
     
-def normalize_text(text):
+def normalize_text(text, logs=None):
     try:
         if isinstance(text, list):
-            return [normalize_text(line) for line in text]
+            return [normalize_text(line, logs) for line in text]
+        import unicodedata
         text = unicodedata.normalize('NFKD', text).encode('ASCII', 'ignore').decode('ASCII')
         return text.lower()
     except Exception as e:
-        print(f"Erreur lors de la normalisation du texte : {e}", file=sys.stderr)
+        if logs is not None:
+            logs.append(f"Erreur lors de la normalisation du texte : {e}")
         return text
 
 def detect_encoding(file_path):
@@ -102,25 +108,28 @@ def detect_encoding(file_path):
         return chardet.detect(raw_data)['encoding'] or 'utf-8'
 
 # Fonction pour lire un fichier ligne par ligne
-def read_file_by_line(file_path):
+def read_file_by_line(file_path, logs=None):
     try:
         encoding = detect_encoding(file_path)
         with open(file_path, 'r', encoding=encoding, errors='replace') as file:
             for line in file:
                 yield line.rstrip('\n')
     except FileNotFoundError:
-        print(f"Le fichier {file_path} n'a pas été trouvé.", file=sys.stderr)
+        if logs is not None:
+            logs.append(f"Le fichier {file_path} n'a pas été trouvé.")
         yield None
     except Exception as e:
-        print(f"Erreur lors de la lecture du fichier {file_path} : {e}", file=sys.stderr)
+        if logs is not None:
+            logs.append(f"Erreur lors de la lecture du fichier {file_path} : {e}")
         yield None
 
 # Fonction pour extraire les sections du fichier
-def extract_sections(file_content):
+def extract_sections(file_content, logs=None):
+    from collections import OrderedDict
     sections = OrderedDict()
     current_section = None
     for line in file_content:
-        if line is None: 
+        if line is None:
             return OrderedDict()
         stripped_line = line.strip()
         try:
@@ -130,11 +139,13 @@ def extract_sections(file_content):
             elif current_section:
                 sections[current_section].append(stripped_line)
         except Exception as e:
-            print(f"Erreur lors de l'extraction des sections : {e}", file=sys.stderr)
+            if logs is not None:
+                logs.append(f"Erreur lors de l'extraction des sections : {e}")
     return sections
 
 # Fonction pour comparer les sections
-def compare_sections(sections_avant, sections_apres):
+def compare_sections(sections_avant, sections_apres, logs=None):
+    from collections import OrderedDict
     differences = OrderedDict()
     try:
         all_sections = OrderedDict()
@@ -145,16 +156,13 @@ def compare_sections(sections_avant, sections_apres):
         for section in all_sections.keys():
             content1 = sections_avant.get(section, [])
             content2 = sections_apres.get(section, [])
-            norm1 = set(normalize_text(content1))
-            norm2 = set(normalize_text(content2))
+            norm1 = set(normalize_text(content1, logs))
+            norm2 = set(normalize_text(content2, logs))
             if norm1 != norm2:
-                # Modifier ici pour ajouter des messages explicites
-                added = [line for line in content2 if normalize_text(line) in norm2 - norm1]
-                removed = [line for line in content1 if normalize_text(line) in norm1 - norm2]
-                # Si added est vide mais qu'il y a des removed, ajouter un message
+                added = [line for line in content2 if normalize_text(line, logs) in norm2 - norm1]
+                removed = [line for line in content1 if normalize_text(line, logs) in norm1 - norm2]
                 if not added and removed:
                     added = ["✗ (Supprimée)"]
-                # Si removed est vide mais qu'il y a des added, ajouter un message
                 if not removed and added:
                     removed = ["✗ (Aucune)"]
                 differences[section] = {
@@ -164,18 +172,20 @@ def compare_sections(sections_avant, sections_apres):
                     "removed": removed
                 }
     except Exception as e:
-        print(f"Erreur lors de la comparaison des sections : {e}", file=sys.stderr)
+        if logs is not None:
+            logs.append(f"Erreur lors de la comparaison des sections : {e}")
     return differences
 
 # Fonction pour afficher les différences
-def display_differences(differences):
+def display_differences(differences, logs=None):
+    if logs is None:
+        logs = []
     if not differences:
-        print("Aucun changement détecté entre les configurations avant et après le mis a jour")
+        logs.append("Aucun changement détecté entre les configurations avant et après le mis a jour")
         return
-    print("\nRapport des changements :")
+    logs.append("\nRapport des changements :")
     for section, content in differences.items():
-        print(f"\n{section}")
-        # Afficher les en-têtes spécifiques si nécessaire
+        logs.append(f"\n{section}")
         headers = {
             "Interfaces OSPF actives :": "Interface           State   Area            DR ID           BDR ID          Nbrs",
             "interfaces isis actives :": "Interface           System        Hold        SNPA",
@@ -185,62 +195,55 @@ def display_differences(differences):
             "interfaces configuré avec RSVP :": "interface           active resv       subscr-iption     static BW    Available BW      Resrved BW     highwater mark"
         }
         if section in headers:
-            print(headers[section])
+            logs.append(headers[section])
         max_lines = max(len(content["removed"]), len(content["added"]))
         if max_lines > 0:
-            # Calculer la largeur maximale pour chaque colonne
             max_before = max((len(line) for line in content["removed"]), default=0)
             max_after = max((len(line) for line in content["added"]), default=0)
-            # Déterminer si on doit utiliser le mode vertical
-            terminal_width = 120  # Largeur typique d'un terminal
+            terminal_width = 120
             use_vertical = (max_before + max_after + 3) > terminal_width
             if use_vertical:
-                # Mode vertical amélioré avec tableau
-                print("\n" + " AVANT ".center(terminal_width, "="))
+                logs.append("\n" + " AVANT ".center(terminal_width, "="))
                 for line in content["removed"]:
-                    print(line)
-                print("\n" + " APRÈS ".center(terminal_width, "="))
+                    logs.append(line)
+                logs.append("\n" + " APRÈS ".center(terminal_width, "="))
                 for line in content["added"]:
-                    print(line)
-                print("=" * terminal_width)
+                    logs.append(line)
+                logs.append("=" * terminal_width)
             else:
-                # Mode tableau côte à côte
-                # Ajuster les largeurs pour l'alignement
                 col_before = max(max_before, 20)
                 col_after = max(max_after, 20)
-                # En-têtes
-                print("\n" + "-" * (col_before + col_after + 3))
-                print(f"{'AVANT'.center(col_before)} | {'APRÈS'.center(col_after)}")
-                print("-" * (col_before + col_after + 3))
-                # Contenu
+                logs.append("\n" + "-" * (col_before + col_after + 3))
+                logs.append(f"{'AVANT'.center(col_before)} | {'APRÈS'.center(col_after)}")
+                logs.append("-" * (col_before + col_after + 3))
                 for i in range(max_lines):
                     before = content["removed"][i] if i < len(content["removed"]) else "✓ (Identique)"
                     after = content["added"][i] if i < len(content["added"]) else "✓ (Identique)"
-                    # Gestion spéciale des messages explicites
                     if before == "✗ (Aucune)":
                         after = content["added"][i] if i < len(content["added"]) else ""
                     elif after == "✗ (Supprimée)":
                         before = content["removed"][i] if i < len(content["removed"]) else ""
-                    # Découper les lignes trop longues
                     before_lines = [before[j:j+col_before] for j in range(0, len(before), col_before)] or [""]
                     after_lines = [after[j:j+col_after] for j in range(0, len(after), col_after)] or [""]
                     max_sub_lines = max(len(before_lines), len(after_lines))
                     for j in range(max_sub_lines):
                         before_part = before_lines[j] if j < len(before_lines) else ""
                         after_part = after_lines[j] if j < len(after_lines) else ""
-                        # Afficher seulement la première ligne avec le séparateur
                         if j == 0:
-                            print(f"{before_part.ljust(col_before)} | {after_part.ljust(col_after)}")
+                            logs.append(f"{before_part.ljust(col_before)} | {after_part.ljust(col_after)}")
                         else:
-                            print(f"{before_part.ljust(col_before)}   {after_part.ljust(col_after)}")
-                print("-" * (col_before + col_after + 3) + "\n")
+                            logs.append(f"{before_part.ljust(col_before)}   {after_part.ljust(col_after)}")
+                logs.append("-" * (col_before + col_after + 3) + "\n")
 
 # Fonction pour écrire les différences dans un fichier
-def write_differences_to_file(differences, filename):
+def write_differences_to_file(differences, filename, logs=None):
+    if logs is None:
+        logs = []
     try:
         with open(filename, 'w', encoding='utf-8') as file:
             if not differences:
                 file.write("Aucun changement détecté entre les configurations avant et après le mis a jour.\n")
+                logs.append(f"Aucun changement détecté entre les configurations avant et après le mis a jour. (fichier: {filename})")
                 return
             file.write("\nRapport des changements :\n")
             for section, content in differences.items():
@@ -276,10 +279,8 @@ def write_differences_to_file(differences, filename):
                         file.write(f"{'AVANT'.center(col_before)} | {'APRÈS'.center(col_after)}\n")
                         file.write("-" * (col_before + col_after + 3) + "\n")
                         for i in range(max_lines):
-                            # Modifications ici pour gérer les cas spéciaux
                             before = content["removed"][i] if i < len(content["removed"]) else "✓ (Identique)"
                             after = content["added"][i] if i < len(content["added"]) else "✓ (Identique)"
-                            # Gestion spéciale des messages explicites
                             if before == "✗ (Aucune)":
                                 after = content["added"][i] if i < len(content["added"]) else ""
                             elif after == "✗ (Supprimée)":
@@ -290,24 +291,25 @@ def write_differences_to_file(differences, filename):
                             for j in range(max_sub_lines):
                                 before_part = before_lines[j] if j < len(before_lines) else ""
                                 after_part = after_lines[j] if j < len(after_lines) else ""
-                                
                                 if j == 0:
                                     file.write(f"{before_part.ljust(col_before)} | {after_part.ljust(col_after)}\n")
                                 else:
                                     file.write(f"{before_part.ljust(col_before)}   {after_part.ljust(col_after)}\n")
                         file.write("-" * (col_before + col_after + 3) + "\n\n")
-        print(f"\nLe rapport détaillé des changements a été sauvegardé dans le fichier : {filename}.")
+        logs.append(f"\nLe rapport détaillé des changements a été sauvegardé dans le fichier : {filename}.")
     except Exception as e:
-        print(f"Erreur lors de l'écriture des différences dans le fichier : {e}")
+        logs.append(f"Erreur lors de l'écriture des différences dans le fichier : {e}")
 
-def nettoyer_fichiers_disque(fichiers_a_supprimer):
+def nettoyer_fichiers_disque(fichiers_a_supprimer, logs=None):
     for fichier in fichiers_a_supprimer:
         try:
             if os.path.exists(fichier):
                 os.remove(fichier)
-                print(f"Fichier supprimé : {fichier}")
+                if logs is not None:
+                    logs.append(f"Fichier supprimé : {fichier}")
         except Exception as e:
-            print(f"Erreur lors de la suppression du fichier {fichier}: {e}")
+            if logs is not None:
+                logs.append(f"Erreur lors de la suppression du fichier {fichier}: {e}")
 
 def fetch_and_store(
     connection,
@@ -365,3 +367,8 @@ def sanitize_for_json(data_dict):
             continue
         sanitized_dict[k] = v
     return sanitized_dict
+
+
+def stream_log(logs, msg):
+    logs.append(msg)
+    # streaming removed

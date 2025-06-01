@@ -14,7 +14,8 @@ from common_utils import (
     verifier_connexion,
     nettoyer_fichiers_disque,
     confirmation_box,
-    valider_ip
+    valider_ip,
+    stream_log
 )
 import juniper_data_collector as jdc
 from importlib import import_module
@@ -80,12 +81,9 @@ def lancer_apres(fichier_identifiants, logs, max_tentatives=3):
 
 def run_avant_workflow(ip, username, password, avant_logs=None):
     # --- Main script logic ---
-
     if not valider_ip(ip):
         avant_logs.append("Adresse IP invalide.")
         return {"status": "error", "message": "Adresse IP invalide.", "logs": avant_logs, "structured_data": {}}
-
-
     lock_obj = None
     lock_file_path_main = None
     connection = None
@@ -117,22 +115,20 @@ def run_avant_workflow(ip, username, password, avant_logs=None):
     }
 
     try:
-
         avant_logs.append(f"--- Début run_avant_checks pour {ip} ---")
         lock_acquired, attempted_lock_path = verrouiller_routeur(ip, avant_logs=avant_logs)
         lock_file_path = attempted_lock_path
         if not lock_acquired:
-            return {"status": "error", "message": f"Impossible de verrouiller le routeur {ip}. Voir logs.", 
+            return {"status": "error", "message": f"Impossible de verrouiller le routeur {ip}. Voir logs.",
                     "lock_file_path": lock_file_path, "logs": avant_logs, "structured_data": structured_output_data}
-
         avant_logs.append(f"AVANT: Tentative de connexion à {ip}...")
         connection = ConnectHandler(**device_config)
         if verifier_connexion(connection):
             avant_logs.append(f"Connecté avec succès au routeur {ip}")
         else:
-            avant_logs.append("Erreur de connexion. Veuillez réessayer.")
+            avant_logs.append("Échec de la vérification de la connexion AVANT.")
             connection.disconnect()
-        # Create AVANT temp file
+            return {"status": "error", "message": "SSH connection verification failed.", "logs": avant_logs}
         with tempfile.NamedTemporaryFile(
             mode='w+',
             dir=GENERATED_FILES_DIR,
@@ -146,13 +142,31 @@ def run_avant_workflow(ip, username, password, avant_logs=None):
         router_hostname_main = "inconnu"
         with open(fichier_temporaire_avant, 'w', encoding='utf-8') as file_handle_avant:
             router_hostname_main, _, _ = jdc.collect_basic_info(connection, file_handle_avant, structured_output_data=structured_output_data, logs=avant_logs)
-            run_all_jdc_collectors(connection, file_handle_avant, structured_output_data, avant_logs)
-            config_file_main = jdc.collect_full_configuration(connection, file_handle_avant, structured_output_data, avant_logs, username, router_hostname_main)
-            if config_file_main and os.path.exists(config_file_main):
-                fichiers_crees_main.append(config_file_main)
-            else:
-                avant_logs.append("Avertissement: Le fichier de configuration séparé n'a pas été créé ou trouvé.")
-        # Rename AVANT file
+            for func_name in [
+                'collect_routing_engine_info',
+                'collect_interface_info',
+                'collect_arp_info',
+                'collect_route_summary',
+                'collect_ospf_info',
+                'collect_isis_info',
+                'collect_mpls_info',
+                'collect_ldp_info',
+                'collect_rsvp_info',
+                'collect_lldp_info',
+                'collect_lsp_info',
+                'collect_bgp_info',
+                'collect_system_services',
+                'collect_configured_protocols',
+                'collect_firewall_acls',
+                'collect_critical_logs',
+                'collect_full_configuration',
+            ]:
+                func = getattr(jdc, func_name, None)
+                if callable(func):
+                    if func_name == 'collect_full_configuration':
+                        func(connection, file_handle_avant, structured_output_data, avant_logs, username, router_hostname_main)
+                    else:
+                        func(connection, file_handle_avant, structured_output_data, avant_logs)
         base_avant_filename = f"AVANT_{username}_{router_hostname_main}.txt"
         AVANT_file = os.path.join(GENERATED_FILES_DIR, base_avant_filename)
         compteur = 1
@@ -161,13 +175,12 @@ def run_avant_workflow(ip, username, password, avant_logs=None):
             compteur += 1
         try:
             os.replace(fichier_temporaire_avant, AVANT_file)
-            avant_logs.append(f"Fichier temporaire renommé en : {AVANT_file}")
+            avant_logs.append(f"Fichier temporaire AVANT renommé en : {AVANT_file}")
             fichiers_crees_main.remove(fichier_temporaire_avant)
             fichiers_crees_main.append(AVANT_file)
         except Exception as e:
-            avant_logs.append(f"Erreur lors du renommage du fichier temporaire {fichier_temporaire_avant} en {AVANT_file}: {e}")
+            avant_logs.append(f"Erreur lors du renommage du fichier temporaire AVANT : {e}")
             AVANT_file = fichier_temporaire_avant
-        # Save identifiants
         identifiants_base_name = f"identifiants_{username}_{router_hostname_main}.json"
         identifiants_file_main = os.path.join(GENERATED_FILES_DIR, identifiants_base_name)
         compteur_id = 1
@@ -175,55 +188,22 @@ def run_avant_workflow(ip, username, password, avant_logs=None):
             identifiants_file_main = os.path.join(GENERATED_FILES_DIR, f"identifiants_{username}_{router_hostname_main}_{compteur_id}.json")
             compteur_id += 1
         try:
-            data_to_save = {
+            identifiants_data = {
                 "ip": ip,
                 "username": username,
+                "router_hostname": router_hostname_main,
                 "lock_file_path": lock_file_path_main,
-                "AVANT_file": AVANT_file,
-                "config_file_main": config_file_main if config_file_main else "N/A"
+                "avant_file_path": AVANT_file,
+                "config_file_path": config_file_main,
+                "ident_file_path": identifiants_file_main,
+                "device_details_for_update": device_config
             }
-            with open(identifiants_file_main, "w", encoding='utf-8') as f_id:
-                json.dump(data_to_save, f_id, indent=4)
+            with open(identifiants_file_main, 'w', encoding='utf-8') as f_ident:
+                json.dump(identifiants_data, f_ident, indent=2)
+            avant_logs.append(f"Fichier d'identifiants sauvegardé : {identifiants_file_main}")
             fichiers_crees_main.append(identifiants_file_main)
-            avant_logs.append(f"Identifiants sauvegardés dans : {identifiants_file_main}")
         except Exception as e:
-            avant_logs.append(f"Erreur lors de la sauvegarde des identifiants : {e}")
-            identifiants_file_main_txt = identifiants_file_main.replace(".json", ".txt")
-            try:
-                with open(identifiants_file_main_txt, "w", encoding='utf-8') as f_txt_id:
-                    f_txt_id.write("ATTENTION: Fichier non sécurisé (fallback JSON échoué)\n")
-                    for key, value in data_to_save.items():
-                        f_txt_id.write(f"{key}: {value}\n")
-                fichiers_crees_main.append(identifiants_file_main_txt)
-                identifiants_file_main = identifiants_file_main_txt
-                avant_logs.append(f"Identifiants sauvegardés (fallback TXT) dans : {identifiants_file_main}")
-            except Exception as e_txt:
-                avant_logs.append(f"Échec complet de la sauvegarde des identifiants (même en TXT) : {e_txt}")
-                identifiants_file_main = None
-        # Build identifiants_data
-        router_hostname = router_hostname_main
-        compteur_ident = 1
-        while os.path.exists(identifiants_file_main):
-            identifiants_file_main = os.path.join(GENERATED_FILES_DIR, f"identifiants_{username}_{router_hostname}_{compteur_ident}.json")
-            compteur_ident += 1
-        identifiants_data = {
-            "ip": ip,
-            "username": username,
-            "router_hostname": router_hostname,
-            "lock_file_path": lock_file_path_main,
-            "avant_file_path": AVANT_file,
-            "config_file_path": config_file_main,
-            "ident_file_path": identifiants_file_main,
-            "device_details_for_update": {
-                'device_type': 'juniper_junos',
-                'host': ip,
-                'username': username,
-                'password': password,
-                'timeout': 60,
-                'session_log': os.path.join(GENERATED_FILES_DIR, 'netmiko_session_avant.log'),
-                'session_log_file_mode': 'append'
-            }
-        }
+            avant_logs.append(f"Erreur lors de la sauvegarde du fichier d'identifiants : {e}")
         return {
             "status": "success", "message": "Vérifications AVANT terminées.",
             "ident_data": identifiants_data, "ident_file_path": identifiants_file_main,
@@ -233,39 +213,29 @@ def run_avant_workflow(ip, username, password, avant_logs=None):
             "connection_obj": connection,
             "structured_data": structured_output_data,
             "log_messages": avant_logs,
-            "device_details_for_update": identifiants_data["device_details_for_update"]
+            "device_details_for_update": device_config
         }
     except Exception as e_generic:
         import traceback
         error_msg = f"AVANT Erreur majeure dans run_avant_checks: {str(e_generic)} (Type: {type(e_generic).__name__})"
         avant_logs.append(error_msg + f"\nTraceback:\n{traceback.format_exc()}")
-        
         for key_data_error in structured_output_data:
-            if not structured_output_data[key_data_error] or \
-               (isinstance(structured_output_data[key_data_error], dict) and not structured_output_data[key_data_error]):
-                structured_output_data[key_data_error] = {"message": f"Collecte interrompue ou donnée non récupérée suite à l'erreur: {str(e_generic)}"}
-
+            pass
         return {
-            "status": "error", "message": error_msg, 
-            "lock_file_path": lock_file_path, 
-            "fichiers_crees": fichiers_crees_main, 
-            "structured_data": structured_output_data, 
+            "status": "error", "message": error_msg,
+            "lock_file_path": lock_file_path,
+            "fichiers_crees": fichiers_crees_main,
+            "structured_data": structured_output_data,
             "log_messages": avant_logs,
-            "connection_obj": connection 
+            "connection_obj": connection
         }
     finally:
-        # Always release the lock and delete the lock file
         if lock_obj or lock_file_path_main:
-            try:
-                liberer_verrou_et_fichier(lock_obj, lock_file_path_main, avant_logs)
-                avant_logs.append(f"Verrou libéré et fichier de verrou supprimé pour {ip}.")
-            except Exception as e:
-                avant_logs.append(f"Erreur lors de la libération du verrou ou suppression du fichier de verrou: {e}")
-        # Always close the SSH connection
+            pass
         if connection:
             try:
                 connection.disconnect()
-                avant_logs.append(f"Connexion SSH fermée pour {ip}.")
+                avant_logs.append(f"Déconnexion de la session SSH (AVANT)... Session SSH (AVANT) déconnectée.")
             except Exception as e:
                 avant_logs.append(f"Erreur lors de la fermeture de la connexion SSH: {e}")
 

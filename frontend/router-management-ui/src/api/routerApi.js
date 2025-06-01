@@ -15,9 +15,10 @@ export const testConnection = (credentials) => {
 };
 
 // --- AVANT ---
+// Only synchronous (full result after completion)
 export const runAvantChecks = (credentials) => {
   return apiClient.post('/run_avant', credentials);
-};
+}
 
 // --- UPDATE ---
 // This function signature is kept for consistency, but the actual streaming

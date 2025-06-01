@@ -15,7 +15,7 @@ Routing Engine status:
     Model                          RE-VMX
     Serial ID                      VM5543516AC4
     Start time                     2025-05-30 02:13:13 UTC
-    Uptime                         11 hours, 29 minutes, 23 seconds
+    Uptime                         11 hours, 29 minutes, 38 seconds
     Last reboot reason             0x10:misc hardware reason 
     Load averages:                 1 minute   5 minute  15 minute
                                        0.00       0.00       0.00

@@ -181,7 +181,7 @@ try:
             connection = ConnectHandler(**device)
             # Vérification de la connexion
             if verifier_connexion(connection):
-                print(f"Connecté avec succès au routeur {ip}")
+                print(f"\nConnecté avec succès au routeur {ip}")
                 break
             else:
                 print("Erreur de connexion. Veuillez réessayer.")
@@ -708,7 +708,6 @@ try:
         print(f"\nErreur lors de l'affichage des chemins des fichiers : {e}")
         raise   
 
-
     # MISE À JOUR
     if confirmation_box("Voulez-vous poursuivre la procédure de mise à jour ?"):
         #CONFIGURATION INITIALE DE LA MISE À JOUR
@@ -718,9 +717,6 @@ try:
             if not image_file:
                 print("Erreur: Vous devez spécifier un nom de package.")
                 continue
-            if not image_file.endswith('.tgz'):
-                print("Attention ! Le package devrait avoir l'extension .tgz")
-                continue
             prefix = "jinstall-ppc-"
             suffix = "-signed.tgz"
             if prefix not in image_file or suffix not in image_file:
@@ -729,8 +725,8 @@ try:
             # Vérification de la présence du package sur le routeur
             print(f"\nVérification de la présence du package {image_file} sur le routeur...")
             try:
-                output_re0 = connection.send_command(f"file list /var/tmp/{image_file}")
-                output_re1 = connection.send_command(f"file list /var/tmp/re1/{image_file}")
+                output_re0 = connection.send_command(f"file list re0:/var/tmp/{image_file}")
+                output_re1 = connection.send_command(f"file list re1:/var/tmp/{image_file}")
                 if "No such file or directory" in output_re0 or "No such file or directory" in output_re1:
                     print(f"\nLe package {image_file} est introuvable !")
                     print("Veuillez choisir parmi les alternatives suivantes :")
@@ -759,40 +755,60 @@ try:
                 continue
         # DÉSACTIVATION DES FONCTIONNALITÉS HA 
         print("\nDésactivation des fonctionnalités de haute disponibilité...")
-        connection.config_mode()
-        commands = [
-            "deactivate chassis redundancy",
-            "deactivate routing-options nonstop-routing",
-            "deactivate system commit synchronize",
-            "set system processes clksyncd-service disable"
-        ]
-        for cmd in commands:
-            output = connection.send_command(cmd)
-        connection.write_channel("commit synchronize\n")
-        connection.exit_config_mode()
-        print("✓ Configuration de haute disponibilité désactivée")
+        try:
+            connection.config_mode()
+            commands = [
+                "deactivate chassis redundancy",
+                "deactivate routing-options nonstop-routing",
+                "deactivate system commit synchronize",
+                "set system processes clksyncd-service disable"
+            ]
+            for cmd in commands:
+                output = connection.send_command(cmd, read_timeout=30)
+                if "error" in output.lower() or "unknown command" in output.lower():
+                    print(f"UPDATE ERREUR: Commande HA '{cmd}' échouée: {output}")
+                    try: connection.exit_config_mode()
+                    except: pass
+            commit_output = connection.commit(comment="HA features update via API", read_timeout=300, and_quit=False)
+            commit_output = connection.send_command("commit synchronize", read_timeout=300)
+            if "commit complete" not in commit_output.lower(): 
+                print(f"'commit synchronize' pour HA a échoué ou a eu une réponse inattendue: {commit_output}")
+                try: connection.exit_config_mode()
+                except: pass
+            connection.exit_config_mode()
+            print("✓ Configuration de haute disponibilité désactivée avec succès")
+        except Exception as e:
+            print(f"✗ Erreur lors de la désactivation des fonctionnalités HA: {str(e)}")
+            raise
         # MISE À JOUR DE RE1
         print("\nMise à jour de RE1...")
-        print("Établissement de la connexion à RE1...")
-        connection.write_channel("request routing-engine login other-routing-engine\n")
-        print("Installation du nouveau logiciel sur RE1...")
-        install_output = connection.send_command(f"request system software add /var/tmp/{image_file} no-validate", delay_factor=4)
-        if "error" in install_output.lower():
-            raise Exception(f"Échec de l'installation sur RE1: {install_output}")
-        # REDÉMARRAGE DE RE1
-        print("Lancement du redémarrage de RE1...")
-        connection.send_command("request system reboot", expect_string=r"Reboot the system", strip_prompt=False)
-        connection.send_command("yes", expect_string=r"Shutdown NOW!")
+        try:
+            print("Établissement de la connexion à RE1...")
+            connection.write_channel("request routing-engine login other-routing-engine\n")
+            time.sleep(30)
+            print("✓ Connexion à RE1 établie avec succès")
+            print("Installation du nouveau logiciel sur RE1...")
+            connection.write_channel(f"request system software add /var/tmp/{image_file} no-validate\n") 
+            time.sleep(30)
+            # REDÉMARRAGE DE RE1
+            print("Lancement du redémarrage de RE1...")
+            connection.write_channel("request system reboot\n")
+            time.sleep(10)
+            connection.write_channel("yes\n")
+            time.sleep(60)
+            print("✓ Redémarrage de RE1 initié avec succès")
+        except Exception as e:
+            print(f"✗ Erreur lors de la mise à jour de RE1: {str(e)}")
+            raise
         # VÉRIFICATION DU REDÉMARRAGE DE RE1
         print("\n Validation du redémarrage de RE1")
         start_time = time.time()
         timeout = 900  # 15 minutes en secondes
         re1_ready = False
-        # Configuration pour la lecture en flux continu
         connection.remote_conn.settimeout(15)  # Timeout de lecture plus long
         output_buffer = ""
         try:
-            connection.write_channel("show chassis routing-engine | match 'Current state' \n")
+            connection.write_channel("show chassis routing-engine |refresh | match Current\n")
             while (time.time() - start_time) < timeout:
                 # Lire le flux de sortie
                 chunk = connection.read_channel()
@@ -804,14 +820,20 @@ try:
                     # Vérifier les états attendus
                     if "Backup" in output_buffer:
                         re1_ready = True
+                        connection.write_channel(chr(3)) 
+                        time.sleep(1)
+                        connection.clear_buffer()
+                        print("\n✓ RE1 a terminé son redémarrage.")
                         break
                 else:
                     time.sleep(1)  # Pause courte si pas de données
             if not re1_ready:
                 raise Exception("15 minutes dépassé - RE1 n'a pas restauré son état opérationnel")
-            print("\n✓ RE1 a terminé son redémarrage.")
         except Exception as e:
-            print(f"\nErreur lors de la vérification du redémarrage de RE1: {str(e)}")
+            print(f"\n✗ Erreur lors de la vérification du redémarrage de RE1: {str(e)}")
+            connection.write_channel(chr(3))
+            time.sleep(1)
+            connection.clear_buffer()
             raise
         # VÉRIFICATION DE LA VERSION SUR RE1
         print("\nVérification de la version sur RE1...")
@@ -831,15 +853,14 @@ try:
             else:
                 raise Exception(f"ERREUR: La version sur RE1 ({current_version}) ne correspond pas à la version attendue ({expected_version})")
         except Exception as e:
-            print(f"\nErreur lors de la vérification de version: {str(e)}")
+            print(f"\n✗ Erreur lors de la vérification de version: {str(e)}")
             raise
         # BASCULEMENT VERS RE1
         print("\nBasculement vers RE1...")
         try:
             # Envoyer la commande de basculement
-            sswitch_output = connection.send_command("request chassis routing-engine master switch", xpect_string=r"Toggle mastership between routing engines", strip_prompt=False)
+            switch_q_out = connection.send_command("request chassis routing-engine master switch", expect_string=r"Toggle mastership between routing engines", strip_prompt=False, strip_command=False, read_timeout=30)
             connection.write_channel("yes\n")
-            # Attendre un court moment pour que la commande soit traitée
             time.sleep(10)
             # Fermer proprement la connexion actuelle
             connection.disconnect()
@@ -851,7 +872,7 @@ try:
             for attempt in range(1, 6):  # 5 tentatives max
                 try:
                     # Réétablir la connexion directe au routeur
-                    new_connection = ConnectHandler(**device)
+                    connection = ConnectHandler(**device)
                     # Vérifier le nouvel état
                     re_status = connection.send_command("show chassis routing-engine")
                     lines = re_status.split('\n')
@@ -877,29 +898,39 @@ try:
                     else:
                         raise Exception("Échec de reconnexion après basculement")
         except Exception as e:
-            print(f"\nErreur lors du basculement vers RE1: {str(e)}")
+            print(f"\n✗ Erreur lors du basculement vers RE1: {str(e)}")
             raise
         # MISE À JOUR DE RE0 
         print("\nMise à jour de RE0...")
-        print("Établissement de la connexion à RE0...")
-        connection.write_channel("request routing-engine login other-routing-engine\n")
-        print("Installation du nouveau logiciel sur RE0...")
-        install_output = connection.send_command(f"request system software add /var/tmp/{image_file} no-validate", delay_factor=4)
-        # REDÉMARRAGE DE RE0
-        print("Lancement du redémarrage de RE0...")
-        connection.send_command("request system reboot", expect_string=r"Reboot the system", strip_prompt=False)
-        connection.send_command("yes", expect_string=r"Shutdown NOW!")
+        try:
+            print("Établissement de la connexion à RE0...")
+            connection.write_channel("request routing-engine login other-routing-engine\n")
+            time.sleep(30)
+            print("✓ Connexion à RE0 établie avec succès")
+            print("Installation du nouveau logiciel sur RE0...")
+            connection.write_channel(f"request system software add /var/tmp/{image_file} no-validate\n") 
+            time.sleep(30)
+            print("✓ Logiciel installé avec succès sur RE0")
+            # REDÉMARRAGE DE RE1
+            print("Lancement du redémarrage de RE0...")
+            connection.write_channel("request system reboot\n")
+            time.sleep(10)
+            connection.write_channel("yes\n")
+            time.sleep(60)
+            print("✓ Redémarrage de RE0 initié avec succès")
+        except Exception as e:
+            print(f"✗ Erreur lors de la mise à jour de RE0: {str(e)}")
+            raise
         # VÉRIFICATION DU REDÉMARRAGE DE RE0 
         print("\nValidation du redémarrage de RE0")
         start_time = time.time()
         timeout = 900  # 15 minutes en secondes
         re0_ready = False
-        # Configuration pour la lecture en flux continu
         connection.remote_conn.settimeout(15)  # Timeout de lecture plus long
         output_buffer = ""
         try:
             # Envoyer la commande de vérification
-            connection.write_channel("show chassis routing-engine | match 'Current state'\n")
+            connection.write_channel("show chassis routing-engine |refresh | match Current\n")
             while (time.time() - start_time) < timeout:
                 # Lire le flux de sortie
                 chunk = connection.read_channel()
@@ -911,14 +942,20 @@ try:
                     # Vérifier si on a les deux états (Master et Backup)
                     if "Backup" in output_buffer:
                         re0_ready = True
+                        connection.write_channel(chr(3)) 
+                        time.sleep(1)
+                        connection.clear_buffer()
+                        print("\n✓ RE0 a terminé son redémarrage.")
                         break
                 else:
                     time.sleep(1)  # Pause courte si pas de données
             if not re0_ready:
-                raise Exception("15 minutes dépassé - RE0 n'a pas restauré son état opérationnel")
-            print("\n✓ RE0 a terminé son redémarrage.")     
+                raise Exception("15 minutes dépassé - RE0 n'a pas restauré son état opérationnel")   
         except Exception as e:
-            print(f"\nErreur lors de la vérification du redémarrage de RE0: {str(e)}")
+            print(f"\n✗ Erreur lors de la vérification du redémarrage de RE0: {str(e)}")
+            connection.write_channel(chr(3))
+            time.sleep(1)
+            connection.clear_buffer()
             raise
         # VÉRIFICATION DE LA VERSION SUR RE0
         print("\nVérification de la version sur RE0...")
@@ -927,7 +964,7 @@ try:
             version_output = connection.send_command("show version invoke-on other-routing-engine | match \"Junos:\"")
             # Extraire la version 
             current_version = version_output.split("Junos:")[1].strip()
-            # Extraire la version attendue du nom du package
+            # Extraire la version attendue du nom du package 
             prefix = "jinstall-ppc-"
             suffix = "-signed.tgz"
             expected_version = image_file.split(prefix)[1].split(suffix)[0]
@@ -938,28 +975,41 @@ try:
             else:
                 raise Exception(f"ERREUR: La version sur RE0 ({current_version}) ne correspond pas à la version attendue ({expected_version})")
         except Exception as e:
-            print(f"\nErreur lors de la vérification de version: {str(e)}")
+            print(f"\n✗ Erreur lors de la vérification de version: {str(e)}")
             raise
         # RÉACTIVATION HA 
         print("\nRéactivation des fonctionnalités de haute disponibilité...")
-        connection.config_mode()
-        commands = [
-            "activate chassis redundancy",
-            "activate routing-options nonstop-routing",
-            "activate system commit synchronize"
-        ]
-        for cmd in commands:
-            output = connection.send_command(cmd)
-        connection.write_channel("commit synchronize\n")
-        connection.exit_config_mode()
-        print("✓ Configuration HA réactivée")
+        try:
+            connection.config_mode()
+            commands = [
+                "activate chassis redundancy",
+                "activate routing-options nonstop-routing",
+                "activate system commit synchronize",
+                "delete system processes clksyncd-service disable"
+            ]
+            for cmd in commands:
+                output = connection.send_command(cmd, read_timeout=30)
+                if "error" in output.lower() or "unknown command" in output.lower():
+                    print(f"UPDATE ERREUR: Commande HA '{cmd}' échouée: {output}")
+                    try: connection.exit_config_mode()
+                    except: pass
+            commit_output = connection.commit(comment="HA features update via API", read_timeout=300, and_quit=False)
+            commit_output = connection.send_command("commit synchronize", read_timeout=300)
+            if "commit complete" not in commit_output.lower(): 
+                print(f"'commit synchronize' pour HA a échoué ou a eu une réponse inattendue: {commit_output}")
+                try: connection.exit_config_mode()
+                except: pass
+            connection.exit_config_mode()
+            print("✓ Configuration de haute disponibilité activée avec succès")
+        except Exception as e:
+            print(f"✗ Erreur lors de la réactivation des fonctionnalités HA: {str(e)}")
+            raise
         # BASCULEMENT FINAL VERS RE0
         print("\nRetour à la configuration d'origine : basculement final vers RE0...")
         try:
             # Envoyer la commande de basculement
-            switch_output = connection.send_command("request chassis routing-engine master switch", xpect_string=r"Toggle mastership between routing engines", strip_prompt=False)
+            switch_q_out = connection.send_command("request chassis routing-engine master switch", expect_string=r"Toggle mastership between routing engines", strip_prompt=False, strip_command=False, read_timeout=30)
             connection.write_channel("yes\n")
-            # Attendre un court moment pour que la commande soit traitée
             time.sleep(10)
             # Fermer proprement la connexion actuelle
             connection.disconnect()
@@ -971,7 +1021,7 @@ try:
             for attempt in range(1, 6):  # 5 tentatives max
                 try:
                     # Réétablir la connexion directe au routeur
-                    new_connection = ConnectHandler(**device)
+                    connection = ConnectHandler(**device)
                     # Vérifier le nouvel état
                     re_status = connection.send_command("show chassis routing-engine")
                     lines = re_status.split('\n')
@@ -983,7 +1033,7 @@ try:
                     if slot1_index is not None and slot1_index + 1 < len(lines):
                         next_line = lines[slot1_index + 1]
                         if "Current state" in next_line and "Master" in next_line:
-                            print("✓ Basculement vers RE0 réussi")
+                            print("✓ Basculement vers REO réussi")
                             break
                         else:
                             raise Exception("RE0 n'est pas dans l'état Master")
@@ -997,7 +1047,7 @@ try:
                     else:
                         raise Exception("Échec de reconnexion après basculement final")
         except Exception as e:
-            print(f"\nErreur lors du basculement final vers RE0: {str(e)}")
+            print(f"\n✗ Erreur lors du basculement final vers RE0: {str(e)}")
             raise
         print("✓ Procédure de mise à jour terminée avec succès")
     else:
@@ -1014,20 +1064,14 @@ except Exception as e:
     if connection:
         connection.disconnect()
     # Demander si l'utilisateur veut relancer le script
-    while True:
-        relancer = input("\nVoulez-vous relancer la partie avant? (oui/non): ").lower()
-        if relancer in ['oui', 'o', 'yes', 'y']:
-            # Solution robuste pour relancer le script
-            python_exec = sys.executable
-            script_path = os.path.abspath(__file__)
-            if ' ' in script_path:
-                script_path = f'"{script_path}"'
-            os.system(f"{python_exec} {script_path}")
-            sys.exit(0)
-        elif relancer in ['non', 'n', 'no']:
-            break
-        else:
-            print("Réponse invalide. Veuillez répondre par 'oui' ou 'non'.")
+    if confirmation_box("Voulez-vous relancer la partie avant?"):
+        # Solution robuste pour relancer le script
+        python_exec = sys.executable
+        script_path = os.path.abspath(__file__)
+        if ' ' in script_path:
+            script_path = f'"{script_path}"'
+        os.system(f"{python_exec} {script_path}")
+        sys.exit(0)
 
 finally:
     # Lancer APRES.py

@@ -18,6 +18,7 @@ const ApresRunner = ({ onApresProcessFinished }) => {
   const [logs, setLogs] = useState([]);
   const [apresData, setApresData] = useState(null);
   const [comparisonResults, setComparisonResults] = useState(null);
+  const [apresLogs, setApresLogs] = useState([]);
 
   const handleRunApres = async () => {
     if (!credentials || !sessionData.ident_data) {
@@ -43,9 +44,10 @@ const ApresRunner = ({ onApresProcessFinished }) => {
     try {
       const response = await runApresChecks(apresPayload);
       setLogs(response.data.logs || []);
+      setApresLogs(response.data.logs || []);
       if (response.data.status === 'success') {
-        finalApresData = response.data.structured_data_apres;
-        finalComparisonResults = response.data.comparison_results;
+        finalApresData = response.data.structured_data;
+        finalComparisonResults = response.data.comparison_result;
         setApresData(finalApresData); // Save for display
         setComparisonResults(finalComparisonResults);
         setError('');
@@ -66,7 +68,7 @@ const ApresRunner = ({ onApresProcessFinished }) => {
     } finally {
       setIsLoading(false);
       if (onApresProcessFinished) {
-        onApresProcessFinished(apresSuccess, finalApresData, finalComparisonResults, criticalErrorForCallback);
+        onApresProcessFinished(apresSuccess, finalApresData, finalComparisonResults, criticalErrorForCallback, apresLogs || []);
       }
     }
   };

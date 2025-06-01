@@ -1,6 +1,5 @@
-from flask import Flask, send_from_directory, request, jsonify
+from flask import Flask, send_from_directory, request, jsonify, Response
 from flask_cors import CORS
-import main_avant as avant_api
 from netmiko import ConnectHandler, NetmikoTimeoutException, NetmikoAuthenticationException
 import os
 from pathlib import Path
@@ -8,6 +7,13 @@ from locking_utils import verrouiller_routeur, liberer_verrou_et_fichier
 import portalocker
 from common_utils import sanitize_for_json
 from locking_utils import liberer_verrou_et_fichier, verrouiller_routeur
+from updater import run_update_procedure
+import time
+import datetime
+import main_avant as avant_api
+import time_stream
+import main_apres
+
 
 react_build_path = os.path.abspath("../../frontend/router-management-ui/build")
 
@@ -25,6 +31,8 @@ session_credentials = {}
 script_dir = os.path.dirname(os.path.abspath(__file__))
 GENERATED_FILES_DIR = os.path.join(script_dir, "generated_files")
 avant_logs = []
+apres_logs = []
+update_logs = []
 
 @app.route('/api/login', methods=['POST'])
 def api_login():
@@ -52,73 +60,110 @@ def api_login():
     except Exception as e:
         return jsonify({"status": "error", "message": f"Erreur: {str(e)}"}), 500
 
-# @app.route('/api/run_avant', methods=['POST'])
-# def api_run_avant():
-#     data = request.json
-#     ip = data.get('ip')
-#     username = data.get('username')
-#     password = data.get('password')
-#     if not all([ip, username, password]):
-#         return jsonify({"status": "error", "message": "IP, username, and password are required."}), 400
-#     try:
-#         result = avant_api.run_avant_workflow(ip, username, password, avant_logs)
-#         # Remove non-serializable connection_obj from result
-#         if 'connection_obj' in result:
-#             result.pop('connection_obj')
-#         return jsonify(result)
-#     except Exception as e:
-#         avant_logs.append(f"Erreur dans /api/run_avant: {str(e)}")
-#         return jsonify({"status": "error", "message": str(e), "log_messages": avant_logs}), 500
-    
 @app.route('/api/run_avant', methods=['POST'])
 def api_run_avant():
     data = request.json
     ip = data.get('ip')
     username = data.get('username')
-    password = data.get('password')    
-    result_from_avant_module = None # To store the full result
-    lock_file_path_from_avant_run = None 
-    connection_obj_from_avant_run = None
+    password = data.get('password')
 
     if not all([ip, username, password]):
         return jsonify({"status": "error", "message": "IP, username, and password are required."}), 400
 
+    current_run_operation_logs = []
+    result_from_avant_module = None
+    connection_obj_from_avant_run = None
+    lock_file_path_from_avant_run = None
     try:
-        result_from_avant_module = avant_api.run_avant_workflow(ip, username, password, avant_logs)
+        result_from_avant_module = avant_api.run_avant_workflow(ip, username, password, current_run_operation_logs)
+        avant_logs.clear()
+        avant_logs.extend(current_run_operation_logs)
+        if not result_from_avant_module:
+            return jsonify({
+                "status": "error",
+                "message": "Erreur inattendue: Aucun résultat final structuré du workflow avant.",
+                "logs": current_run_operation_logs
+            }), 500
         lock_file_path_from_avant_run = result_from_avant_module.get("lock_file_path")
-        lock_aquired = result_from_avant_module.get("lock_acquired", False)
         connection_obj_from_avant_run = result_from_avant_module.get("connection_obj")
-        if connection_obj_from_avant_run in result_from_avant_module:
-            result_from_avant_module.pop("connection_obj") # Remove connection_obj from the result to avoid serialization issues
+        if 'connection_obj' in result_from_avant_module:
+            result_from_avant_module.pop("connection_obj")
         serializable_result = sanitize_for_json(result_from_avant_module)
+        serializable_result["logs"] = result_from_avant_module.get("log_messages", current_run_operation_logs)
         if result_from_avant_module.get("status") == "error":
-            if lock_file_path_from_avant_run:
-                liberer_verrou_et_fichier(lock_aquired, lock_file_path_from_avant_run, avant_logs)
             return jsonify(serializable_result), 500
         return jsonify(serializable_result)
-    except Exception as e_api_avant: 
-        avant_logs.append(f"API /run_avant Erreur inattendue: {str(e_api_avant)}")
-        if lock_file_path_from_avant_run: # If known from a partial result_from_avant_module
-             avant_api.liberer_verrou_et_fichier(lock_file_path_from_avant_run, avant_logs)
-        
-        # Construct a safe error response
+    except Exception as e_api_avant:
+        timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        error_msg = f"[{timestamp}] API /run_avant (non-SSE) Erreur critique: {str(e_api_avant)}"
+        current_run_operation_logs.append(error_msg)
+        avant_logs.clear()
+        avant_logs.extend(current_run_operation_logs)
         error_response = {
-            "status": "error", 
-            "message": f"Erreur inattendue dans l'API /run_avant: {str(e_api_avant)}",
-            "logs": avant_logs
+            "status": "error",
+            "message": f"Erreur critique dans l'API /run_avant (non-SSE): {str(e_api_avant)}",
+            "logs": current_run_operation_logs
         }
-        if result_from_avant_module: # If we have some result, try to include its safe parts
+        if result_from_avant_module:
             error_response["partial_result_summary"] = {
-                k:v for k,v in sanitize_for_json(result_from_avant_module).items() if k not in ["logs"]
+                k: v for k, v in sanitize_for_json(result_from_avant_module).items()
+                if k not in ["logs", "connection_obj"]
             }
         return jsonify(error_response), 500
     finally:
-        if connection_obj_from_avant_run and connection_obj_from_avant_run.is_alive():
-            avant_logs.append("API /run_avant (finally): Fermeture de la connexion après l'exécution de AVANT.")
-            connection_obj_from_avant_run.disconnect()
+        if connection_obj_from_avant_run and \
+           hasattr(connection_obj_from_avant_run, 'is_alive') and \
+           connection_obj_from_avant_run.is_alive():
+            api_finally_log_msg = "API /run_avant (non-SSE finally): La connexion Netmiko était encore active. Tentative de fermeture."
+            avant_logs.append(api_finally_log_msg)
+            try:
+                connection_obj_from_avant_run.disconnect()
+            except Exception as e_disconnect_api_finally:
+                api_finally_err_msg = f"API /run_avant (non-SSE finally): Erreur lors de la tentative de fermeture de la connexion: {str(e_disconnect_api_finally)}"
+                avant_logs.append(api_finally_err_msg)
 
-    
-
+@app.route('/api/run_apres', methods=['POST'])
+def api_run_apres():
+    data = request.json
+    avant_ident_file = data.get('ident_file')
+    password_apres = data.get('password')
+    if not password_apres:
+        return jsonify({"status": "error", "message": "Password is required for APRES."}), 400
+    current_run_operation_logs = []
+    result_from_apres_module = None
+    try:
+        result_from_apres_module = main_apres.run_apres_workflow(avant_ident_file, current_run_operation_logs, password_apres)
+        apres_logs.clear()
+        apres_logs.extend(current_run_operation_logs)
+        if not result_from_apres_module:
+            return jsonify({
+                "status": "error",
+                "message": "Erreur inattendue: Aucun résultat final du workflow apres.",
+                "logs": current_run_operation_logs
+            }), 500
+        if 'connection_obj' in result_from_apres_module:
+            result_from_apres_module.pop('connection_obj')
+        serializable_result = sanitize_for_json(result_from_apres_module)
+        serializable_result["logs"] = result_from_apres_module.get("logs", current_run_operation_logs)
+        if result_from_apres_module.get("status") == "error":
+            return jsonify(serializable_result), 500
+        return jsonify(serializable_result)
+    except Exception as e_api_apres:
+        timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        error_msg = f"[{timestamp}] API /run_apres (non-SSE) Erreur critique: {str(e_api_apres)}"
+        current_run_operation_logs.append(error_msg)
+        apres_logs.clear()
+        apres_logs.extend(current_run_operation_logs)
+        error_response = {
+            "status": "error",
+            "message": f"Erreur critique dans l'API /run_apres (non-SSE): {str(e_api_apres)}",
+            "logs": current_run_operation_logs
+        }
+        if result_from_apres_module:
+            error_response["partial_result_summary"] = {
+                k: v for k, v in sanitize_for_json(result_from_apres_module).items() if k not in ["logs"]
+            }
+        return jsonify(error_response), 500
 
 @app.route('/api/files', methods=['GET'])
 def list_files():
@@ -188,6 +233,43 @@ def api_unlock_router():
         return jsonify({"status": "success", "message": f"Router {ip} unlocked."})
     except Exception as e:
         return jsonify({"status": "error", "message": f"Unlock failed: {e}"}), 500
+    
+
+@app.route('/api/run_update', methods=['POST'])
+def api_run_update():
+    data = request.json
+    ip = data.get('ip')
+    username = data.get('username')
+    password = data.get('password')
+    image_file = data.get('image_file')
+    # You may want to add validation here
+    try:
+        result = run_update_procedure(ip, username, password, image_file, update_logs)
+        return jsonify({"status": "success", "result": result})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+    
+
+@app.route('/api/test_sse')
+def api_test_sse():
+    import time_stream
+    import json
+    def event_stream():
+        logs = []
+        gen = time_stream.time_stream_log_generator(logs, count=5, delay=1)
+        try:
+            while True:
+                try:
+                    log_line = next(gen)
+                    yield f"data: {log_line}\n\n"
+                except StopIteration as e:
+                    # At the end, send the full logs as a JSON event
+                    logs_table = e.value if e.value is not None else logs
+                    yield f"event: logs\ndata: {json.dumps(logs_table)}\n\n"
+                    break
+        except Exception as ex:
+            yield f"data: [SSE error: {str(ex)}]\n\n"
+    return Response(event_stream(), mimetype='text/event-stream')
     
 
 if __name__ == '__main__':

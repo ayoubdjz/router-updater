@@ -1,4 +1,4 @@
-from common_utils import verifier_connexion, fetch_and_store
+from common_utils import verifier_connexion, fetch_and_store, stream_log
 import parsers
 import os
 
@@ -23,7 +23,6 @@ def collect_basic_info(connection, file_handle, structured_output_data, logs):
     try:
         if not verifier_connexion(connection):
             raise Exception("Connexion perdue avec le routeur avant récupération des infos de base")
-        
         logs.append("\nInformations de base du routeur :")
         file_handle.write("Informations de base du routeur :\n")
         output = fetch_and_store(connection, structured_output_data, key, cmd, parser_func=parsers.parse_basic_info)
@@ -85,14 +84,11 @@ def collect_interface_info(connection, file_handle, structured_output_data, logs
                 raise Exception("Connexion perdue avec le routeur")
         logs.append("\nInformations sur les interfaces :")
         file_handle.write("\nInformations sur les interfaces :\n")
-       # output_terse = fetch_and_store(connection, structured_output_data, key_terse, cmd_terse)
-       # output_detail = fetch_and_store(connection, structured_output_data, key_detail, cmd_detail)
         output_terse = connection.send_command(cmd_terse, read_timeout=90)
         output_detail = connection.send_command(cmd_detail, read_timeout=90)
         interfaces_up, interfaces_down = parsers.parse_interfaces(output_terse, output_detail)
         structured_output_data['interfaces_up'] = interfaces_up
         structured_output_data['interfaces_down'] = interfaces_down
-        # Log up interfaces
         logs.append("Les Interfaces up :")
         file_handle.write("Les Interfaces up :\n")
         if interfaces_up:
@@ -106,7 +102,6 @@ def collect_interface_info(connection, file_handle, structured_output_data, logs
         else:
             logs.append("Aucune interface active trouvée.")
             file_handle.write("Aucune interface active trouvee.\n")
-        # Log down interfaces
         logs.append("Les Interfaces down :")
         file_handle.write("Les Interfaces down :\n")
         if interfaces_down:
