@@ -1,9 +1,9 @@
 ********** Server Side***********
 
-cd backend
+cd server\Scripts
 pip install -r requirements.txt
 
-python api.py
+python app.py
 
 
 
