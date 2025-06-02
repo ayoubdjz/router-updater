@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { runUpdateProcedure } from '../api/routerApi';
+import { runUpdateProcedureStream } from '../api/routerApi';
 import { toast } from 'react-toastify';
 
 export const useSoftwareUpdate = (setLastFailedAction) => {
@@ -41,31 +41,45 @@ export const useSoftwareUpdate = (setLastFailedAction) => {
     setLastFailedAction(null);
     updateSession({ updateAttempted: true, updateCompleted: false, updateInProgress: true });
 
-    if (abortControllerRef.current) { // Abort previous if any
+    if (abortControllerRef.current) {
         abortControllerRef.current.abort();
     }
     abortControllerRef.current = new AbortController();
     const { signal } = abortControllerRef.current;
 
     try {
-      // Use runUpdateProcedure instead of fetch
       const updateData = { image_file: currentFilename };
-      const response = await runUpdateProcedure(updateData, credentials, sessionData.ident_data);
-      // Handle response (non-streaming, synchronous)
-      if (response.data.status !== 'success') {
-        throw new Error(response.data.message || 'Update failed.');
-      }
-      setUpdateOperationResult(response.data.result);
-      setStreamingUpdateLogs(response.data.result?.logs || []);
-      updateSession({ updateCompleted: true, updateInProgress: false });
-      toast.success(response.data.result?.message || "Update completed successfully!");
+      await runUpdateProcedureStream(
+        updateData,
+        credentials,
+        sessionData.ident_data,
+        (logLine) => setStreamingUpdateLogs((prev) => [...prev, logLine]),
+        (result) => {
+          setUpdateOperationResult(result);
+          updateSession({ updateCompleted: true, updateInProgress: false });
+          setIsUpdateInProgress(false);
+          if (result.success) {
+            toast.success(result.message || "Update completed successfully!");
+          } else {
+            toast.error(result.error || "Update failed.");
+          }
+        },
+        (err) => {
+          const errorMsg = `Failed to run update: ${err.message}`;
+          setUpdateOperationResult({ status: 'error', message: errorMsg });
+          setLastFailedAction({ type: 'update', message: errorMsg });
+          toast.error(errorMsg);
+          updateSession({ updateCompleted: false, updateInProgress: false });
+          setIsUpdateInProgress(false);
+        },
+        signal
+      );
     } catch (err) {
       const errorMsg = `Failed to run update: ${err.message}`;
       setUpdateOperationResult({ status: 'error', message: errorMsg });
       setLastFailedAction({ type: 'update', message: errorMsg });
       toast.error(errorMsg);
       updateSession({ updateCompleted: false, updateInProgress: false });
-    } finally {
       setIsUpdateInProgress(false);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -5,7 +5,7 @@ import os
 from pathlib import Path
 from locking_utils import verrouiller_routeur, liberer_verrou_et_fichier
 import portalocker
-from common_utils import sanitize_for_json
+from common_utils import sanitize_for_json, stream_log
 from locking_utils import liberer_verrou_et_fichier, verrouiller_routeur
 from updater import run_update_procedure
 import time
@@ -238,17 +238,39 @@ def api_unlock_router():
 @app.route('/api/run_update', methods=['POST'])
 def api_run_update():
     data = request.json
-    print(data)
     ip = data.get('ip')
     username = data.get('username')
     password = data.get('password')
     image_file = data.get('image_file')
-    # You may want to add validation here
-    try:
-        result = run_update_procedure(ip, username, password, image_file, update_logs)
-        return jsonify({"status": "success", "result": result})
-    except Exception as e:
-        return jsonify({"status": "error", "message": str(e)}), 500
+    def event_stream():
+        logs = []
+        # This function will be called on every log() call in run_update_procedure
+        def sse_stream(msg):
+            yield f"data: {msg}\n\n"
+        # Use a generator to yield logs in real time
+        result_holder = {'done': False, 'result': None}
+        def run_update():
+            # Pass sse_stream as a callback to run_update_procedure
+            def log_yielder(msg):
+                logs.append(msg)
+                # This will be picked up in the main generator loop
+            result = run_update_procedure(ip, username, password, image_file, logs, log_callback=None, sse_stream=None)
+            result_holder['result'] = result
+            result_holder['done'] = True
+        import threading
+        import time
+        t = threading.Thread(target=run_update)
+        t.start()
+        last_len = 0
+        while not result_holder['done'] or last_len < len(logs):
+            while last_len < len(logs):
+                msg = logs[last_len]
+                yield f"data: {msg}\n\n"
+                last_len += 1
+            time.sleep(0.5)
+        import json
+        yield f"event: result\ndata: {json.dumps(result_holder['result'])}\n\n"
+    return Response(event_stream(), mimetype='text/event-stream')
     
 
 @app.route('/api/test_sse')

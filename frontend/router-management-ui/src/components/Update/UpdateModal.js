@@ -11,7 +11,7 @@ import CircularProgress from '@mui/material/CircularProgress'; // Added for load
 
 //isLoading prop added, but not directly used in this component's rendering yet.
 //Parent (DashboardPage) handles disabling buttons/showing progress.
-const UpdateModal = ({ open, onClose, onConfirm, isLoading }) => { 
+const UpdateModal = ({ open, onClose, onConfirm, isLoading, streamingLogs = [] }) => { 
   const [filename, setFilename] = useState('');
   const [error, setError] = useState('');
 
@@ -65,6 +65,17 @@ const UpdateModal = ({ open, onClose, onConfirm, isLoading }) => {
             disabled={isLoading}
           />
         </Box>
+        {isLoading && (
+          <Box sx={{ mt: 3, maxHeight: 300, overflowY: 'auto', background: '#222', color: '#fff', borderRadius: 1, p: 2, fontFamily: 'monospace', fontSize: 14, width: '100%', boxSizing: 'border-box', minHeight: 80 }}>
+            {streamingLogs.length === 0 ? (
+              <span>Waiting for logs...</span>
+            ) : (
+              streamingLogs.map((line, idx) => (
+                <pre key={idx} style={{ margin: 0, whiteSpace: 'pre-wrap' }}>{line}</pre>
+              ))
+            )}
+          </Box>
+        )}
       </DialogContent>
       <DialogActions>
         <Button onClick={handleCancel} disabled={isLoading}>Cancel</Button>
