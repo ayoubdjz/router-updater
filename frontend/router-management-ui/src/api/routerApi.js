@@ -25,12 +25,16 @@ export const runAvantChecks = (credentials) => {
 // will be handled by `fetch` directly in DashboardPage.js to manage SSE.
 // This function can still be used if a non-streaming initiation is ever needed
 // or if it's refactored to return a promise that wraps the fetch stream.
-export const runUpdateProcedure = (updateData) => {
-  // updateData should contain { ident_data, password, image_file }
-  // For actual streaming, DashboardPage.js uses fetch directly.
-  // This POST could be used to *initiate* a task that then streams,
-  // but the current implementation streams directly from this POST.
-  return apiClient.post('/run_update', updateData);
+export const runUpdateProcedure = (updateData, credentials, identData) => {
+  // Always build the payload with { ip, username, password, image_file }
+  const payload = {
+    ip: credentials.ip || identData?.ip || updateData?.ip,
+    username: credentials?.username || identData?.username || updateData?.username,
+    password: credentials?.password || updateData?.password,
+    image_file: updateData?.image_file,
+  };
+  // Ensure the payload is correct before sending
+  return apiClient.post('/run_update', payload);
 };
 
 // --- APRES ---

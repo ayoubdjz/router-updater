@@ -21,29 +21,29 @@ root>
 root> 
 
 root> show system uptime 
-Current time: 2025-05-30 13:42:40 UTC
-System booted: 2025-05-30 02:13:13 UTC (11:29:27 ago)
-Protocols started: 2025-05-30 02:13:44 UTC (11:28:56 ago)
-Last configured: 2025-05-30 02:15:09 UTC (11:27:31 ago) by root
- 1:42PM  up 11:29, 2 users, load averages: 0.00, 0.00, 0.00
+Current time: 2025-05-30 15:17:19 UTC
+System booted: 2025-05-30 02:13:13 UTC (13:04:06 ago)
+Protocols started: 2025-05-30 02:13:44 UTC (13:03:35 ago)
+Last configured: 2025-05-30 02:15:09 UTC (13:02:10 ago) by root
+ 3:17PM  up 13:04, 2 users, load averages: 0.06, 0.03, 0.00
 
 root> 
 
 root> show system uptime 
-Current time: 2025-05-30 13:42:40 UTC
-System booted: 2025-05-30 02:13:13 UTC (11:29:27 ago)
-Protocols started: 2025-05-30 02:13:44 UTC (11:28:56 ago)
-Last configured: 2025-05-30 02:15:09 UTC (11:27:31 ago) by root
- 1:42PM  up 11:29, 2 users, load averages: 0.00, 0.00, 0.00
+Current time: 2025-05-30 15:17:19 UTC
+System booted: 2025-05-30 02:13:13 UTC (13:04:06 ago)
+Protocols started: 2025-05-30 02:13:44 UTC (13:03:35 ago)
+Last configured: 2025-05-30 02:15:09 UTC (13:02:10 ago) by root
+ 3:17PM  up 13:04, 2 users, load averages: 0.06, 0.03, 0.00
 
 root> 
 
 root> show system uptime 
-Current time: 2025-05-30 13:42:40 UTC
-System booted: 2025-05-30 02:13:13 UTC (11:29:27 ago)
-Protocols started: 2025-05-30 02:13:44 UTC (11:28:56 ago)
-Last configured: 2025-05-30 02:15:09 UTC (11:27:31 ago) by root
- 1:42PM  up 11:29, 2 users, load averages: 0.00, 0.00, 0.00
+Current time: 2025-05-30 15:17:19 UTC
+System booted: 2025-05-30 02:13:13 UTC (13:04:06 ago)
+Protocols started: 2025-05-30 02:13:44 UTC (13:03:35 ago)
+Last configured: 2025-05-30 02:15:09 UTC (13:02:10 ago) by root
+ 3:17PM  up 13:04, 2 users, load averages: 0.06, 0.03, 0.00
 
 root> 
 
@@ -97,20 +97,20 @@ JUNOS Packet Forwarding Engine Trio Simulation Package [14.1R4.8]
 root> 
 
 root> show system uptime 
-Current time: 2025-05-30 13:42:40 UTC
-System booted: 2025-05-30 02:13:13 UTC (11:29:27 ago)
-Protocols started: 2025-05-30 02:13:44 UTC (11:28:56 ago)
-Last configured: 2025-05-30 02:15:09 UTC (11:27:31 ago) by root
- 1:42PM  up 11:29, 2 users, load averages: 0.00, 0.00, 0.00
+Current time: 2025-05-30 15:17:19 UTC
+System booted: 2025-05-30 02:13:13 UTC (13:04:06 ago)
+Protocols started: 2025-05-30 02:13:44 UTC (13:03:35 ago)
+Last configured: 2025-05-30 02:15:09 UTC (13:02:10 ago) by root
+ 3:17PM  up 13:04, 2 users, load averages: 0.06, 0.03, 0.00
 
 root> 
 
 root> show system uptime 
-Current time: 2025-05-30 13:42:40 UTC
-System booted: 2025-05-30 02:13:13 UTC (11:29:27 ago)
-Protocols started: 2025-05-30 02:13:44 UTC (11:28:56 ago)
-Last configured: 2025-05-30 02:15:09 UTC (11:27:31 ago) by root
- 1:42PM  up 11:29, 2 users, load averages: 0.00, 0.00, 0.00
+Current time: 2025-05-30 15:17:19 UTC
+System booted: 2025-05-30 02:13:13 UTC (13:04:06 ago)
+Protocols started: 2025-05-30 02:13:44 UTC (13:03:35 ago)
+Last configured: 2025-05-30 02:15:09 UTC (13:02:10 ago) by root
+ 3:17PM  up 13:04, 2 users, load averages: 0.06, 0.03, 0.00
 
 root> 
 
@@ -119,27 +119,27 @@ Routing Engine status:
     DRAM                      2048 MB (2048 MB installed)
     Memory utilization          40 percent
     CPU utilization:
-      User                       1 percent
+      User                       2 percent
       Background                 0 percent
-      Kernel                     0 percent
+      Kernel                     2 percent
       Interrupt                  6 percent
-      Idle                      93 percent
+      Idle                      90 percent
     Model                          RE-VMX
     Serial ID                      VM5543516AC4
     Start time                     2025-05-30 02:13:13 UTC
-    Uptime                         11 hours, 29 minutes, 23 seconds
+    Uptime                         13 hours, 4 minutes, 1 second
     Last reboot reason             0x10:misc hardware reason 
     Load averages:                 1 minute   5 minute  15 minute
-                                       0.00       0.00       0.00
+                                       0.07       0.03       0.00
 
 root> 
 
 root> show system uptime 
-Current time: 2025-05-30 13:42:41 UTC
-System booted: 2025-05-30 02:13:13 UTC (11:29:28 ago)
-Protocols started: 2025-05-30 02:13:44 UTC (11:28:57 ago)
-Last configured: 2025-05-30 02:15:09 UTC (11:27:32 ago) by root
- 1:42PM  up 11:29, 2 users, load averages: 0.00, 0.00, 0.00
+Current time: 2025-05-30 15:17:19 UTC
+System booted: 2025-05-30 02:13:13 UTC (13:04:06 ago)
+Protocols started: 2025-05-30 02:13:44 UTC (13:03:35 ago)
+Last configured: 2025-05-30 02:15:09 UTC (13:02:10 ago) by root
+ 3:17PM  up 13:04, 2 users, load averages: 0.06, 0.03, 0.00
 
 root> 
 
@@ -206,17 +206,17 @@ Physical interface: ge-0/0/0, Enabled, Physical link is Up
   CoS queues     : 8 supported, 8 maximum usable queues
   Hold-times     : Up 0 ms, Down 0 ms
   Current address: 00:05:86:71:7b:00, Hardware address: 00:05:86:71:7b:00
-  Last flapped   : 2025-05-30 02:14:27 UTC (11:28:14 ago)
+  Last flapped   : 2025-05-30 02:14:27 UTC (13:02:52 ago)
   Statistics last cleared: Never
   Traffic statistics:
-   Input  bytes  :              9687903                 1000 bps
-   Output bytes  :             54453368                    0 bps
-   Input  packets:               181244                    0 pps
-   Output packets:               342759                    0 pps
+   Input  bytes  :             10356283                  368 bps
+   Output bytes  :             57958675                 7576 bps
+   Input  packets:               193164                    0 pps
+   Output packets:               364192                    6 pps
    IPv6 transit statistics:
-    Input  bytes  :                 784
+    Input  bytes  :                 896
     Output bytes  :                   0
-    Input  packets:                  14
+    Input  packets:                  16
     Output packets:                   0
   Active alarms  : None
   Active defects : None
@@ -225,17 +225,17 @@ Physical interface: ge-0/0/0, Enabled, Physical link is Up
   Logical interface ge-0/0/0.0 (Index 329) (SNMP ifIndex 523) (Generation 138)
     Flags: Up SNMP-Traps 0x4004000 Encapsulation: ENET2
     Traffic statistics:
-     Input  bytes  :              9731765
-     Output bytes  :             52396826
-     Input  packets:               183871
-     Output packets:               342759
+     Input  bytes  :             10380205
+     Output bytes  :             55773535
+     Input  packets:               195491
+     Output packets:               364192
     Local statistics:
-     Input  bytes  :              9570290
-     Output bytes  :             52396722
-     Input  packets:               180097
-     Output packets:               342757
+     Input  bytes  :             10214280
+     Output bytes  :             55773431
+     Input  packets:               191717
+     Output packets:               364190
     Transit statistics:
-     Input  bytes  :               161475                 1000 bps
+     Input  bytes  :               165925                    0 bps
      Output bytes  :                  104                    0 bps
      Input  packets:                 3774                    0 pps
      Output packets:                    2                    0 pps
@@ -401,7 +401,7 @@ Physical interface: ge-0/0/1, Enabled, Physical link is Up
   CoS queues     : 8 supported, 8 maximum usable queues
   Hold-times     : Up 0 ms, Down 0 ms
   Current address: 00:05:86:71:7b:01, Hardware address: 00:05:86:71:7b:01
-  Last flapped   : 2025-05-30 02:14:27 UTC (11:28:14 ago)
+  Last flapped   : 2025-05-30 02:14:27 UTC (13:02:52 ago)
   Statistics last cleared: Never
   Traffic statistics:
    Input  bytes  :                    0                    0 bps
@@ -427,7 +427,7 @@ Physical interface: ge-0/0/2, Enabled, Physical link is Up
   CoS queues     : 8 supported, 8 maximum usable queues
   Hold-times     : Up 0 ms, Down 0 ms
   Current address: 00:05:86:71:7b:02, Hardware address: 00:05:86:71:7b:02
-  Last flapped   : 2025-05-30 02:14:27 UTC (11:28:14 ago)
+  Last flapped   : 2025-05-30 02:14:27 UTC (13:02:52 ago)
   Statistics last cleared: Never
   Traffic statistics:
    Input  bytes  :                    0                    0 bps
@@ -453,7 +453,7 @@ Physical interface: ge-0/0/3, Enabled, Physical link is Up
   CoS queues     : 8 supported, 8 maximum usable queues
   Hold-times     : Up 0 ms, Down 0 ms
   Current address: 00:05:86:71:7b:03, Hardware address: 00:05:86:71:7b:03
-  Last flapped   : 2025-05-30 02:14:27 UTC (11:28:14 ago)
+  Last flapped   : 2025-05-30 02:14:27 UTC (13:02:52 ago)
   Statistics last cleared: Never
   Traffic statistics:
    Input  bytes  :                    0                    0 bps
@@ -479,7 +479,7 @@ Physical interface: ge-0/0/4, Enabled, Physical link is Up
   CoS queues     : 8 supported, 8 maximum usable queues
   Hold-times     : Up 0 ms, Down 0 ms
   Current address: 00:05:86:71:7b:04, Hardware address: 00:05:86:71:7b:04
-  Last flapped   : 2025-05-30 02:14:27 UTC (11:28:14 ago)
+  Last flapped   : 2025-05-30 02:14:27 UTC (13:02:53 ago)
   Statistics last cleared: Never
   Traffic statistics:
    Input  bytes  :                    0                    0 bps
@@ -505,7 +505,7 @@ Physical interface: ge-0/0/5, Enabled, Physical link is Up
   CoS queues     : 8 supported, 8 maximum usable queues
   Hold-times     : Up 0 ms, Down 0 ms
   Current address: 00:05:86:71:7b:05, Hardware address: 00:05:86:71:7b:05
-  Last flapped   : 2025-05-30 02:14:27 UTC (11:28:14 ago)
+  Last flapped   : 2025-05-30 02:14:27 UTC (13:02:53 ago)
   Statistics last cleared: Never
   Traffic statistics:
    Input  bytes  :                    0                    0 bps
@@ -531,7 +531,7 @@ Physical interface: ge-0/0/6, Enabled, Physical link is Up
   CoS queues     : 8 supported, 8 maximum usable queues
   Hold-times     : Up 0 ms, Down 0 ms
   Current address: 00:05:86:71:7b:06, Hardware address: 00:05:86:71:7b:06
-  Last flapped   : 2025-05-30 02:14:27 UTC (11:28:14 ago)
+  Last flapped   : 2025-05-30 02:14:27 UTC (13:02:53 ago)
   Statistics last cleared: Never
   Traffic statistics:
    Input  bytes  :                    0                    0 bps
@@ -557,7 +557,7 @@ Physical interface: ge-0/0/7, Enabled, Physical link is Up
   CoS queues     : 8 supported, 8 maximum usable queues
   Hold-times     : Up 0 ms, Down 0 ms
   Current address: 00:05:86:71:7b:07, Hardware address: 00:05:86:71:7b:07
-  Last flapped   : 2025-05-30 02:14:27 UTC (11:28:14 ago)
+  Last flapped   : 2025-05-30 02:14:27 UTC (13:02:53 ago)
   Statistics last cleared: Never
   Traffic statistics:
    Input  bytes  :                    0                    0 bps
@@ -583,7 +583,7 @@ Physical interface: ge-0/0/8, Enabled, Physical link is Up
   CoS queues     : 8 supported, 8 maximum usable queues
   Hold-times     : Up 0 ms, Down 0 ms
   Current address: 00:05:86:71:7b:08, Hardware address: 00:05:86:71:7b:08
-  Last flapped   : 2025-05-30 02:14:27 UTC (11:28:14 ago)
+  Last flapped   : 2025-05-30 02:14:27 UTC (13:02:53 ago)
   Statistics last cleared: Never
   Traffic statistics:
    Input  bytes  :                    0                    0 bps
@@ -609,7 +609,7 @@ Physical interface: ge-0/0/9, Enabled, Physical link is Up
   CoS queues     : 8 supported, 8 maximum usable queues
   Hold-times     : Up 0 ms, Down 0 ms
   Current address: 00:05:86:71:7b:09, Hardware address: 00:05:86:71:7b:09
-  Last flapped   : 2025-05-30 02:14:27 UTC (11:28:14 ago)
+  Last flapped   : 2025-05-30 02:14:27 UTC (13:02:53 ago)
   Statistics last cleared: Never
   Traffic statistics:
    Input  bytes  :                    0                    0 bps
@@ -879,8 +879,8 @@ Physical interface: em2, Enabled, Physical link is Up
   Traffic statistics:
    Input  bytes  :                    0
    Output bytes  :                    0
-   Input  packets:               181338
-   Output packets:               342782
+   Input  packets:               193430
+   Output packets:               364545
    IPv6 transit statistics:
     Input  bytes  :                   0
     Output bytes  :                   0
@@ -1033,10 +1033,10 @@ Physical interface: lo0, Enabled, Physical link is Up
   Last flapped   : Never
   Statistics last cleared: Never
   Traffic statistics:
-   Input  bytes  :                11481
-   Output bytes  :                11481
-   Input  packets:                  214
-   Output packets:                  214
+   Input  bytes  :                12585
+   Output bytes  :                12585
+   Input  packets:                  238
+   Output packets:                  238
    IPv6 transit statistics:
     Input  bytes  :                   0
     Output bytes  :                   0
@@ -1046,15 +1046,15 @@ Physical interface: lo0, Enabled, Physical link is Up
   Logical interface lo0.16384 (Index 324) (SNMP ifIndex 21) (Generation 133)
     Flags: Down SNMP-Traps Encapsulation: Unspecified
     Traffic statistics:
-     Input  bytes  :                 1152
-     Output bytes  :                 1152
-     Input  packets:                   24
-     Output packets:                   24
+     Input  bytes  :                 1336
+     Output bytes  :                 1336
+     Input  packets:                   28
+     Output packets:                   28
     Local statistics:
-     Input  bytes  :                 1152
-     Output bytes  :                 1152
-     Input  packets:                   24
-     Output packets:                   24
+     Input  bytes  :                 1336
+     Output bytes  :                 1336
+     Input  packets:                   28
+     Output packets:                   28
     Transit statistics:
      Input  bytes  :                    0                    0 bps
      Output bytes  :                    0                    0 bps
@@ -1067,20 +1067,20 @@ Physical interface: lo0, Enabled, Physical link is Up
   Logical interface lo0.16385 (Index 325) (SNMP ifIndex 22) (Generation 134)
     Flags: Down SNMP-Traps Encapsulation: Unspecified
     Traffic statistics:
-     Input  bytes  :                10329
-     Output bytes  :                10329
-     Input  packets:                  190
-     Output packets:                  190
+     Input  bytes  :                11249
+     Output bytes  :                11249
+     Input  packets:                  210
+     Output packets:                  210
      IPv6 transit statistics:
       Input  bytes  :                   0
       Output bytes  :                   0
       Input  packets:                   0
       Output packets:                   0
     Local statistics:
-     Input  bytes  :                10329
-     Output bytes  :                10329
-     Input  packets:                  190
-     Output packets:                  190
+     Input  bytes  :                11249
+     Output bytes  :                11249
+     Input  packets:                  210
+     Output packets:                  210
     Transit statistics:
      Input  bytes  :                    0                    0 bps
      Output bytes  :                    0                    0 bps
@@ -1280,11 +1280,11 @@ Physical interface: vtep, Enabled, Physical link is Up
 root> 
 
 root> show system uptime 
-Current time: 2025-05-30 13:42:41 UTC
-System booted: 2025-05-30 02:13:13 UTC (11:29:28 ago)
-Protocols started: 2025-05-30 02:13:44 UTC (11:28:57 ago)
-Last configured: 2025-05-30 02:15:09 UTC (11:27:32 ago) by root
- 1:42PM  up 11:29, 2 users, load averages: 0.00, 0.00, 0.00
+Current time: 2025-05-30 15:17:20 UTC
+System booted: 2025-05-30 02:13:13 UTC (13:04:07 ago)
+Protocols started: 2025-05-30 02:13:44 UTC (13:03:36 ago)
+Last configured: 2025-05-30 02:15:09 UTC (13:02:11 ago) by root
+ 3:17PM  up 13:04, 2 users, load averages: 0.06, 0.03, 0.00
 
 root> 
 
@@ -1298,20 +1298,20 @@ Total entries: 3
 root> 
 
 root> show system uptime 
-Current time: 2025-05-30 13:42:41 UTC
-System booted: 2025-05-30 02:13:13 UTC (11:29:28 ago)
-Protocols started: 2025-05-30 02:13:44 UTC (11:28:57 ago)
-Last configured: 2025-05-30 02:15:09 UTC (11:27:32 ago) by root
- 1:42PM  up 11:29, 2 users, load averages: 0.00, 0.00, 0.00
+Current time: 2025-05-30 15:17:20 UTC
+System booted: 2025-05-30 02:13:13 UTC (13:04:07 ago)
+Protocols started: 2025-05-30 02:13:44 UTC (13:03:36 ago)
+Last configured: 2025-05-30 02:15:09 UTC (13:02:11 ago) by root
+ 3:17PM  up 13:04, 2 users, load averages: 0.06, 0.03, 0.00
 
 root> 
 
 root> show system uptime 
-Current time: 2025-05-30 13:42:41 UTC
-System booted: 2025-05-30 02:13:13 UTC (11:29:28 ago)
-Protocols started: 2025-05-30 02:13:44 UTC (11:28:57 ago)
-Last configured: 2025-05-30 02:15:09 UTC (11:27:32 ago) by root
- 1:42PM  up 11:29, 2 users, load averages: 0.00, 0.00, 0.00
+Current time: 2025-05-30 15:17:20 UTC
+System booted: 2025-05-30 02:13:13 UTC (13:04:07 ago)
+Protocols started: 2025-05-30 02:13:44 UTC (13:03:36 ago)
+Last configured: 2025-05-30 02:15:09 UTC (13:02:11 ago) by root
+ 3:17PM  up 13:04, 2 users, load averages: 0.06, 0.03, 0.00
 
 root> 
 
@@ -1325,11 +1325,11 @@ inet.0: 2 destinations, 2 routes (2 active, 0 holddown, 0 hidden)
 root> 
 
 root> show system uptime 
-Current time: 2025-05-30 13:42:41 UTC
-System booted: 2025-05-30 02:13:13 UTC (11:29:28 ago)
-Protocols started: 2025-05-30 02:13:44 UTC (11:28:57 ago)
-Last configured: 2025-05-30 02:15:09 UTC (11:27:32 ago) by root
- 1:42PM  up 11:29, 2 users, load averages: 0.00, 0.00, 0.00
+Current time: 2025-05-30 15:17:20 UTC
+System booted: 2025-05-30 02:13:13 UTC (13:04:07 ago)
+Protocols started: 2025-05-30 02:13:44 UTC (13:03:36 ago)
+Last configured: 2025-05-30 02:15:09 UTC (13:02:11 ago) by root
+ 3:17PM  up 13:04, 2 users, load averages: 0.06, 0.03, 0.00
 
 root> 
 
@@ -1339,11 +1339,11 @@ OSPF instance is not running
 root> 
 
 root> show system uptime 
-Current time: 2025-05-30 13:42:42 UTC
-System booted: 2025-05-30 02:13:13 UTC (11:29:29 ago)
-Protocols started: 2025-05-30 02:13:44 UTC (11:28:58 ago)
-Last configured: 2025-05-30 02:15:09 UTC (11:27:33 ago) by root
- 1:42PM  up 11:29, 2 users, load averages: 0.00, 0.00, 0.00
+Current time: 2025-05-30 15:17:20 UTC
+System booted: 2025-05-30 02:13:13 UTC (13:04:07 ago)
+Protocols started: 2025-05-30 02:13:44 UTC (13:03:36 ago)
+Last configured: 2025-05-30 02:15:09 UTC (13:02:11 ago) by root
+ 3:17PM  up 13:04, 2 users, load averages: 0.06, 0.03, 0.00
 
 root> 
 
@@ -1353,11 +1353,11 @@ IS-IS instance is not running
 root> 
 
 root> show system uptime 
-Current time: 2025-05-30 13:42:42 UTC
-System booted: 2025-05-30 02:13:13 UTC (11:29:29 ago)
-Protocols started: 2025-05-30 02:13:44 UTC (11:28:58 ago)
-Last configured: 2025-05-30 02:15:09 UTC (11:27:33 ago) by root
- 1:42PM  up 11:29, 2 users, load averages: 0.00, 0.00, 0.00
+Current time: 2025-05-30 15:17:21 UTC
+System booted: 2025-05-30 02:13:13 UTC (13:04:08 ago)
+Protocols started: 2025-05-30 02:13:44 UTC (13:03:37 ago)
+Last configured: 2025-05-30 02:15:09 UTC (13:02:12 ago) by root
+ 3:17PM  up 13:04, 2 users, load averages: 0.06, 0.03, 0.00
 
 root> 
 
@@ -1367,11 +1367,11 @@ MPLS not configured
 root> 
 
 root> show system uptime 
-Current time: 2025-05-30 13:42:42 UTC
-System booted: 2025-05-30 02:13:13 UTC (11:29:29 ago)
-Protocols started: 2025-05-30 02:13:44 UTC (11:28:58 ago)
-Last configured: 2025-05-30 02:15:09 UTC (11:27:33 ago) by root
- 1:42PM  up 11:29, 2 users, load averages: 0.00, 0.00, 0.00
+Current time: 2025-05-30 15:17:21 UTC
+System booted: 2025-05-30 02:13:13 UTC (13:04:08 ago)
+Protocols started: 2025-05-30 02:13:44 UTC (13:03:37 ago)
+Last configured: 2025-05-30 02:15:09 UTC (13:02:12 ago) by root
+ 3:17PM  up 13:04, 2 users, load averages: 0.06, 0.03, 0.00
 
 root> 
 
@@ -1381,11 +1381,11 @@ LDP instance is not running
 root> 
 
 root> show system uptime 
-Current time: 2025-05-30 13:42:42 UTC
-System booted: 2025-05-30 02:13:13 UTC (11:29:29 ago)
-Protocols started: 2025-05-30 02:13:44 UTC (11:28:58 ago)
-Last configured: 2025-05-30 02:15:09 UTC (11:27:33 ago) by root
- 1:42PM  up 11:29, 2 users, load averages: 0.00, 0.00, 0.00
+Current time: 2025-05-30 15:17:21 UTC
+System booted: 2025-05-30 02:13:13 UTC (13:04:08 ago)
+Protocols started: 2025-05-30 02:13:44 UTC (13:03:37 ago)
+Last configured: 2025-05-30 02:15:09 UTC (13:02:12 ago) by root
+ 3:17PM  up 13:04, 2 users, load averages: 0.06, 0.03, 0.00
 
 root> 
 
@@ -1395,11 +1395,11 @@ RSVP not configured
 root> 
 
 root> show system uptime 
-Current time: 2025-05-30 13:42:42 UTC
-System booted: 2025-05-30 02:13:13 UTC (11:29:29 ago)
-Protocols started: 2025-05-30 02:13:44 UTC (11:28:58 ago)
-Last configured: 2025-05-30 02:15:09 UTC (11:27:33 ago) by root
- 1:42PM  up 11:29, 2 users, load averages: 0.00, 0.00, 0.00
+Current time: 2025-05-30 15:17:21 UTC
+System booted: 2025-05-30 02:13:13 UTC (13:04:08 ago)
+Protocols started: 2025-05-30 02:13:44 UTC (13:03:37 ago)
+Last configured: 2025-05-30 02:15:09 UTC (13:02:12 ago) by root
+ 3:17PM  up 13:04, 2 users, load averages: 0.06, 0.03, 0.00
 
 root> 
 
@@ -1408,11 +1408,11 @@ root> show lldp neighbor | no-more
 root> 
 
 root> show system uptime 
-Current time: 2025-05-30 13:42:42 UTC
-System booted: 2025-05-30 02:13:13 UTC (11:29:29 ago)
-Protocols started: 2025-05-30 02:13:44 UTC (11:28:58 ago)
-Last configured: 2025-05-30 02:15:09 UTC (11:27:33 ago) by root
- 1:42PM  up 11:29, 2 users, load averages: 0.00, 0.00, 0.00
+Current time: 2025-05-30 15:17:21 UTC
+System booted: 2025-05-30 02:13:13 UTC (13:04:08 ago)
+Protocols started: 2025-05-30 02:13:44 UTC (13:03:37 ago)
+Last configured: 2025-05-30 02:15:09 UTC (13:02:12 ago) by root
+ 3:17PM  up 13:04, 2 users, load averages: 0.06, 0.03, 0.00
 
 root> 
 
@@ -1422,11 +1422,11 @@ MPLS not configured
 root> 
 
 root> show system uptime 
-Current time: 2025-05-30 13:42:43 UTC
-System booted: 2025-05-30 02:13:13 UTC (11:29:30 ago)
-Protocols started: 2025-05-30 02:13:44 UTC (11:28:59 ago)
-Last configured: 2025-05-30 02:15:09 UTC (11:27:34 ago) by root
- 1:42PM  up 11:30, 2 users, load averages: 0.00, 0.00, 0.00
+Current time: 2025-05-30 15:17:21 UTC
+System booted: 2025-05-30 02:13:13 UTC (13:04:08 ago)
+Protocols started: 2025-05-30 02:13:44 UTC (13:03:37 ago)
+Last configured: 2025-05-30 02:15:09 UTC (13:02:12 ago) by root
+ 3:17PM  up 13:04, 2 users, load averages: 0.06, 0.03, 0.00
 
 root> 
 
@@ -1436,11 +1436,11 @@ BGP is not running
 root> 
 
 root> show system uptime 
-Current time: 2025-05-30 13:42:43 UTC
-System booted: 2025-05-30 02:13:13 UTC (11:29:30 ago)
-Protocols started: 2025-05-30 02:13:44 UTC (11:28:59 ago)
-Last configured: 2025-05-30 02:15:09 UTC (11:27:34 ago) by root
- 1:42PM  up 11:30, 2 users, load averages: 0.00, 0.00, 0.00
+Current time: 2025-05-30 15:17:22 UTC
+System booted: 2025-05-30 02:13:13 UTC (13:04:09 ago)
+Protocols started: 2025-05-30 02:13:44 UTC (13:03:38 ago)
+Last configured: 2025-05-30 02:15:09 UTC (13:02:13 ago) by root
+ 3:17PM  up 13:04, 2 users, load averages: 0.06, 0.03, 0.00
 
 root> 
 
@@ -1450,11 +1450,11 @@ ssh;
 root> 
 
 root> show system uptime 
-Current time: 2025-05-30 13:42:43 UTC
-System booted: 2025-05-30 02:13:13 UTC (11:29:30 ago)
-Protocols started: 2025-05-30 02:13:44 UTC (11:28:59 ago)
-Last configured: 2025-05-30 02:15:09 UTC (11:27:34 ago) by root
- 1:42PM  up 11:30, 2 users, load averages: 0.00, 0.00, 0.00
+Current time: 2025-05-30 15:17:22 UTC
+System booted: 2025-05-30 02:13:13 UTC (13:04:09 ago)
+Protocols started: 2025-05-30 02:13:44 UTC (13:03:38 ago)
+Last configured: 2025-05-30 02:15:09 UTC (13:02:13 ago) by root
+ 3:17PM  up 13:04, 2 users, load averages: 0.06, 0.03, 0.00
 
 root> 
 
@@ -1463,11 +1463,11 @@ root> show configuration protocols | no-more
 root> 
 
 root> show system uptime 
-Current time: 2025-05-30 13:42:43 UTC
-System booted: 2025-05-30 02:13:13 UTC (11:29:30 ago)
-Protocols started: 2025-05-30 02:13:44 UTC (11:28:59 ago)
-Last configured: 2025-05-30 02:15:09 UTC (11:27:34 ago) by root
- 1:42PM  up 11:30, 2 users, load averages: 0.00, 0.00, 0.00
+Current time: 2025-05-30 15:17:22 UTC
+System booted: 2025-05-30 02:13:13 UTC (13:04:09 ago)
+Protocols started: 2025-05-30 02:13:44 UTC (13:03:38 ago)
+Last configured: 2025-05-30 02:15:09 UTC (13:02:13 ago) by root
+ 3:17PM  up 13:04, 2 users, load averages: 0.06, 0.03, 0.00
 
 root> 
 
@@ -1476,20 +1476,20 @@ root> show configuration firewall | no-more
 root> 
 
 root> show system uptime 
-Current time: 2025-05-30 13:42:43 UTC
-System booted: 2025-05-30 02:13:13 UTC (11:29:30 ago)
-Protocols started: 2025-05-30 02:13:44 UTC (11:28:59 ago)
-Last configured: 2025-05-30 02:15:09 UTC (11:27:34 ago) by root
- 1:42PM  up 11:30, 2 users, load averages: 0.00, 0.00, 0.00
+Current time: 2025-05-30 15:17:22 UTC
+System booted: 2025-05-30 02:13:13 UTC (13:04:09 ago)
+Protocols started: 2025-05-30 02:13:44 UTC (13:03:38 ago)
+Last configured: 2025-05-30 02:15:09 UTC (13:02:13 ago) by root
+ 3:17PM  up 13:04, 2 users, load averages: 0.06, 0.03, 0.00
 
 root> 
 
 root> show system uptime 
-Current time: 2025-05-30 13:42:43 UTC
-System booted: 2025-05-30 02:13:13 UTC (11:29:30 ago)
-Protocols started: 2025-05-30 02:13:44 UTC (11:28:59 ago)
-Last configured: 2025-05-30 02:15:09 UTC (11:27:34 ago) by root
- 1:42PM  up 11:30, 2 users, load averages: 0.00, 0.00, 0.00
+Current time: 2025-05-30 15:17:22 UTC
+System booted: 2025-05-30 02:13:13 UTC (13:04:09 ago)
+Protocols started: 2025-05-30 02:13:44 UTC (13:03:38 ago)
+Last configured: 2025-05-30 02:15:09 UTC (13:02:13 ago) by root
+ 3:17PM  up 13:04, 2 users, load averages: 0.06, 0.03, 0.00
 
 root> 
 
@@ -1503,25 +1503,25 @@ May 30 02:15:08   chassisd[2962]: CHASSISD_FILE_OPEN: File open: /dev/acb, error
 May 30 02:15:10   /kernel: KERN_ARP_DUPLICATE_ADDR: duplicate IP address 192.168.110.2! sent from address: 00:50:56:e7:df:30 (error count = 1)
 May 30 05:07:44   /kernel: KERN_ARP_DUPLICATE_ADDR: duplicate IP address 192.168.110.2! sent from address: 00:50:56:e7:df:30 (error count = 2)
 May 30 05:11:01   /kernel: KERN_ARP_DUPLICATE_ADDR: duplicate IP address 192.168.110.2! sent from address: 00:50:56:e7:df:30 (error count = 5)
----(more 87%)---
+---(more 86%)---
                                         
 root> 
 
 root> show system uptime 
-Current time: 2025-05-30 13:42:43 UTC
-System booted: 2025-05-30 02:13:13 UTC (11:29:30 ago)
-Protocols started: 2025-05-30 02:13:44 UTC (11:28:59 ago)
-Last configured: 2025-05-30 02:15:09 UTC (11:27:34 ago) by root
- 1:42PM  up 11:30, 2 users, load averages: 0.00, 0.00, 0.00
+Current time: 2025-05-30 15:17:22 UTC
+System booted: 2025-05-30 02:13:13 UTC (13:04:09 ago)
+Protocols started: 2025-05-30 02:13:44 UTC (13:03:38 ago)
+Last configured: 2025-05-30 02:15:09 UTC (13:02:13 ago) by root
+ 3:17PM  up 13:04, 2 users, load averages: 0.06, 0.03, 0.00
 
 root> 
 
 root> show system uptime 
-Current time: 2025-05-30 13:42:44 UTC
-System booted: 2025-05-30 02:13:13 UTC (11:29:31 ago)
-Protocols started: 2025-05-30 02:13:44 UTC (11:29:00 ago)
-Last configured: 2025-05-30 02:15:09 UTC (11:27:35 ago) by root
- 1:42PM  up 11:30, 2 users, load averages: 0.00, 0.00, 0.00
+Current time: 2025-05-30 15:17:22 UTC
+System booted: 2025-05-30 02:13:13 UTC (13:04:09 ago)
+Protocols started: 2025-05-30 02:13:44 UTC (13:03:38 ago)
+Last configured: 2025-05-30 02:15:09 UTC (13:02:13 ago) by root
+ 3:17PM  up 13:04, 2 users, load averages: 0.06, 0.03, 0.00
 
 root> 
 
@@ -1535,25 +1535,25 @@ May  1 16:14:47  rtsock_inform_fru_offline: inform peer type 17, index 0 offline
 May  1 16:14:47  rtsock_reset_self_ping_statistics: reset fpc_slot 0 self_ping stats, error 0
 May  1 16:14:47  fpc_offline_now - slot 0, reason: None, error Chassis connection dropped transition state 1
 May  1 16:14:55  ch_power_off_frus_cleanup_exit: Chassisd exiting with error-code= 69
----(more 12%)---
+---(more 11%)---
                                         
 root> 
 
 root> show system uptime 
-Current time: 2025-05-30 13:42:44 UTC
-System booted: 2025-05-30 02:13:13 UTC (11:29:31 ago)
-Protocols started: 2025-05-30 02:13:44 UTC (11:29:00 ago)
-Last configured: 2025-05-30 02:15:09 UTC (11:27:35 ago) by root
- 1:42PM  up 11:30, 2 users, load averages: 0.00, 0.00, 0.00
+Current time: 2025-05-30 15:17:23 UTC
+System booted: 2025-05-30 02:13:13 UTC (13:04:10 ago)
+Protocols started: 2025-05-30 02:13:44 UTC (13:03:39 ago)
+Last configured: 2025-05-30 02:15:09 UTC (13:02:14 ago) by root
+ 3:17PM  up 13:04, 2 users, load averages: 0.06, 0.03, 0.00
 
 root> 
 
 root> show system uptime 
-Current time: 2025-05-30 13:42:44 UTC
-System booted: 2025-05-30 02:13:13 UTC (11:29:31 ago)
-Protocols started: 2025-05-30 02:13:44 UTC (11:29:00 ago)
-Last configured: 2025-05-30 02:15:09 UTC (11:27:35 ago) by root
- 1:42PM  up 11:30, 2 users, load averages: 0.00, 0.00, 0.00
+Current time: 2025-05-30 15:17:23 UTC
+System booted: 2025-05-30 02:13:13 UTC (13:04:10 ago)
+Protocols started: 2025-05-30 02:13:44 UTC (13:03:39 ago)
+Last configured: 2025-05-30 02:15:09 UTC (13:02:14 ago) by root
+ 3:17PM  up 13:04, 2 users, load averages: 0.06, 0.03, 0.00
 
 root> 
 

@@ -238,6 +238,7 @@ def api_unlock_router():
 @app.route('/api/run_update', methods=['POST'])
 def api_run_update():
     data = request.json
+    print(data)
     ip = data.get('ip')
     username = data.get('username')
     password = data.get('password')

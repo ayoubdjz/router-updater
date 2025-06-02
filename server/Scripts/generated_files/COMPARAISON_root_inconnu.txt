@@ -4,8 +4,18 @@ Rapport des changements :
 Informations du moteur de routage :
 
 ======================================================== AVANT =========================================================
-Uptime                         11 hours, 29 minutes, 23 seconds
+User                       2 percent
+Kernel                     2 percent
+Interrupt                  6 percent
+Idle                      90 percent
+Uptime                         13 hours, 4 minutes, 1 second
+0.07       0.03       0.00
 
 ======================================================== APRÈS =========================================================
-Uptime                         11 hours, 29 minutes, 38 seconds
+User                      14 percent
+Kernel                     7 percent
+Interrupt                  7 percent
+Idle                      72 percent
+Uptime                         13 hours, 4 minutes, 11 seconds
+0.06       0.03       0.00
 ========================================================================================================================

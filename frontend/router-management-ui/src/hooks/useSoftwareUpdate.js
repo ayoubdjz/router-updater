@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { API_BASE_URL } from '../api/routerApi';
+import { runUpdateProcedure } from '../api/routerApi';
 import { toast } from 'react-toastify';
 
 export const useSoftwareUpdate = (setLastFailedAction) => {
@@ -48,107 +48,25 @@ export const useSoftwareUpdate = (setLastFailedAction) => {
     const { signal } = abortControllerRef.current;
 
     try {
-      const response = await fetch(`${API_BASE_URL}/run_update`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ident_data: sessionData.ident_data,
-          password: credentials.password,
-          image_file: currentFilename,
-        }),
-        signal,
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ message: `HTTP error ${response.status}` }));
-        throw new Error(errorData.message || `Server responded with ${response.status}`);
+      // Use runUpdateProcedure instead of fetch
+      const updateData = { image_file: currentFilename };
+      const response = await runUpdateProcedure(updateData, credentials, sessionData.ident_data);
+      // Handle response (non-streaming, synchronous)
+      if (response.data.status !== 'success') {
+        throw new Error(response.data.message || 'Update failed.');
       }
-      if (!response.body) throw new Error("Response body is null, cannot stream.");
-
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder();
-      let buffer = '';
-
-      // eslint-disable-next-line no-constant-condition
-      while (true) {
-        const { done, value } = await reader.read();
-        if (signal.aborted) { // Check if aborted by user closing modal elsewhere
-            throw new Error('AbortError'); // Simulate AbortError to be caught
-        }
-        if (done) {
-          if (!updateOperationResult) {
-            setUpdateOperationResult({ status: 'warning', message: 'Update stream ended unexpectedly. Check server logs.' });
-          }
-          break;
-        }
-
-        buffer += decoder.decode(value, { stream: true });
-        let boundary = buffer.indexOf('\n\n');
-        while (boundary >= 0) {
-          const message = buffer.substring(0, boundary);
-          buffer = buffer.substring(boundary + 2);
-          
-          if (message.startsWith('data:')) {
-            try {
-              const jsonData = JSON.parse(message.substring(5));
-              if (jsonData.type === 'log') {
-                setStreamingUpdateLogs(prev => [...prev, jsonData.message]);
-              }
-            } catch (e) {
-              console.error("Failed to parse SSE log data:", e, "Raw data:", message);
-              setStreamingUpdateLogs(prev => [...prev, `[RAW/Parse Error]: ${message.substring(5)}`]);
-            }
-          } else if (message.startsWith('event:')) {
-            const lines = message.split('\n');
-            const eventLine = lines.find(line => line.startsWith('event:'));
-            const dataLine = lines.find(line => line.startsWith('data:'));
-
-            if (eventLine && dataLine) {
-              const eventType = eventLine.substring(6).trim();
-              try {
-                const eventData = JSON.parse(dataLine.substring(5).trim());
-                if (eventType === 'update_complete') {
-                  setUpdateOperationResult(eventData);
-                  updateSession({ updateCompleted: true, updateInProgress: false });
-                  if (eventData.status === 'success') toast.success(eventData.message || "Update completed successfully!");
-                  else if (eventData.status === 'success_with_warning') toast.warn(eventData.message || "Update completed with warnings.");
-                  else toast.error(eventData.message || "Update finished with errors.");
-                  reader.cancel(); return;
-                } else if (eventType === 'update_error') {
-                  setUpdateOperationResult(eventData);
-                  updateSession({ updateCompleted: false, updateInProgress: false });
-                  setLastFailedAction({ type: 'update', message: eventData.message });
-                  toast.error(eventData.message || "A critical error occurred during the update stream.");
-                  reader.cancel(); return;
-                }
-              } catch (e) {
-                 console.error("Failed to parse SSE event data:", e, "Raw event:", message);
-                 setStreamingUpdateLogs(prev => [...prev, `[RAW Event/Parse Error]: ${message}`]);
-              }
-            }
-          }
-          boundary = buffer.indexOf('\n\n');
-        }
-      }
+      setUpdateOperationResult(response.data.result);
+      setStreamingUpdateLogs(response.data.result?.logs || []);
+      updateSession({ updateCompleted: true, updateInProgress: false });
+      toast.success(response.data.result?.message || "Update completed successfully!");
     } catch (err) {
-      if (err.name === 'AbortError') {
-        setUpdateOperationResult({ status: 'info', message: 'Update operation aborted by user.' });
-        toast.info('Update operation aborted.');
-      } else {
-        const errorMsg = `Failed to run update: ${err.message}`;
-        setUpdateOperationResult({ status: 'error', message: errorMsg });
-        setLastFailedAction({ type: 'update', message: errorMsg });
-        toast.error(errorMsg);
-      }
+      const errorMsg = `Failed to run update: ${err.message}`;
+      setUpdateOperationResult({ status: 'error', message: errorMsg });
+      setLastFailedAction({ type: 'update', message: errorMsg });
+      toast.error(errorMsg);
       updateSession({ updateCompleted: false, updateInProgress: false });
     } finally {
       setIsUpdateInProgress(false);
-      if (abortControllerRef.current && !abortControllerRef.current.signal.aborted) {
-          // If not aborted by user, but finished (success/error/unexpected), nullify ref
-          // If aborted by user, it's already handled.
-      }
-      // Don't nullify abortControllerRef.current here if we want to allow retry.
-      // It will be overwritten on next call.
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [credentials, sessionData.ident_data, updateSession, setLastFailedAction, updateImageFilename]);
