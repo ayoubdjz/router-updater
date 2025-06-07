@@ -6,6 +6,9 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 
+import mobilisLogo from '../../public/mobilis.png';
+import ensticpLogo from '../../public/ENSTICP.png';
+
 const Navbar = ({ isAuthenticated, onLogout }) => {
   const navigate = useNavigate();
 
@@ -18,27 +21,38 @@ const Navbar = ({ isAuthenticated, onLogout }) => {
 
   return (
     <AppBar position="static">
-      <Toolbar>
-        <Typography variant="h6" component={RouterLink} to="/" sx={{ flexGrow: 1, color: 'inherit', textDecoration: 'none' }}>
+      <Toolbar sx={{ justifyContent: 'space-between' }}>
+        {/* Left: Project Title */}
+        <Typography variant="h6" component={RouterLink} to="/" sx={{ color: 'inherit', textDecoration: 'none' }}>
           Router Management
         </Typography>
-        {isAuthenticated ? (
-          <>
-            <Button color="inherit" component={RouterLink} to="/dashboard">
-              Dashboard
+
+        {/* Center: Logos */}
+        <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1, justifyContent: 'center' }}>
+          <img src={ensticpLogo} alt="ENSTICP Logo" style={{ height: 40, marginRight: 12 }} />
+          <img src={mobilisLogo} alt="Mobilis Logo" style={{ height: 40 }} />
+        </Box>
+
+        {/* Right: Auth Buttons */}
+        <Box>
+          {isAuthenticated ? (
+            <>
+              <Button color="inherit" component={RouterLink} to="/dashboard">
+                Dashboard
+              </Button>
+              <Button color="inherit" component={RouterLink} to="/files">
+                Manage Files
+              </Button>
+              <Button color="inherit" onClick={handleLogout}>
+                Logout
+              </Button>
+            </>
+          ) : (
+            <Button color="inherit" component={RouterLink} to="/login">
+              Login
             </Button>
-            <Button color="inherit" component={RouterLink} to="/files">
-              Manage Files
-            </Button>
-            <Button color="inherit" onClick={handleLogout}>
-              Logout
-            </Button>
-          </>
-        ) : (
-          <Button color="inherit" component={RouterLink} to="/login">
-            Login
-          </Button>
-        )}
+          )}
+        </Box>
       </Toolbar>
     </AppBar>
   );

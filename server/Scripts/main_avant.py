@@ -27,7 +27,7 @@ from juniper_update_proc import perform_junos_update
 from types import FunctionType
 jdc_module = import_module('juniper_data_collector')
 jdc_functions = [getattr(jdc_module, name) for name in dir(jdc_module)
-                 if isinstance(getattr(jdc_module, name), FunctionType) and not name.startswith('_')]
+                if isinstance(getattr(jdc_module, name), FunctionType) and not name.startswith('_')]
 
 # List of function names in the desired order
 JDC_FUNC_ORDER = [

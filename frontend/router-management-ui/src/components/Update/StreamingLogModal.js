@@ -19,26 +19,48 @@ const StreamingLogModal = ({ open, onClose, logs, title, isLoading, finalStatus 
 
   useEffect(scrollToBottom, [logs]);
 
+  // Determine status from isLoading, finalStatus, or sessionData
   let statusSeverity = "info";
   let statusMessage = "Operation in progress...";
+
+  // Try to get update session state from window (since no prop is passed)
+  let updateSessionState = null;
+  try {
+    // This assumes sessionData is attached to window by the app for debugging
+    updateSessionState = window.__UPDATE_SESSION_STATE__;
+  } catch {}
 
   if (finalStatus) {
     if (finalStatus.status === 'success') {
       statusSeverity = "success";
       statusMessage = finalStatus.message || "Operation completed successfully.";
     } else if (finalStatus.status === 'success_with_warning') {
-        statusSeverity = "warning";
-        statusMessage = finalStatus.message || "Operation completed with warnings.";
+      statusSeverity = "warning";
+      statusMessage = finalStatus.message || "Operation completed with warnings.";
     } else if (finalStatus.status === 'error') {
       statusSeverity = "error";
       statusMessage = finalStatus.message || "An error occurred.";
-    } else if (finalStatus.status === 'warning') { // General warning from stream end
-        statusSeverity = "warning";
-        statusMessage = finalStatus.message || "Operation ended with a warning.";
-    } else if (finalStatus.status === 'info') { // e.g. Aborted by user
-        statusSeverity = "info";
-        statusMessage = finalStatus.message || "Operation status info.";
+    } else if (finalStatus.status === 'warning') {
+      statusSeverity = "warning";
+      statusMessage = finalStatus.message || "Operation ended with a warning.";
+    } else if (finalStatus.status === 'info') {
+      statusSeverity = "info";
+      statusMessage = finalStatus.message || "Operation status info.";
     }
+  } else if (updateSessionState) {
+    if (updateSessionState.updateCompleted) {
+      statusSeverity = "success";
+      statusMessage = "Update completed.";
+    } else if (updateSessionState.updateInProgress) {
+      statusSeverity = "info";
+      statusMessage = "Operation in progress...";
+    } else {
+      statusSeverity = "error";
+      statusMessage = "Update failed or was cancelled.";
+    }
+  } else if (!isLoading) {
+    statusSeverity = "error";
+    statusMessage = "Update failed or was cancelled.";
   }
 
 

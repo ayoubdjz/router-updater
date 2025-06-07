@@ -72,8 +72,6 @@ def api_run_avant():
 
     current_run_operation_logs = []
     result_from_avant_module = None
-    connection_obj_from_avant_run = None
-    lock_file_path_from_avant_run = None
     try:
         result_from_avant_module = avant_api.run_avant_workflow(ip, username, password, current_run_operation_logs)
         avant_logs.clear()
@@ -84,8 +82,6 @@ def api_run_avant():
                 "message": "Erreur inattendue: Aucun résultat final structuré du workflow avant.",
                 "logs": current_run_operation_logs
             }), 500
-        lock_file_path_from_avant_run = result_from_avant_module.get("lock_file_path")
-        connection_obj_from_avant_run = result_from_avant_module.get("connection_obj")
         if 'connection_obj' in result_from_avant_module:
             result_from_avant_module.pop("connection_obj")
         serializable_result = sanitize_for_json(result_from_avant_module)
@@ -95,13 +91,13 @@ def api_run_avant():
         return jsonify(serializable_result)
     except Exception as e_api_avant:
         timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        error_msg = f"[{timestamp}] API /run_avant (non-SSE) Erreur critique: {str(e_api_avant)}"
+        error_msg = f"[{timestamp}] API /run_avant Erreur critique: {str(e_api_avant)}"
         current_run_operation_logs.append(error_msg)
         avant_logs.clear()
         avant_logs.extend(current_run_operation_logs)
         error_response = {
             "status": "error",
-            "message": f"Erreur critique dans l'API /run_avant (non-SSE): {str(e_api_avant)}",
+            "message": f"Erreur critique dans l'API /run_avant: {str(e_api_avant)}",
             "logs": current_run_operation_logs
         }
         if result_from_avant_module:
@@ -110,17 +106,6 @@ def api_run_avant():
                 if k not in ["logs", "connection_obj"]
             }
         return jsonify(error_response), 500
-    finally:
-        if connection_obj_from_avant_run and \
-           hasattr(connection_obj_from_avant_run, 'is_alive') and \
-           connection_obj_from_avant_run.is_alive():
-            api_finally_log_msg = "API /run_avant (non-SSE finally): La connexion Netmiko était encore active. Tentative de fermeture."
-            avant_logs.append(api_finally_log_msg)
-            try:
-                connection_obj_from_avant_run.disconnect()
-            except Exception as e_disconnect_api_finally:
-                api_finally_err_msg = f"API /run_avant (non-SSE finally): Erreur lors de la tentative de fermeture de la connexion: {str(e_disconnect_api_finally)}"
-                avant_logs.append(api_finally_err_msg)
 
 @app.route('/api/run_apres', methods=['POST'])
 def api_run_apres():
@@ -180,7 +165,7 @@ def get_file(filename):
         if ".." in filename or filename.startswith("/"):
             return jsonify({"status": "error", "message": "Invalid filename."}), 400
         if not os.path.isdir(GENERATED_FILES_DIR):
-             return jsonify({"status": "error", "message": f"Directory {GENERATED_FILES_DIR} not found."}), 404
+            return jsonify({"status": "error", "message": f"Directory {GENERATED_FILES_DIR} not found."}), 404
         return send_from_directory(GENERATED_FILES_DIR, filename, as_attachment=False)
     except FileNotFoundError:
         return jsonify({"status": "error", "message": "File not found in directory."}), 404

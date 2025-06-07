@@ -38,7 +38,13 @@ export const useAvantChecks = (setLastFailedAction) => {
       const { data } = await runAvantChecks(credentials);
       setAvantLogs(data.logs || []);
       if (data.status === 'error') {
-        throw new Error(data.message || 'AVANT checks failed.');
+        console.error('AVANT checks failed:', data);
+        setAvantError(data.message || 'AVANT checks failed.');
+        setAvantCriticalError(data.message || 'AVANT checks failed.');
+        updateSession({ avantCompleted: false, avantData: null, viewState: 'avant_error' });
+        if (setLastFailedAction) setLastFailedAction({ type: 'avant', message: data.message || 'AVANT checks failed.' });
+        toast.error(data.message || 'AVANT checks failed.');
+        return;
       }
       updateSession({
         avantCompleted: true,
@@ -51,7 +57,15 @@ export const useAvantChecks = (setLastFailedAction) => {
       });
       toast.success(data.message || "AVANT checks completed successfully.");
     } catch (err) {
-      const errorMessage = err.message || 'Failed to perform AVANT pre-checks.';
+      // Improved error logging for network/server errors
+      let errorMessage = 'Failed to perform AVANT pre-checks.';
+      if (err.response && err.response.data) {
+        console.error('AVANT API error:', err.response.data);
+        errorMessage = err.response.data.message || JSON.stringify(err.response.data);
+      } else {
+        console.error('AVANT checks failed:', err);
+        errorMessage = err.message || errorMessage;
+      }
       setAvantError(errorMessage); 
       setAvantCriticalError(errorMessage); 
       updateSession({ avantCompleted: false, avantData: null, viewState: 'avant_error' });

@@ -56,12 +56,15 @@ export const useSoftwareUpdate = (setLastFailedAction) => {
         (logLine) => setStreamingUpdateLogs((prev) => [...prev, logLine]),
         (result) => {
           setUpdateOperationResult(result);
-          updateSession({ updateCompleted: true, updateInProgress: false });
-          setIsUpdateInProgress(false);
-          if (result.success) {
-            toast.success(result.message || "Update completed successfully!");
+          // Determine update status based on result.status
+          if (result && (result.status === 'success' || result.status === 'ok')) {
+            updateSession({ updateCompleted: true, updateInProgress: false });
+            setIsUpdateInProgress(false);
+            toast.success(result.message || "Mise à jour terminé avec succès.");
           } else {
-            toast.error(result.error || "Update failed.");
+            updateSession({ updateCompleted: false, updateInProgress: false });
+            setIsUpdateInProgress(false);
+            toast.error(result.message || result.error || "Erreur lors de la mise à jour.");
           }
         },
         (err) => {
