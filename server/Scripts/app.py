@@ -255,28 +255,7 @@ def api_run_update():
         import json
         yield f"event: result\ndata: {json.dumps(result_holder['result'])}\n\n"
     return Response(event_stream(), mimetype='text/event-stream')
-    
 
-@app.route('/api/test_sse')
-def api_test_sse():
-    import time_stream
-    import json
-    def event_stream():
-        logs = []
-        gen = time_stream.time_stream_log_generator(logs, count=5, delay=1)
-        try:
-            while True:
-                try:
-                    log_line = next(gen)
-                    yield f"data: {log_line}\n\n"
-                except StopIteration as e:
-                    # At the end, send the full logs as a JSON event
-                    logs_table = e.value if e.value is not None else logs
-                    yield f"event: logs\ndata: {json.dumps(logs_table)}\n\n"
-                    break
-        except Exception as ex:
-            yield f"data: [SSE error: {str(ex)}]\n\n"
-    return Response(event_stream(), mimetype='text/event-stream')
     
 
 if __name__ == '__main__':
