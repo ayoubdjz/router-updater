@@ -1,5 +1,5 @@
 set version 14.1R4.8
-set system root-authentication encrypted-password "$1$xsruK9V6$Sx7IKiOwsDR3E9pPHN0WW1"
+set system root-authentication encrypted-password "$1$H9GMjS5O$f/3EtLuiK0gEFwIT4LLe80"
 set system services ssh
 set system syslog user * any emergency
 set system syslog file messages any notice

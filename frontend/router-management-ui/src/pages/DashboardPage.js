@@ -72,12 +72,16 @@ const DashboardPage = () => {
   // APRES Checks Hook
   const {
     showApresConfirmModal,
-    apresCriticalError: apresHookCriticalError, // Renamed to avoid conflict
+    apresCriticalError,
+    apresCompleted,
+    apresData,
+    comparisonResults,
+    apresLogs,
+    apresLoading,
     handleTriggerApres,
     handleConfirmApres,
     handleCancelApres,
-    handleApresProcessFinished,
-    handleReloadApres, // Also used as retryApres
+    handleReloadApres,
   } = useApresChecks(setLastFailedAction);
 
   // Generated Files Hook
@@ -149,9 +153,6 @@ const DashboardPage = () => {
                 </Button>
             )}
         </Box>
-        <Button variant="outlined" sx={{ mt: 3 }} onClick={() => setShowAvantLogsModal(true)}>
-          Voir les logs AVANT
-        </Button>
       </Paper>
     );
   }
@@ -178,14 +179,6 @@ const DashboardPage = () => {
         Device: {sessionData.ident_data?.ip || 'N/A'} (Hostname: {sessionData.ident_data?.router_hostname || 'N/A'})
       </Typography>
 
-      {actionError && <Alert severity="error" sx={{ my: 2 }}>{actionError}</Alert>}
-      {lastFailedAction && (
-        <Alert severity="warning" sx={{ my: 2 }} action={
-          <Button color="inherit" size="small" onClick={handleRetry}>RETRY ({lastFailedAction.type.toUpperCase()})</Button>
-        }>
-          Last action ({lastFailedAction.type}) failed: {lastFailedAction.message}. You can try again.
-        </Alert>
-      )}
       {dashboardActionLogs.length > 0 && <LogDisplay logs={dashboardActionLogs} title="Dashboard Action Logs" />}
 
       {/* Update Section always available if AVANT is complete */}
@@ -217,13 +210,17 @@ const DashboardPage = () => {
             </Typography>
           </Divider>
           <ApresSection
-            apresCriticalError={apresHookCriticalError}
+            apresCriticalError={apresCriticalError}
+            apresCompleted={apresCompleted}
+            apresData={apresData}
+            comparisonResults={comparisonResults}
+            apresLogs={apresLogs}
+            apresLoading={apresLoading}
             handleTriggerApres={handleTriggerApres}
             handleReloadApres={handleReloadApres}
-            handleApresProcessFinished={handleApresProcessFinished}
-            setShowComparisonDetailModal={() => setShowComparisonDetailModal(true)}
-            setShowApresLogsModal={() => setShowApresLogsModal(true)}
-            // isActionLoading={isActionLoading} // Pass if Apres buttons depend on general loading
+            onShowLogs={() => setShowApresLogsModal(true)}
+            onShowComparison={() => setShowComparisonDetailModal(true)}
+            updateInProgress={isUpdateInProgressHook}
           />
         </>
       )}
@@ -231,39 +228,31 @@ const DashboardPage = () => {
       <DashboardModals
         showComparisonDetailModal={showComparisonDetailModal}
         closeComparisonDetailModal={() => setShowComparisonDetailModal(false)}
-        comparisonResults={sessionData.comparisonResults}
-        
+        comparisonResults={comparisonResults}
         showAvantLogsModal={showAvantLogsModal}
         closeAvantLogsModal={() => setShowAvantLogsModal(false)}
         avantLogs={avantLogs}
-
-        
         showApresConfirmModal={showApresConfirmModal}
         closeApresConfirmModal={handleCancelApres}
         confirmApres={handleConfirmApres}
-        
         isUpdateModalOpen={isUpdateModalOpen}
         closeUpdateModal={handleCloseUpdateModal}
         startUpdateProcedure={(filename) => {
-            setUpdateImageFilename(filename); // Ensure filename is set in hook for retries
+            setUpdateImageFilename(filename);
             handleStartUpdateProcedure(filename);
         }}
-        
         isStreamingLogModalOpen={isStreamingLogModalOpen}
         closeStreamingLogModal={handleCloseStreamingLogModal}
         streamingUpdateLogs={streamingUpdateLogs}
-        isUpdateInProgress={isUpdateInProgressHook} // Pass hook's state
+        isUpdateInProgress={isUpdateInProgressHook}
         updateOperationResult={updateOperationResult}
-        
         fileViewerOpen={fileViewer.open}
         closeFileViewerModal={handleCloseFileViewer}
         fileViewerContent={fileViewer.content}
         fileViewerFilename={fileViewer.filename}
-
-        showAprestLogsModal={showApresLogsModal}
+        showApresLogsModal={showApresLogsModal}
         closeApresLogsModal={() => setShowApresLogsModal(false)}
-        apresLogs={sessionData.apresLogs}
-        
+        apresLogs={apresLogs}
       />
 
     </Box>

@@ -3,21 +3,14 @@ Rapport des changements :
 
 Informations du moteur de routage :
 
-======================================================== AVANT =========================================================
-Memory utilization          49 percent
-User                      15 percent
-Kernel                    14 percent
-Interrupt                  6 percent
-Idle                      65 percent
-Uptime                         1 hour, 8 minutes, 8 seconds
-11.74       4.20       1.78
+-------------------------------------------------------------------------------------------------------------
+                        AVANT                         |                         APRÈS                        
+-------------------------------------------------------------------------------------------------------------
+Memory utilization          40 percent                | Memory utilization          41 percent               
+User                       8 percent                  | User                      14 percent                 
+Kernel                     4 percent                  | Kernel                     9 percent                 
+Idle                      80 percent                  | Idle                      69 percent                 
+Uptime                         15 minutes, 12 seconds | Uptime                         16 minutes, 52 seconds
+0.14       0.72       0.81                            | 16.44       3.91       1.92                          
+-------------------------------------------------------------------------------------------------------------
 
-======================================================== APRÈS =========================================================
-Memory utilization          48 percent
-User                       7 percent
-Kernel                     9 percent
-Interrupt                  7 percent
-Idle                      77 percent
-Uptime                         1 hour, 8 minutes, 34 seconds
-8.11       4.05       1.81
-========================================================================================================================

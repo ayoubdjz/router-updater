@@ -6,11 +6,11 @@ Informations du moteur de routage :
 -------------------------------------------------------------------------------------------------------------
                         AVANT                         |                         APRÈS                        
 -------------------------------------------------------------------------------------------------------------
-User                       8 percent                  | User                       9 percent                 
+User                       6 percent                  | User                      14 percent                 
 Kernel                     4 percent                  | Kernel                     8 percent                 
-Interrupt                  8 percent                  | Interrupt                 11 percent                 
-Idle                      80 percent                  | Idle                      73 percent                 
-Uptime                         15 minutes, 12 seconds | Uptime                         15 minutes, 32 seconds
-0.14       0.72       0.81                            | 0.09       0.66       0.79                           
+Interrupt                 12 percent                  | Interrupt                  9 percent                 
+Idle                      79 percent                  | Idle                      70 percent                 
+Uptime                         23 minutes, 38 seconds | Uptime                         23 minutes, 48 seconds
+0.03       0.99       1.17                            | 0.03       0.96       1.16                           
 -------------------------------------------------------------------------------------------------------------
 

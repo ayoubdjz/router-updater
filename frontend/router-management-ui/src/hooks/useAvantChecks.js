@@ -38,7 +38,6 @@ export const useAvantChecks = (setLastFailedAction) => {
       const { data } = await runAvantChecks(credentials);
       setAvantLogs(data.logs || []);
       if (data.status === 'error') {
-        console.error('AVANT checks failed:', data);
         setAvantError(data.message || 'AVANT checks failed.');
         setAvantCriticalError(data.message || 'AVANT checks failed.');
         updateSession({ avantCompleted: false, avantData: null, viewState: 'avant_error' });
@@ -60,10 +59,8 @@ export const useAvantChecks = (setLastFailedAction) => {
       // Improved error logging for network/server errors
       let errorMessage = 'Failed to perform AVANT pre-checks.';
       if (err.response && err.response.data) {
-        console.error('AVANT API error:', err.response.data);
         errorMessage = err.response.data.message || JSON.stringify(err.response.data);
       } else {
-        console.error('AVANT checks failed:', err);
         errorMessage = err.message || errorMessage;
       }
       setAvantError(errorMessage); 

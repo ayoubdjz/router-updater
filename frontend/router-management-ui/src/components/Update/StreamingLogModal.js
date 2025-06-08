@@ -31,7 +31,6 @@ const StreamingLogModal = ({ open, onClose, logs, title, isLoading, finalStatus 
   } catch {}
 
   if (finalStatus) {
-    console.log("Final status received:", finalStatus);
     if (finalStatus.success === 'true') {
       statusSeverity = "success";
       statusMessage = finalStatus.message || "Update Operation completed successfully.";

@@ -6,25 +6,22 @@ import Paper from '@mui/material/Paper';
 import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
 import StructuredDataDisplay from '../Common/StructuredDataDisplay';
-import ApresRunner from '../Apres/ApresRunner'; // Existing component
-import { useAuth } from '../../contexts/AuthContext'; // To get sessionData
-import ComparisonModal from '../Common/ComparisonModal'; // Import the new modal component
+
+import ComparisonModal from '../Common/ComparisonModal';
 
 const ApresSection = ({
-  apresCriticalError, // The error message string
+  apresCriticalError,
+  apresCompleted,
+  apresData,
+  comparisonResults,
+  apresLogs,
+  apresLoading,
   handleTriggerApres,
-  handleReloadApres, // Also used for retry
-  handleApresProcessFinished,
-  setShowComparisonDetailModal,
-  setShowApresLogsModal, // <-- add this prop
-  // isActionLoading, // If general action loading affects Apres buttons
+  handleReloadApres,
+  onShowLogs,
+  onShowComparison,
+  updateInProgress
 }) => {
-  const { sessionData } = useAuth();
-  const showApresRunner = sessionData.viewState === 'apres_running' && !sessionData.apresCompleted && !apresCriticalError;
-  const showApresResultsDisplay = sessionData.apresCompleted && sessionData.apresData && !apresCriticalError;
-  // Use comparisonResults from sessionData (string)
-  const hasComparisonResults = sessionData.comparisonResults && typeof sessionData.comparisonResults === 'string' && sessionData.comparisonResults.trim().length > 0;
-  const [showComparisonModal, setShowComparisonModal] = React.useState(false);
 
   if (apresCriticalError) {
     return (
@@ -39,61 +36,57 @@ const ApresSection = ({
     <Paper elevation={2} sx={{ p: { xs: 2, md: 3 }, mb: 3, backgroundColor: 'hsl(207, 73%, 94%)' }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2, flexWrap: 'wrap', gap: 1 }}>
         <Typography variant="h5">Post-Checks Information</Typography>
-        {(!showApresRunner && !sessionData.apresCompleted) && (
+        {(!apresLoading && !apresCompleted) && (
           <Button 
             variant="contained" 
             color="secondary" 
             onClick={handleTriggerApres} 
-            disabled={sessionData.updateInProgress}
+            disabled={updateInProgress}
           >
             Run Post-Checks
           </Button>
         )}
-        {sessionData.apresCompleted && (
+        {apresCompleted && (
           <Button 
             variant="outlined" 
             color="secondary" 
             onClick={handleReloadApres} 
-            disabled={showApresRunner || sessionData.updateInProgress}
+            disabled={apresLoading || updateInProgress}
           >
-          {showApresRunner ? <CircularProgress size={20} sx={{mr:1}}/> : null} Reload Post-Checks
+            {apresLoading && <CircularProgress size={20} sx={{mr:1}}/>}
+            Reload Post-Checks
           </Button>
         )}
       </Box>
 
+      {/* Loading State */}
+      {apresLoading && (
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', my: 3 }}>
+          <CircularProgress size={60} />
+          <Typography variant="h6" sx={{ mt: 2 }}>Running APRES Post-Checks...</Typography>
+          <Typography variant="body2">Please wait, this may take a few moments.</Typography>
+        </Box>
+      )}
+
       {/* Structured Data Display for APRES */}
-      {sessionData.apresCompleted && (
+      {apresCompleted && apresData && (
         <>
-          <StructuredDataDisplay data={sessionData.apresData} titlePrefix="APRES" />
+          <StructuredDataDisplay data={apresData} titlePrefix="APRES" />
           {/* Show comparison button if comparisonResults string exists */}
-          {hasComparisonResults && (
+          {comparisonResults && typeof comparisonResults === 'string' && comparisonResults.trim().length > 0 && (
             <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
-              <Button variant="outlined" onClick={() => setShowComparisonModal(true)}>
+              <Button variant="outlined" onClick={onShowComparison}>
                 Compare Pre/Post Checks
               </Button>
             </Box>
           )}
           {/* Show APRES logs button */}
           <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2, gap: 2, flexWrap: 'wrap' }}>
-            <Button variant="outlined" onClick={() => setShowApresLogsModal(true)}>Show Post-Checks Logs</Button>
+            <Button variant="outlined" onClick={onShowLogs}>Show Post-Checks Logs</Button>
           </Box>
-          {/* Comparison Modal for string result */}
-          {hasComparisonResults && (
-            <ComparisonModal
-              open={showComparisonModal}
-              onClose={() => setShowComparisonModal(false)}
-              comparisonResults={sessionData.comparisonResults}
-            />
-          )}
         </>
       )}
 
-      {/* APRES runner (loading state) */}
-      {showApresRunner && <ApresRunner onApresProcessFinished={handleApresProcessFinished} />}
-
-      {sessionData.viewState === 'apres_completed_with_issues' && !apresCriticalError && (
-        <Alert severity="warning" sx={{mt:2}}>Post-checks completed with some discrepancies. Review logs and comparison.</Alert>
-      )}
     </Paper>
   );
 };

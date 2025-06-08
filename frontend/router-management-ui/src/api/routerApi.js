@@ -77,11 +77,9 @@ export const runUpdateProcedureStream = (updateData, credentials, identData, onL
           if (expectingResult) {
             // This is the final JSON result, do not display its logs array
             try {
-              console.log('[SSE DEBUG] Received final JSON result:', dataStr);
               const result = JSON.parse(dataStr);
               if (onResult) onResult(result);
             } catch (e) {
-              console.error('[SSE DEBUG] Error parsing final JSON result:', e, dataStr);
               if (onError) onError(e);
             }
             expectingResult = false;
