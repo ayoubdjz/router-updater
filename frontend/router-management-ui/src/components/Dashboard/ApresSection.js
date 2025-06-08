@@ -50,14 +50,14 @@ const ApresSection = ({
           </Button>
         )}
         {sessionData.apresCompleted && (
-           <Button 
-             variant="outlined" 
-             color="secondary" 
-             onClick={handleReloadApres} 
-             disabled={showApresRunner || sessionData.updateInProgress}
-           >
-            {showApresRunner ? <CircularProgress size={20} sx={{mr:1}}/> : null} Reload Post-Checks
-           </Button>
+          <Button 
+            variant="outlined" 
+            color="secondary" 
+            onClick={handleReloadApres} 
+            disabled={showApresRunner || sessionData.updateInProgress}
+          >
+          {showApresRunner ? <CircularProgress size={20} sx={{mr:1}}/> : null} Reload Post-Checks
+          </Button>
         )}
       </Box>
 

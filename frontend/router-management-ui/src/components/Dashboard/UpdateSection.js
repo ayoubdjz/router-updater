@@ -17,7 +17,6 @@ const UpdateSection = ({
   return (
     <>
       {/* Software Update Button */}
-      {!sessionData.updateInProgress && !sessionData.updateCompleted && (
         <Box sx={{ display: 'flex', justifyContent: 'center', my: 2, py:1, borderBottom: '1px solid #e0e0e0', borderTop: '1px solid #e0e0e0' }}>
           <Button 
             variant="contained" 
@@ -29,26 +28,6 @@ const UpdateSection = ({
             Start Software Update
           </Button>
         </Box>
-      )}
-
-      {/* Show update status based on sessionData */}
-      {sessionData.updateInProgress && (
-        <Alert severity="info" sx={{ my: 2 }}>Software update in progress...</Alert>
-      )}
-      {sessionData.updateCompleted && updateOperationResult && (
-        <Alert severity={updateOperationResult.status === 'success' ? 'success' : updateOperationResult.status === 'success_with_warning' ? 'warning' : 'error'} sx={{ my: 2 }}>
-          Update Finished: {updateOperationResult.message}
-          {updateOperationResult.status !== 'success' && updateOperationResult.status !== 'success_with_warning' && (
-            <Button color="inherit" size="small" onClick={retryUpdate} sx={{ ml: 2 }}>RETRY UPDATE</Button>
-          )}
-        </Alert>
-      )}
-      {!sessionData.updateInProgress && !sessionData.updateCompleted && updateOperationResult && updateOperationResult.status === 'error' && (
-        <Alert severity="error" sx={{ my: 2 }}>
-          Update Failed: {updateOperationResult.message}
-          <Button color="inherit" size="small" onClick={retryUpdate} sx={{ ml: 2 }}>RETRY UPDATE</Button>
-        </Alert>
-      )}
     </>
   );
 };

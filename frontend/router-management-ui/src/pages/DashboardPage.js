@@ -127,10 +127,11 @@ const DashboardPage = () => {
   // --- Early Returns (Order Matters) ---
   if (showInitialAvantLoadingState) {
     return (
-      <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" minHeight="60vh">
-        <CircularProgress />
-        <Typography variant="h6" sx={{ mt: 2 }}>Pré-checks AVANT en cours...</Typography>
-      </Box>
+      <Paper elevation={3} sx={{ p: 3, textAlign: 'center', my: 2 }}>
+        <CircularProgress size={60} />
+        <Typography variant="h6" sx={{ mt: 2 }}>Running AVANT Pre-Checks...</Typography>
+        <Typography variant="body2">Please wait, this may take a few moments.</Typography>
+      </Paper>
     );
   }
 
@@ -166,7 +167,7 @@ const DashboardPage = () => {
   }
 
   const showAvantResultsSection = sessionData.avantCompleted && !avantCriticalError;
-  const showApresSection = showAvantResultsSection && (sessionData.updateCompleted || !sessionData.updateAttempted);
+  const showApresSection = showAvantResultsSection;
 
 
   // --- Main Component JSX ---

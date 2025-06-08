@@ -125,6 +125,7 @@ const AvantRunner = ({ runOnLoad = false, onAvantProcessComplete }) => {
       </Paper>
     );
   }
+  
 
   return (
     <Paper elevation={2} sx={{ my: 2, p: 3, backgroundColor: '#f3e5f5' }}>
@@ -132,7 +133,7 @@ const AvantRunner = ({ runOnLoad = false, onAvantProcessComplete }) => {
         <Typography variant="h5">AVANT Pre-Check Section</Typography>
         <Box>
             {!avantMutation.isPending && ( // Show re-run only if not currently running
-                 <Button variant="outlined" onClick={handleManualRunAvant} disabled={unlockMutation.isPending}>
+                <Button variant="outlined" onClick={handleManualRunAvant} disabled={unlockMutation.isPending}>
                     {sessionData.avantCompleted ? "Re-run AVANT Checks" : "Run AVANT Checks"}
                 </Button>
             )}

@@ -31,21 +31,16 @@ const StreamingLogModal = ({ open, onClose, logs, title, isLoading, finalStatus 
   } catch {}
 
   if (finalStatus) {
-    if (finalStatus.status === 'success') {
+    console.log("Final status received:", finalStatus);
+    if (finalStatus.success === 'true') {
       statusSeverity = "success";
-      statusMessage = finalStatus.message || "Operation completed successfully.";
-    } else if (finalStatus.status === 'success_with_warning') {
-      statusSeverity = "warning";
-      statusMessage = finalStatus.message || "Operation completed with warnings.";
-    } else if (finalStatus.status === 'error') {
+      statusMessage = finalStatus.message || "Update Operation completed successfully.";
+    } else if (finalStatus.success === 'false') {
       statusSeverity = "error";
-      statusMessage = finalStatus.message || "An error occurred.";
-    } else if (finalStatus.status === 'warning') {
-      statusSeverity = "warning";
-      statusMessage = finalStatus.message || "Operation ended with a warning.";
-    } else if (finalStatus.status === 'info') {
-      statusSeverity = "info";
-      statusMessage = finalStatus.message || "Operation status info.";
+      statusMessage = `An error occurred during the update operation: ${finalStatus.error || 'Unknown error'}`;
+    } else {
+      statusSeverity = "error";
+      statusMessage = `An error occurred during the update operation: ${finalStatus.error || 'Unknown error'}`;
     }
   } else if (updateSessionState) {
     if (updateSessionState.updateCompleted) {
@@ -58,9 +53,9 @@ const StreamingLogModal = ({ open, onClose, logs, title, isLoading, finalStatus 
       statusSeverity = "error";
       statusMessage = "Update failed or was cancelled.";
     }
-  } else if (!isLoading) {
-    statusSeverity = "error";
-    statusMessage = "Update failed or was cancelled.";
+  } else if (isLoading) {
+    statusSeverity = "info";
+    statusMessage = "Operation in progress...";
   }
 
 
@@ -85,19 +80,13 @@ const StreamingLogModal = ({ open, onClose, logs, title, isLoading, finalStatus 
         {isLoading && !finalStatus && (
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', my: 1 }}>
             <CircularProgress size={24} sx={{ mr: 1 }} />
-            <Typography>Processing... please wait.</Typography>
+            <Typography>{statusMessage}</Typography>
           </Box>
         )}
 
         {finalStatus && (
           <Alert severity={statusSeverity} sx={{mt: 1}}>
             {statusMessage}
-            {finalStatus.updated_junos_info && (
-                <Typography variant="body2" sx={{mt:1}}>
-                    New JUNOS Version: {finalStatus.updated_junos_info.new_junos_version || 'N/A'} <br/>
-                    Current Master RE: {finalStatus.updated_junos_info.current_master_re !== undefined ? `RE${finalStatus.updated_junos_info.current_master_re}` : 'N/A'}
-                </Typography>
-            )}
           </Alert>
         )}
 

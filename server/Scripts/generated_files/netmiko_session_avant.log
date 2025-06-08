@@ -21,29 +21,29 @@ root>
 root> 
 
 root> show system uptime 
-Current time: 2025-06-07 20:13:11 UTC
-System booted: 2025-06-07 18:39:46 UTC (01:33:25 ago)
-Protocols started: 2025-06-07 18:41:01 UTC (01:32:10 ago)
-Last configured: 2025-06-07 18:57:45 UTC (01:15:26 ago) by root
- 8:13PM  up 1:33, 2 users, load averages: 0.85, 2.69, 2.47
+Current time: 2025-06-08 10:19:05 UTC
+System booted: 2025-06-08 09:10:57 UTC (01:08:08 ago)
+Protocols started: 2025-06-08 09:12:04 UTC (01:07:01 ago)
+Last configured: 2025-06-08 09:13:46 UTC (01:05:19 ago) by root
+10:19AM  up 1:08, 13 users, load averages: 11.74, 4.20, 1.78
 
 root> 
 
 root> show system uptime 
-Current time: 2025-06-07 20:13:11 UTC
-System booted: 2025-06-07 18:39:46 UTC (01:33:25 ago)
-Protocols started: 2025-06-07 18:41:01 UTC (01:32:10 ago)
-Last configured: 2025-06-07 18:57:45 UTC (01:15:26 ago) by root
- 8:13PM  up 1:33, 2 users, load averages: 0.85, 2.69, 2.47
+Current time: 2025-06-08 10:19:05 UTC
+System booted: 2025-06-08 09:10:57 UTC (01:08:08 ago)
+Protocols started: 2025-06-08 09:12:04 UTC (01:07:01 ago)
+Last configured: 2025-06-08 09:13:46 UTC (01:05:19 ago) by root
+10:19AM  up 1:08, 13 users, load averages: 11.74, 4.20, 1.78
 
 root> 
 
 root> show system uptime 
-Current time: 2025-06-07 20:13:11 UTC
-System booted: 2025-06-07 18:39:46 UTC (01:33:25 ago)
-Protocols started: 2025-06-07 18:41:01 UTC (01:32:10 ago)
-Last configured: 2025-06-07 18:57:45 UTC (01:15:26 ago) by root
- 8:13PM  up 1:33, 2 users, load averages: 0.85, 2.69, 2.47
+Current time: 2025-06-08 10:19:05 UTC
+System booted: 2025-06-08 09:10:57 UTC (01:08:08 ago)
+Protocols started: 2025-06-08 09:12:04 UTC (01:07:01 ago)
+Last configured: 2025-06-08 09:13:46 UTC (01:05:19 ago) by root
+10:19AM  up 1:08, 13 users, load averages: 11.74, 4.20, 1.78
 
 root> 
 
@@ -97,49 +97,49 @@ JUNOS Packet Forwarding Engine Trio Simulation Package [14.1R4.8]
 root> 
 
 root> show system uptime 
-Current time: 2025-06-07 20:13:12 UTC
-System booted: 2025-06-07 18:39:46 UTC (01:33:26 ago)
-Protocols started: 2025-06-07 18:41:01 UTC (01:32:11 ago)
-Last configured: 2025-06-07 18:57:45 UTC (01:15:27 ago) by root
- 8:13PM  up 1:33, 2 users, load averages: 0.85, 2.69, 2.47
+Current time: 2025-06-08 10:19:06 UTC
+System booted: 2025-06-08 09:10:57 UTC (01:08:09 ago)
+Protocols started: 2025-06-08 09:12:04 UTC (01:07:02 ago)
+Last configured: 2025-06-08 09:13:46 UTC (01:05:20 ago) by root
+10:19AM  up 1:08, 13 users, load averages: 11.74, 4.20, 1.78
 
 root> 
 
 root> show system uptime 
-Current time: 2025-06-07 20:13:12 UTC
-System booted: 2025-06-07 18:39:46 UTC (01:33:26 ago)
-Protocols started: 2025-06-07 18:41:01 UTC (01:32:11 ago)
-Last configured: 2025-06-07 18:57:45 UTC (01:15:27 ago) by root
- 8:13PM  up 1:33, 2 users, load averages: 0.85, 2.69, 2.47
+Current time: 2025-06-08 10:19:06 UTC
+System booted: 2025-06-08 09:10:57 UTC (01:08:09 ago)
+Protocols started: 2025-06-08 09:12:04 UTC (01:07:02 ago)
+Last configured: 2025-06-08 09:13:46 UTC (01:05:20 ago) by root
+10:19AM  up 1:08, 13 users, load averages: 11.74, 4.20, 1.78
 
 root> 
 
 root> show chassis routing-engine | no-more 
 Routing Engine status:
     DRAM                      2048 MB (2048 MB installed)
-    Memory utilization          40 percent
+    Memory utilization          49 percent
     CPU utilization:
-      User                       9 percent
+      User                      15 percent
       Background                 0 percent
-      Kernel                    10 percent
-      Interrupt                 65 percent
-      Idle                      16 percent
+      Kernel                    14 percent
+      Interrupt                  6 percent
+      Idle                      65 percent
     Model                          RE-VMX
     Serial ID                      VM5543516AC4
-    Start time                     2025-06-07 18:39:46 UTC
-    Uptime                         1 hour, 33 minutes, 21 seconds
+    Start time                     2025-06-08 09:10:57 UTC
+    Uptime                         1 hour, 8 minutes, 8 seconds
     Last reboot reason             0x10:misc hardware reason 
     Load averages:                 1 minute   5 minute  15 minute
-                                       0.92       2.74       2.48
+                                      11.74       4.20       1.78
 
 root> 
 
 root> show system uptime 
-Current time: 2025-06-07 20:13:12 UTC
-System booted: 2025-06-07 18:39:46 UTC (01:33:26 ago)
-Protocols started: 2025-06-07 18:41:01 UTC (01:32:11 ago)
-Last configured: 2025-06-07 18:57:45 UTC (01:15:27 ago) by root
- 8:13PM  up 1:33, 2 users, load averages: 0.85, 2.69, 2.47
+Current time: 2025-06-08 10:19:06 UTC
+System booted: 2025-06-08 09:10:57 UTC (01:08:09 ago)
+Protocols started: 2025-06-08 09:12:04 UTC (01:07:02 ago)
+Last configured: 2025-06-08 09:13:46 UTC (01:05:20 ago) by root
+10:19AM  up 1:08, 13 users, load averages: 11.74, 4.20, 1.78
 
 root> 
 
@@ -205,18 +205,18 @@ Physical interface: ge-0/0/0, Enabled, Physical link is Up
   Link flags     : None
   CoS queues     : 8 supported, 8 maximum usable queues
   Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:29:00, Hardware address: 00:05:86:71:29:00
-  Last flapped   : 2025-06-07 18:42:32 UTC (01:30:40 ago)
+  Current address: 00:05:86:71:8b:00, Hardware address: 00:05:86:71:8b:00
+  Last flapped   : 2025-06-08 09:13:03 UTC (01:06:03 ago)
   Statistics last cleared: Never
   Traffic statistics:
-   Input  bytes  :              1861532                  856 bps
-   Output bytes  :              9936176                    0 bps
-   Input  packets:                37537                    0 pps
-   Output packets:                68935                    0 pps
+   Input  bytes  :               642746                    0 bps
+   Output bytes  :              2972868                    0 bps
+   Input  packets:                11988                    0 pps
+   Output packets:                21480                    0 pps
    IPv6 transit statistics:
-    Input  bytes  :               50439
+    Input  bytes  :               37420
     Output bytes  :                   0
-    Input  packets:                 311
+    Input  packets:                 199
     Output packets:                   0
   Active alarms  : None
   Active defects : None
@@ -225,19 +225,19 @@ Physical interface: ge-0/0/0, Enabled, Physical link is Up
   Logical interface ge-0/0/0.0 (Index 329) (SNMP ifIndex 523) (Generation 138)
     Flags: Up SNMP-Traps 0x4004000 Encapsulation: ENET2
     Traffic statistics:
-     Input  bytes  :              1884196
-     Output bytes  :              9523492
-     Input  packets:                39746
-     Output packets:                68940
+     Input  bytes  :               675810
+     Output bytes  :              2845712
+     Input  packets:                13972
+     Output packets:                21490
     Local statistics:
-     Input  bytes  :              1766366
-     Output bytes  :              9523492
-     Input  packets:                36915
-     Output packets:                68940
+     Input  bytes  :               572230
+     Output bytes  :              2845712
+     Input  packets:                11599
+     Output packets:                21490
     Transit statistics:
-     Input  bytes  :               117830                  856 bps
+     Input  bytes  :               103580                    0 bps
      Output bytes  :                    0                    0 bps
-     Input  packets:                 2831                    0 pps
+     Input  packets:                 2373                    0 pps
      Output packets:                    0                    0 pps
     Protocol inet, MTU: 1500, Generation: 152, Route table: 0
       Flags: Sendbcast-pkt-to-re, Is-Primary
@@ -400,8 +400,8 @@ Physical interface: ge-0/0/1, Enabled, Physical link is Up
   Link flags     : None
   CoS queues     : 8 supported, 8 maximum usable queues
   Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:29:01, Hardware address: 00:05:86:71:29:01
-  Last flapped   : 2025-06-07 18:42:32 UTC (01:30:40 ago)
+  Current address: 00:05:86:71:8b:01, Hardware address: 00:05:86:71:8b:01
+  Last flapped   : 2025-06-08 09:13:03 UTC (01:06:03 ago)
   Statistics last cleared: Never
   Traffic statistics:
    Input  bytes  :                    0                    0 bps
@@ -426,8 +426,8 @@ Physical interface: ge-0/0/2, Enabled, Physical link is Up
   Link flags     : None
   CoS queues     : 8 supported, 8 maximum usable queues
   Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:29:02, Hardware address: 00:05:86:71:29:02
-  Last flapped   : 2025-06-07 18:42:32 UTC (01:30:40 ago)
+  Current address: 00:05:86:71:8b:02, Hardware address: 00:05:86:71:8b:02
+  Last flapped   : 2025-06-08 09:13:03 UTC (01:06:03 ago)
   Statistics last cleared: Never
   Traffic statistics:
    Input  bytes  :                    0                    0 bps
@@ -452,8 +452,8 @@ Physical interface: ge-0/0/3, Enabled, Physical link is Up
   Link flags     : None
   CoS queues     : 8 supported, 8 maximum usable queues
   Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:29:03, Hardware address: 00:05:86:71:29:03
-  Last flapped   : 2025-06-07 18:42:32 UTC (01:30:40 ago)
+  Current address: 00:05:86:71:8b:03, Hardware address: 00:05:86:71:8b:03
+  Last flapped   : 2025-06-08 09:13:03 UTC (01:06:03 ago)
   Statistics last cleared: Never
   Traffic statistics:
    Input  bytes  :                    0                    0 bps
@@ -478,8 +478,8 @@ Physical interface: ge-0/0/4, Enabled, Physical link is Up
   Link flags     : None
   CoS queues     : 8 supported, 8 maximum usable queues
   Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:29:04, Hardware address: 00:05:86:71:29:04
-  Last flapped   : 2025-06-07 18:42:32 UTC (01:30:40 ago)
+  Current address: 00:05:86:71:8b:04, Hardware address: 00:05:86:71:8b:04
+  Last flapped   : 2025-06-08 09:13:03 UTC (01:06:03 ago)
   Statistics last cleared: Never
   Traffic statistics:
    Input  bytes  :                    0                    0 bps
@@ -504,8 +504,8 @@ Physical interface: ge-0/0/5, Enabled, Physical link is Up
   Link flags     : None
   CoS queues     : 8 supported, 8 maximum usable queues
   Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:29:05, Hardware address: 00:05:86:71:29:05
-  Last flapped   : 2025-06-07 18:42:32 UTC (01:30:40 ago)
+  Current address: 00:05:86:71:8b:05, Hardware address: 00:05:86:71:8b:05
+  Last flapped   : 2025-06-08 09:13:03 UTC (01:06:03 ago)
   Statistics last cleared: Never
   Traffic statistics:
    Input  bytes  :                    0                    0 bps
@@ -530,8 +530,8 @@ Physical interface: ge-0/0/6, Enabled, Physical link is Up
   Link flags     : None
   CoS queues     : 8 supported, 8 maximum usable queues
   Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:29:06, Hardware address: 00:05:86:71:29:06
-  Last flapped   : 2025-06-07 18:42:32 UTC (01:30:40 ago)
+  Current address: 00:05:86:71:8b:06, Hardware address: 00:05:86:71:8b:06
+  Last flapped   : 2025-06-08 09:13:03 UTC (01:06:03 ago)
   Statistics last cleared: Never
   Traffic statistics:
    Input  bytes  :                    0                    0 bps
@@ -556,8 +556,8 @@ Physical interface: ge-0/0/7, Enabled, Physical link is Up
   Link flags     : None
   CoS queues     : 8 supported, 8 maximum usable queues
   Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:29:07, Hardware address: 00:05:86:71:29:07
-  Last flapped   : 2025-06-07 18:42:32 UTC (01:30:40 ago)
+  Current address: 00:05:86:71:8b:07, Hardware address: 00:05:86:71:8b:07
+  Last flapped   : 2025-06-08 09:13:03 UTC (01:06:03 ago)
   Statistics last cleared: Never
   Traffic statistics:
    Input  bytes  :                    0                    0 bps
@@ -582,8 +582,8 @@ Physical interface: ge-0/0/8, Enabled, Physical link is Up
   Link flags     : None
   CoS queues     : 8 supported, 8 maximum usable queues
   Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:29:08, Hardware address: 00:05:86:71:29:08
-  Last flapped   : 2025-06-07 18:42:32 UTC (01:30:40 ago)
+  Current address: 00:05:86:71:8b:08, Hardware address: 00:05:86:71:8b:08
+  Last flapped   : 2025-06-08 09:13:03 UTC (01:06:03 ago)
   Statistics last cleared: Never
   Traffic statistics:
    Input  bytes  :                    0                    0 bps
@@ -608,8 +608,8 @@ Physical interface: ge-0/0/9, Enabled, Physical link is Up
   Link flags     : None
   CoS queues     : 8 supported, 8 maximum usable queues
   Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:29:09, Hardware address: 00:05:86:71:29:09
-  Last flapped   : 2025-06-07 18:42:32 UTC (01:30:40 ago)
+  Current address: 00:05:86:71:8b:09, Hardware address: 00:05:86:71:8b:09
+  Last flapped   : 2025-06-08 09:13:03 UTC (01:06:03 ago)
   Statistics last cleared: Never
   Traffic statistics:
    Input  bytes  :                    0                    0 bps
@@ -726,7 +726,7 @@ Physical interface: cbp0, Enabled, Physical link is Up
   Link flags     : None
   Physical info  : Unspecified
   Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:29:11, Hardware address: 00:05:86:71:29:11
+  Current address: 00:05:86:71:8b:11, Hardware address: 00:05:86:71:8b:11
   Alternate link address: Unspecified
   Last flapped   : Never
   Statistics last cleared: Never
@@ -879,8 +879,8 @@ Physical interface: em2, Enabled, Physical link is Up
   Traffic statistics:
    Input  bytes  :                    0
    Output bytes  :                    0
-   Input  packets:                37827
-   Output packets:                68939
+   Input  packets:                12038
+   Output packets:                21504
    IPv6 transit statistics:
     Input  bytes  :                   0
     Output bytes  :                   0
@@ -1004,7 +1004,7 @@ Physical interface: irb, Enabled, Physical link is Up
   Link flags     : None
   Physical info  : Unspecified
   Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:2c:f0, Hardware address: 00:05:86:71:2c:f0
+  Current address: 00:05:86:71:8e:f0, Hardware address: 00:05:86:71:8e:f0
   Alternate link address: Unspecified
   Last flapped   : Never
   Statistics last cleared: Never
@@ -1033,10 +1033,10 @@ Physical interface: lo0, Enabled, Physical link is Up
   Last flapped   : Never
   Statistics last cleared: Never
   Traffic statistics:
-   Input  bytes  :                15233
-   Output bytes  :                15233
-   Input  packets:                  156
-   Output packets:                  156
+   Input  bytes  :                32516
+   Output bytes  :                32516
+   Input  packets:                  282
+   Output packets:                  282
    IPv6 transit statistics:
     Input  bytes  :                   0
     Output bytes  :                   0
@@ -1067,20 +1067,20 @@ Physical interface: lo0, Enabled, Physical link is Up
   Logical interface lo0.16385 (Index 325) (SNMP ifIndex 22) (Generation 134)
     Flags: Down SNMP-Traps Encapsulation: Unspecified
     Traffic statistics:
-     Input  bytes  :                15001
-     Output bytes  :                15001
-     Input  packets:                  152
-     Output packets:                  152
+     Input  bytes  :                32284
+     Output bytes  :                32284
+     Input  packets:                  278
+     Output packets:                  278
      IPv6 transit statistics:
       Input  bytes  :                   0
       Output bytes  :                   0
       Input  packets:                   0
       Output packets:                   0
     Local statistics:
-     Input  bytes  :                15001
-     Output bytes  :                15001
-     Input  packets:                  152
-     Output packets:                  152
+     Input  bytes  :                32284
+     Output bytes  :                32284
+     Input  packets:                  278
+     Output packets:                  278
     Transit statistics:
      Input  bytes  :                    0                    0 bps
      Output bytes  :                    0                    0 bps
@@ -1202,7 +1202,7 @@ Physical interface: pip0, Enabled, Physical link is Up
   Link flags     : None
   Physical info  : Unspecified
   Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 00:05:86:71:2c:b0, Hardware address: 00:05:86:71:2c:b0
+  Current address: 00:05:86:71:8e:b0, Hardware address: 00:05:86:71:8e:b0
   Alternate link address: Unspecified
   Last flapped   : Never
   Statistics last cleared: Never
@@ -1279,11 +1279,11 @@ Physical interface: vtep, Enabled, Physical link is Up
 root> 
 
 root> show system uptime 
-Current time: 2025-06-07 20:13:14 UTC
-System booted: 2025-06-07 18:39:46 UTC (01:33:28 ago)
-Protocols started: 2025-06-07 18:41:01 UTC (01:32:13 ago)
-Last configured: 2025-06-07 18:57:45 UTC (01:15:29 ago) by root
- 8:13PM  up 1:33, 2 users, load averages: 1.02, 2.70, 2.47
+Current time: 2025-06-08 10:19:07 UTC
+System booted: 2025-06-08 09:10:57 UTC (01:08:10 ago)
+Protocols started: 2025-06-08 09:12:04 UTC (01:07:03 ago)
+Last configured: 2025-06-08 09:13:46 UTC (01:05:21 ago) by root
+10:19AM  up 1:08, 13 users, load averages: 11.28, 4.23, 1.81
 
 root> 
 
@@ -1294,20 +1294,20 @@ MAC Address       Address         Name                      Interface           
 root> 
 
 root> show system uptime 
-Current time: 2025-06-07 20:13:14 UTC
-System booted: 2025-06-07 18:39:46 UTC (01:33:28 ago)
-Protocols started: 2025-06-07 18:41:01 UTC (01:32:13 ago)
-Last configured: 2025-06-07 18:57:45 UTC (01:15:29 ago) by root
- 8:13PM  up 1:33, 2 users, load averages: 1.02, 2.70, 2.47
+Current time: 2025-06-08 10:19:07 UTC
+System booted: 2025-06-08 09:10:57 UTC (01:08:10 ago)
+Protocols started: 2025-06-08 09:12:04 UTC (01:07:03 ago)
+Last configured: 2025-06-08 09:13:46 UTC (01:05:21 ago) by root
+10:19AM  up 1:08, 13 users, load averages: 11.28, 4.23, 1.81
 
 root> 
 
 root> show system uptime 
-Current time: 2025-06-07 20:13:15 UTC
-System booted: 2025-06-07 18:39:46 UTC (01:33:29 ago)
-Protocols started: 2025-06-07 18:41:01 UTC (01:32:14 ago)
-Last configured: 2025-06-07 18:57:45 UTC (01:15:30 ago) by root
- 8:13PM  up 1:33, 2 users, load averages: 1.02, 2.70, 2.47
+Current time: 2025-06-08 10:19:07 UTC
+System booted: 2025-06-08 09:10:57 UTC (01:08:10 ago)
+Protocols started: 2025-06-08 09:12:04 UTC (01:07:03 ago)
+Last configured: 2025-06-08 09:13:46 UTC (01:05:21 ago) by root
+10:19AM  up 1:08, 13 users, load averages: 11.28, 4.23, 1.81
 
 root> 
 
@@ -1321,11 +1321,11 @@ inet.0: 2 destinations, 2 routes (2 active, 0 holddown, 0 hidden)
 root> 
 
 root> show system uptime 
-Current time: 2025-06-07 20:13:15 UTC
-System booted: 2025-06-07 18:39:46 UTC (01:33:29 ago)
-Protocols started: 2025-06-07 18:41:01 UTC (01:32:14 ago)
-Last configured: 2025-06-07 18:57:45 UTC (01:15:30 ago) by root
- 8:13PM  up 1:33, 2 users, load averages: 1.02, 2.70, 2.47
+Current time: 2025-06-08 10:19:07 UTC
+System booted: 2025-06-08 09:10:57 UTC (01:08:10 ago)
+Protocols started: 2025-06-08 09:12:04 UTC (01:07:03 ago)
+Last configured: 2025-06-08 09:13:46 UTC (01:05:21 ago) by root
+10:19AM  up 1:08, 13 users, load averages: 11.28, 4.23, 1.81
 
 root> 
 
@@ -1335,11 +1335,11 @@ OSPF instance is not running
 root> 
 
 root> show system uptime 
-Current time: 2025-06-07 20:13:15 UTC
-System booted: 2025-06-07 18:39:46 UTC (01:33:29 ago)
-Protocols started: 2025-06-07 18:41:01 UTC (01:32:14 ago)
-Last configured: 2025-06-07 18:57:45 UTC (01:15:30 ago) by root
- 8:13PM  up 1:33, 2 users, load averages: 1.02, 2.70, 2.47
+Current time: 2025-06-08 10:19:08 UTC
+System booted: 2025-06-08 09:10:57 UTC (01:08:11 ago)
+Protocols started: 2025-06-08 09:12:04 UTC (01:07:04 ago)
+Last configured: 2025-06-08 09:13:46 UTC (01:05:22 ago) by root
+10:19AM  up 1:08, 13 users, load averages: 11.28, 4.23, 1.81
 
 root> 
 
@@ -1349,11 +1349,11 @@ IS-IS instance is not running
 root> 
 
 root> show system uptime 
-Current time: 2025-06-07 20:13:15 UTC
-System booted: 2025-06-07 18:39:46 UTC (01:33:29 ago)
-Protocols started: 2025-06-07 18:41:01 UTC (01:32:14 ago)
-Last configured: 2025-06-07 18:57:45 UTC (01:15:30 ago) by root
- 8:13PM  up 1:33, 2 users, load averages: 1.02, 2.70, 2.47
+Current time: 2025-06-08 10:19:08 UTC
+System booted: 2025-06-08 09:10:57 UTC (01:08:11 ago)
+Protocols started: 2025-06-08 09:12:04 UTC (01:07:04 ago)
+Last configured: 2025-06-08 09:13:46 UTC (01:05:22 ago) by root
+10:19AM  up 1:08, 13 users, load averages: 11.28, 4.23, 1.81
 
 root> 
 
@@ -1363,11 +1363,11 @@ MPLS not configured
 root> 
 
 root> show system uptime 
-Current time: 2025-06-07 20:13:15 UTC
-System booted: 2025-06-07 18:39:46 UTC (01:33:29 ago)
-Protocols started: 2025-06-07 18:41:01 UTC (01:32:14 ago)
-Last configured: 2025-06-07 18:57:45 UTC (01:15:30 ago) by root
- 8:13PM  up 1:33, 2 users, load averages: 1.02, 2.70, 2.47
+Current time: 2025-06-08 10:19:08 UTC
+System booted: 2025-06-08 09:10:57 UTC (01:08:11 ago)
+Protocols started: 2025-06-08 09:12:04 UTC (01:07:04 ago)
+Last configured: 2025-06-08 09:13:46 UTC (01:05:22 ago) by root
+10:19AM  up 1:08, 13 users, load averages: 11.28, 4.23, 1.81
 
 root> 
 
@@ -1377,11 +1377,11 @@ LDP instance is not running
 root> 
 
 root> show system uptime 
-Current time: 2025-06-07 20:13:16 UTC
-System booted: 2025-06-07 18:39:46 UTC (01:33:30 ago)
-Protocols started: 2025-06-07 18:41:01 UTC (01:32:15 ago)
-Last configured: 2025-06-07 18:57:45 UTC (01:15:31 ago) by root
- 8:13PM  up 1:34, 2 users, load averages: 1.02, 2.70, 2.47
+Current time: 2025-06-08 10:19:08 UTC
+System booted: 2025-06-08 09:10:57 UTC (01:08:11 ago)
+Protocols started: 2025-06-08 09:12:04 UTC (01:07:04 ago)
+Last configured: 2025-06-08 09:13:46 UTC (01:05:22 ago) by root
+10:19AM  up 1:08, 13 users, load averages: 11.28, 4.23, 1.81
 
 root> 
 
@@ -1391,11 +1391,11 @@ RSVP not configured
 root> 
 
 root> show system uptime 
-Current time: 2025-06-07 20:13:16 UTC
-System booted: 2025-06-07 18:39:46 UTC (01:33:30 ago)
-Protocols started: 2025-06-07 18:41:01 UTC (01:32:15 ago)
-Last configured: 2025-06-07 18:57:45 UTC (01:15:31 ago) by root
- 8:13PM  up 1:34, 2 users, load averages: 1.02, 2.70, 2.47
+Current time: 2025-06-08 10:19:08 UTC
+System booted: 2025-06-08 09:10:57 UTC (01:08:11 ago)
+Protocols started: 2025-06-08 09:12:04 UTC (01:07:04 ago)
+Last configured: 2025-06-08 09:13:46 UTC (01:05:22 ago) by root
+10:19AM  up 1:08, 13 users, load averages: 11.28, 4.23, 1.81
 
 root> 
 
@@ -1404,11 +1404,11 @@ root> show lldp neighbor | no-more
 root> 
 
 root> show system uptime 
-Current time: 2025-06-07 20:13:16 UTC
-System booted: 2025-06-07 18:39:46 UTC (01:33:30 ago)
-Protocols started: 2025-06-07 18:41:01 UTC (01:32:15 ago)
-Last configured: 2025-06-07 18:57:45 UTC (01:15:31 ago) by root
- 8:13PM  up 1:34, 2 users, load averages: 1.02, 2.70, 2.47
+Current time: 2025-06-08 10:19:09 UTC
+System booted: 2025-06-08 09:10:57 UTC (01:08:12 ago)
+Protocols started: 2025-06-08 09:12:04 UTC (01:07:05 ago)
+Last configured: 2025-06-08 09:13:46 UTC (01:05:23 ago) by root
+10:19AM  up 1:08, 13 users, load averages: 11.28, 4.23, 1.81
 
 root> 
 
@@ -1418,11 +1418,11 @@ MPLS not configured
 root> 
 
 root> show system uptime 
-Current time: 2025-06-07 20:13:16 UTC
-System booted: 2025-06-07 18:39:46 UTC (01:33:30 ago)
-Protocols started: 2025-06-07 18:41:01 UTC (01:32:15 ago)
-Last configured: 2025-06-07 18:57:45 UTC (01:15:31 ago) by root
- 8:13PM  up 1:34, 2 users, load averages: 1.02, 2.70, 2.47
+Current time: 2025-06-08 10:19:09 UTC
+System booted: 2025-06-08 09:10:57 UTC (01:08:12 ago)
+Protocols started: 2025-06-08 09:12:04 UTC (01:07:05 ago)
+Last configured: 2025-06-08 09:13:46 UTC (01:05:23 ago) by root
+10:19AM  up 1:08, 13 users, load averages: 11.28, 4.23, 1.81
 
 root> 
 
@@ -1432,11 +1432,11 @@ BGP is not running
 root> 
 
 root> show system uptime 
-Current time: 2025-06-07 20:13:17 UTC
-System booted: 2025-06-07 18:39:46 UTC (01:33:31 ago)
-Protocols started: 2025-06-07 18:41:01 UTC (01:32:16 ago)
-Last configured: 2025-06-07 18:57:45 UTC (01:15:32 ago) by root
- 8:13PM  up 1:34, 2 users, load averages: 1.02, 2.70, 2.47
+Current time: 2025-06-08 10:19:09 UTC
+System booted: 2025-06-08 09:10:57 UTC (01:08:12 ago)
+Protocols started: 2025-06-08 09:12:04 UTC (01:07:05 ago)
+Last configured: 2025-06-08 09:13:46 UTC (01:05:23 ago) by root
+10:19AM  up 1:08, 13 users, load averages: 11.28, 4.23, 1.81
 
 root> 
 
@@ -1446,11 +1446,11 @@ ssh;
 root> 
 
 root> show system uptime 
-Current time: 2025-06-07 20:13:17 UTC
-System booted: 2025-06-07 18:39:46 UTC (01:33:31 ago)
-Protocols started: 2025-06-07 18:41:01 UTC (01:32:16 ago)
-Last configured: 2025-06-07 18:57:45 UTC (01:15:32 ago) by root
- 8:13PM  up 1:34, 2 users, load averages: 1.02, 2.70, 2.47
+Current time: 2025-06-08 10:19:10 UTC
+System booted: 2025-06-08 09:10:57 UTC (01:08:13 ago)
+Protocols started: 2025-06-08 09:12:04 UTC (01:07:06 ago)
+Last configured: 2025-06-08 09:13:46 UTC (01:05:24 ago) by root
+10:19AM  up 1:08, 13 users, load averages: 11.28, 4.23, 1.81
 
 root> 
 
@@ -1459,11 +1459,11 @@ root> show configuration protocols | no-more
 root> 
 
 root> show system uptime 
-Current time: 2025-06-07 20:13:17 UTC
-System booted: 2025-06-07 18:39:46 UTC (01:33:31 ago)
-Protocols started: 2025-06-07 18:41:01 UTC (01:32:16 ago)
-Last configured: 2025-06-07 18:57:45 UTC (01:15:32 ago) by root
- 8:13PM  up 1:34, 2 users, load averages: 1.02, 2.70, 2.47
+Current time: 2025-06-08 10:19:10 UTC
+System booted: 2025-06-08 09:10:57 UTC (01:08:13 ago)
+Protocols started: 2025-06-08 09:12:04 UTC (01:07:06 ago)
+Last configured: 2025-06-08 09:13:46 UTC (01:05:24 ago) by root
+10:19AM  up 1:08, 13 users, load averages: 11.28, 4.23, 1.81
 
 root> 
 
@@ -1472,52 +1472,52 @@ root> show configuration firewall | no-more
 root> 
 
 root> show system uptime 
-Current time: 2025-06-07 20:13:17 UTC
-System booted: 2025-06-07 18:39:46 UTC (01:33:31 ago)
-Protocols started: 2025-06-07 18:41:01 UTC (01:32:16 ago)
-Last configured: 2025-06-07 18:57:45 UTC (01:15:32 ago) by root
- 8:13PM  up 1:34, 2 users, load averages: 1.02, 2.70, 2.47
+Current time: 2025-06-08 10:19:10 UTC
+System booted: 2025-06-08 09:10:57 UTC (01:08:13 ago)
+Protocols started: 2025-06-08 09:12:04 UTC (01:07:06 ago)
+Last configured: 2025-06-08 09:13:46 UTC (01:05:24 ago) by root
+10:19AM  up 1:08, 13 users, load averages: 11.28, 4.23, 1.81
 
 root> 
 
 root> show system uptime 
-Current time: 2025-06-07 20:13:17 UTC
-System booted: 2025-06-07 18:39:46 UTC (01:33:31 ago)
-Protocols started: 2025-06-07 18:41:01 UTC (01:32:16 ago)
-Last configured: 2025-06-07 18:57:45 UTC (01:15:32 ago) by root
- 8:13PM  up 1:34, 2 users, load averages: 1.02, 2.70, 2.47
+Current time: 2025-06-08 10:19:10 UTC
+System booted: 2025-06-08 09:10:57 UTC (01:08:13 ago)
+Protocols started: 2025-06-08 09:12:04 UTC (01:07:06 ago)
+Last configured: 2025-06-08 09:13:46 UTC (01:05:24 ago) by root
+10:19AM  up 1:08, 13 users, load averages: 11.28, 4.23, 1.81
 
 root> 
 
 root> show log messages | match "error|warning|critical" | last 10 | no-more 
-Jun  7 18:41:14   dfcd[2318]: LIBJSNMP_NS_LOG_WARNING: WARNING: Warning: Failed to connect to the agentx master agent (/var/run/snmpd_agentx): Unknown host (/var/run/snmpd_agentx) (No such file or directory)
-Jun  7 18:41:16   /kernel: em0error setting host MAC filter table
-Jun  7 18:41:16   /kernel: em1error setting host MAC filter table
-Jun  7 18:41:16   /kernel: em2error setting host MAC filter table
-Jun  7 18:41:16   /kernel: em3error setting host MAC filter table
-Jun  7 18:41:16   /kernel: em4error setting host MAC filter table
-Jun  7 18:41:16   /kernel: em5error setting host MAC filter table
-Jun  7 18:57:42   chassisd[3060]: CHASSISD_FILE_OPEN: File open: /dev/acb, error: 2 -- No such file or directory
-Jun  7 18:57:42   chassisd[3060]: CHASSISD_FILE_OPEN: File open: /dev/acb, error: 2 -- No such file or directory
----(more 96%)---
+Jun  8 09:12:13   /kernel: em0error setting host MAC filter table
+Jun  8 09:12:13   /kernel: em1error setting host MAC filter table
+Jun  8 09:12:13   /kernel: em2error setting host MAC filter table
+Jun  8 09:12:13   /kernel: em3error setting host MAC filter table
+Jun  8 09:12:13   /kernel: em4error setting host MAC filter table
+Jun  8 09:12:13   /kernel: em5error setting host MAC filter table
+Jun  8 09:13:44   chassisd[2957]: CHASSISD_FILE_OPEN: File open: /dev/acb, error: 2 -- No such file or directory
+Jun  8 09:13:44   chassisd[2957]: CHASSISD_FILE_OPEN: File open: /dev/acb, error: 2 -- No such file or directory
+Jun  8 09:13:47   /kernel: KERN_ARP_DUPLICATE_ADDR: duplicate IP address 192.168.95.2! sent from address: 00:50:56:e7:e8:9d (error count = 1)
+---(more 98%)---
                                         
 root> 
 
 root> show system uptime 
-Current time: 2025-06-07 20:13:18 UTC
-System booted: 2025-06-07 18:39:46 UTC (01:33:32 ago)
-Protocols started: 2025-06-07 18:41:01 UTC (01:32:17 ago)
-Last configured: 2025-06-07 18:57:45 UTC (01:15:33 ago) by root
- 8:13PM  up 1:34, 2 users, load averages: 1.02, 2.70, 2.47
+Current time: 2025-06-08 10:19:10 UTC
+System booted: 2025-06-08 09:10:57 UTC (01:08:13 ago)
+Protocols started: 2025-06-08 09:12:04 UTC (01:07:06 ago)
+Last configured: 2025-06-08 09:13:46 UTC (01:05:24 ago) by root
+10:19AM  up 1:08, 13 users, load averages: 11.28, 4.23, 1.81
 
 root> 
 
 root> show system uptime 
-Current time: 2025-06-07 20:13:18 UTC
-System booted: 2025-06-07 18:39:46 UTC (01:33:32 ago)
-Protocols started: 2025-06-07 18:41:01 UTC (01:32:17 ago)
-Last configured: 2025-06-07 18:57:45 UTC (01:15:33 ago) by root
- 8:13PM  up 1:34, 2 users, load averages: 1.02, 2.70, 2.47
+Current time: 2025-06-08 10:19:10 UTC
+System booted: 2025-06-08 09:10:57 UTC (01:08:13 ago)
+Protocols started: 2025-06-08 09:12:04 UTC (01:07:06 ago)
+Last configured: 2025-06-08 09:13:46 UTC (01:05:24 ago) by root
+10:19AM  up 1:08, 13 users, load averages: 11.28, 4.23, 1.81
 
 root> 
 
@@ -1531,31 +1531,31 @@ May  1 16:14:47  rtsock_inform_fru_offline: inform peer type 17, index 0 offline
 May  1 16:14:47  rtsock_reset_self_ping_statistics: reset fpc_slot 0 self_ping stats, error 0
 May  1 16:14:47  fpc_offline_now - slot 0, reason: None, error Chassis connection dropped transition state 1
 May  1 16:14:55  ch_power_off_frus_cleanup_exit: Chassisd exiting with error-code= 69
----(more 42%)---
+---(more 47%)---
                                         
 root> 
 
 root> show system uptime 
-Current time: 2025-06-07 20:13:18 UTC
-System booted: 2025-06-07 18:39:46 UTC (01:33:32 ago)
-Protocols started: 2025-06-07 18:41:01 UTC (01:32:17 ago)
-Last configured: 2025-06-07 18:57:45 UTC (01:15:33 ago) by root
- 8:13PM  up 1:34, 2 users, load averages: 0.94, 2.65, 2.46
+Current time: 2025-06-08 10:19:11 UTC
+System booted: 2025-06-08 09:10:57 UTC (01:08:14 ago)
+Protocols started: 2025-06-08 09:12:04 UTC (01:07:07 ago)
+Last configured: 2025-06-08 09:13:46 UTC (01:05:25 ago) by root
+10:19AM  up 1:08, 13 users, load averages: 10.62, 4.21, 1.81
 
 root> 
 
 root> show system uptime 
-Current time: 2025-06-07 20:13:18 UTC
-System booted: 2025-06-07 18:39:46 UTC (01:33:32 ago)
-Protocols started: 2025-06-07 18:41:01 UTC (01:32:17 ago)
-Last configured: 2025-06-07 18:57:45 UTC (01:15:33 ago) by root
- 8:13PM  up 1:34, 2 users, load averages: 0.94, 2.65, 2.46
+Current time: 2025-06-08 10:19:11 UTC
+System booted: 2025-06-08 09:10:57 UTC (01:08:14 ago)
+Protocols started: 2025-06-08 09:12:04 UTC (01:07:07 ago)
+Last configured: 2025-06-08 09:13:46 UTC (01:05:25 ago) by root
+10:19AM  up 1:08, 13 users, load averages: 10.62, 4.21, 1.81
 
 root> 
 
 root> show configuration | display set | no-more 
 set version 14.1R4.8
-set system root-authentication encrypted-password "$1$MgeS59tO$TfNKNC8WBi6hRvzEdyl5/0"
+set system root-authentication encrypted-password "$1$xsruK9V6$Sx7IKiOwsDR3E9pPHN0WW1"
 set system services ssh
 set system syslog user * any emergency
 set system syslog file messages any notice

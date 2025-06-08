@@ -1,0 +1,23 @@
+
+Rapport des changements :
+
+Informations du moteur de routage :
+
+======================================================== AVANT =========================================================
+Memory utilization          49 percent
+User                      15 percent
+Kernel                    14 percent
+Interrupt                  6 percent
+Idle                      65 percent
+Uptime                         1 hour, 8 minutes, 8 seconds
+11.74       4.20       1.78
+
+======================================================== APRÈS =========================================================
+Memory utilization          48 percent
+User                       7 percent
+Kernel                     9 percent
+Interrupt                  7 percent
+Idle                      77 percent
+Uptime                         1 hour, 8 minutes, 34 seconds
+8.11       4.05       1.81
+========================================================================================================================
