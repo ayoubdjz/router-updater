@@ -22,6 +22,7 @@ from common_utils import (
 import juniper_data_collector as jdc
 
 def run_apres_workflow(avant_ident_file, apres_logs, password_apres):
+    from locking_utils import verrouiller_routeur, liberer_verrou_et_fichier
     if apres_logs is None:
         apres_logs = []
     connection_apres = None
@@ -35,6 +36,9 @@ def run_apres_workflow(avant_ident_file, apres_logs, password_apres):
         "system_services": [], "configured_protocols": [], "firewall_config": "",
         "critical_logs_messages": "", "critical_logs_chassisd": "", "full_config_set": "",
     }
+    lock_obj = None
+    lock_file_path = None
+    ip_apres = None
     try:
         # --- File selection logic (keep APRES-specific) ---
         selected_ident_file = avant_ident_file
@@ -83,6 +87,13 @@ def run_apres_workflow(avant_ident_file, apres_logs, password_apres):
         if not password_apres:
             apres_logs.append("Erreur: Aucun mot de passe fourni dans les identifiants ou la session. Impossible de continuer.")
             return {"status": "error", "message": "No password provided for APRES connection.", "logs": apres_logs}
+
+        # --- LOCKING LOGIC ---
+        lock_acquired, attempted_lock_path = verrouiller_routeur(ip_apres, avant_logs=apres_logs)
+        lock_file_path = attempted_lock_path
+        if not lock_acquired:
+            apres_logs.append(f"Impossible de verrouiller le routeur {ip_apres}. Opération APRES annulée.")
+            return {"status": "error", "message": f"Impossible de verrouiller le routeur {ip_apres}. Voir logs.", "lock_file_path": lock_file_path, "logs": apres_logs, "structured_data": structured_output_data}
         device_config_apres = {
             'device_type': 'juniper_junos',
             'host': ip_apres,
@@ -212,5 +223,10 @@ def run_apres_workflow(avant_ident_file, apres_logs, password_apres):
                 apres_logs.append(f"Déconnexion de la session SSH (APRES)... Session SSH (APRES) déconnectée.")
             except Exception as e:
                 apres_logs.append(f"Erreur lors de la fermeture de la connexion SSH: {e}")
-        # APRES-specific: Cleanup prompts for files (optional, can be handled by caller)
-        # ...existing code for cleanup...
+        # Always release the lock if acquired
+        if lock_obj and lock_file_path:
+            try:
+                liberer_verrou_et_fichier(lock_obj, lock_file_path, apres_logs)
+                apres_logs.append(f"Verrou sur le routeur {ip_apres} libéré (APRES).")
+            except Exception as e:
+                apres_logs.append(f"Erreur lors de la libération du verrou APRES: {e}")

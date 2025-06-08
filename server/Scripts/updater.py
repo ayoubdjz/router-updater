@@ -19,6 +19,10 @@ def stream_log(update_logs, msg, log_file_path=None):
 
 
 def run_update_procedure(ip, username, password, image_file, update_logs=None, log_callback=None, log_file_path=None, sse_stream=None):
+    from locking_utils import verrouiller_routeur, liberer_verrou_et_fichier
+    lock_obj = None
+    lock_file_path = None
+    connection = None
     try:
         if update_logs is None:
             update_logs = []
@@ -33,6 +37,15 @@ def run_update_procedure(ip, username, password, image_file, update_logs=None, l
                 log_callback(msg)
             if sse_stream:
                 sse_stream(msg)
+
+        # --- LOCKING LOGIC ---
+        lock_acquired, attempted_lock_path = verrouiller_routeur(ip, avant_logs=update_logs)
+        lock_obj = lock_acquired
+        lock_file_path = attempted_lock_path
+        if not lock_obj:
+            log(f"Impossible de verrouiller le routeur {ip}. Opération de mise à jour annulée.")
+            return {'success': False, 'logs': update_logs, 'error': f'Impossible de verrouiller le routeur {ip}. Voir logs.', 'lock_file_path': lock_file_path}
+
         # Build device config as in main_avant.py
         device = {
             'device_type': 'juniper_junos',
@@ -351,3 +364,13 @@ def run_update_procedure(ip, username, password, image_file, update_logs=None, l
         if "Socket is closed" in str(e) or "Connexion perdue" in str(e):
             log("La connexion avec le routeur a été interrompue.")
         return {'success': False, 'logs': update_logs, 'error': "La connexion avec le routeur a été interrompue."}
+    finally:
+        # Always release the lock if acquired
+        if lock_obj and lock_file_path:
+            try:
+                liberer_verrou_et_fichier(lock_obj, lock_file_path, update_logs)
+                if update_logs is not None:
+                    update_logs.append(f"Verrou sur le routeur {ip} libéré (UPDATE).")
+            except Exception as e:
+                if update_logs is not None:
+                    update_logs.append(f"Erreur lors de la libération du verrou UPDATE: {e}")

@@ -193,9 +193,15 @@ def api_lock_router():
     ip = data.get('ip')
     if not ip:
         return jsonify({"status": "error", "message": "IP is required."}), 400
-    lock, lock_file = verrouiller_routeur(ip)
+    avant_logs_local = []
+    lock, lock_file = verrouiller_routeur(ip, avant_logs=avant_logs_local)
     if lock is None or lock_file is None:
-        return jsonify({"status": "error", "message": f"Router {ip} is already locked or lock failed."}), 423
+        return jsonify({
+            "status": "error",
+            "message": f"Impossible de verrouiller le routeur {ip}. Voir logs.",
+            "lock_file_path": lock_file,
+            "logs": avant_logs_local
+        }), 423
     return jsonify({"status": "success", "message": f"Router {ip} locked.", "lock_file": lock_file})
 
 @app.route('/api/unlock_router', methods=['POST'])

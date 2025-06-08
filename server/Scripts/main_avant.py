@@ -116,6 +116,7 @@ def run_avant_workflow(ip, username, password, avant_logs=None):
         avant_logs.append(f"--- Début run_avant_checks pour {ip} ---")
         lock_acquired, attempted_lock_path = verrouiller_routeur(ip, avant_logs=avant_logs)
         lock_file_path = attempted_lock_path
+        lock_file_path_main = lock_file_path
         if not lock_acquired:
             return {"status": "error", "message": f"Impossible de verrouiller le routeur {ip}. Voir logs.",
                     "lock_file_path": lock_file_path, "logs": avant_logs, "structured_data": structured_output_data}
@@ -228,12 +229,17 @@ def run_avant_workflow(ip, username, password, avant_logs=None):
             "connection_obj": connection
         }
     finally:
-        if lock_obj or lock_file_path_main:
-            pass
         if connection:
             try:
                 connection.disconnect()
                 avant_logs.append(f"Déconnexion de la session SSH (AVANT)... Session SSH (AVANT) déconnectée.")
             except Exception as e:
                 avant_logs.append(f"Erreur lors de la fermeture de la connexion SSH: {e}")
+        # Always release the lock if acquired
+        if lock_file_path_main:
+            try:
+                liberer_verrou_et_fichier(lock_file_path_main, avant_logs)
+                avant_logs.append(f"Verrou sur le routeur {ip} libéré (AVANT).")
+            except Exception as e:
+                avant_logs.append(f"Erreur lors de la libération du verrou AVANT: {e}")
 
