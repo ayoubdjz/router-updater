@@ -75,6 +75,9 @@ def run_update_procedure(ip, username, password, image_file, update_logs=None, l
         # Vérification de la présence du package sur le routeur
         log(f"Vérification de la présence du package {image_file} sur le routeur...")
         try:
+            for attempt in range(1, 6):  # 5 tentatives max
+                log(f"Tentative {attempt}/5 pour vérifier la présence du package...")
+                time.sleep(10)  # Attendre 10 secondes entre les tentatives
             output_re0 = connection.send_command(f"file list re0:/var/tmp/{image_file}")
             output_re1 = connection.send_command(f"file list re1:/var/tmp/{image_file}")
             if "No such file or directory" in output_re0 or "No such file or directory" in output_re1:
