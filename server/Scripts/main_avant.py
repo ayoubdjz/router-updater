@@ -21,8 +21,6 @@ import juniper_data_collector as jdc
 from importlib import import_module
 
 # Import the perform_junos_update function
-from juniper_update_proc import perform_junos_update
-
 # Dynamically import all public functions from juniper_data_collector
 from types import FunctionType
 jdc_module = import_module('juniper_data_collector')
